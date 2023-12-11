@@ -40,7 +40,7 @@ const NavbarVertical = (props) => {
 					aria-expanded={isCurrentEventKey ? true : false}
 					aria-controls="navDashboard">
 					{icon ? <span class="nav-icon material-symbols-outlined">
-						{icon} 
+						{icon}
 					</span> : ''}{' '}
 					{children}
 				</Link>
