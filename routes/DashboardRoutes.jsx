@@ -36,7 +36,7 @@ export const DashboardMenu = [
 		icon: 'account_balance_wallet',
 		children: [
 			{ id: uuid(), link: '', name: 'Ventas' },
-			{ id: uuid(), link: '', name: 'Asistencia' },
+			{ id: uuid(), link: '/components/ventas_asistencia/asistencia', name: 'Asistencia' },
 			{ id: uuid(), link: '', name: 'Detalle de Empleado' }
 		]
 	},
