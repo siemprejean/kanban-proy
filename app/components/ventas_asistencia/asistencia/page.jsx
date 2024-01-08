@@ -25,7 +25,6 @@ const events = [
 
 const Asistencia = () => {
 	const [show, setShow] = useState(false);
-	
 	const [dia, setDay] = useState(false);
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
