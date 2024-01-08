@@ -69,10 +69,10 @@ export const DashboardMenu = [
 		title: 'Configuraciones',
 		icon: 'settings',
 		children: [
-			{ id: uuid(), link: '/authentication/sign-in', name: 'Usuarios' },
+			{ id: uuid(), link: '/components/login', name: 'Usuarios' },
 			{ id: uuid(), link: '/authentication/sign-up', name: 'Roles y Permisos' },
-			{ id: uuid(), link: '/authentication/forget-password', name: 'Empresas' },	
-			{ id: uuid(), link: '/authentication/sign-up', name: 'Marcas' },
+			{ id: uuid(), link: '/components/company', name: 'Empresas' },	
+			{ id: uuid(), link: '/components/brand', name: 'Marcas' },
 			{ id: uuid(), link: '/authentication/forget-password', name: 'Tiendas' }
 		]
 	},
