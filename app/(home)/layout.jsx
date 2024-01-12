@@ -19,7 +19,7 @@ export default function DashboardLayout({ children }) {
 	return (
 
 	<div>
-		<Login/>
+	
 		<div id="db-wrapper" className={`${showMenu ? '' : 'toggled'}`}>
 			
 			<div className="navbar-vertical navbar">
