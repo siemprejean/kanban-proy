@@ -15,17 +15,32 @@ import { Fragment } from "react";
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction';
-
+import Card from 'react-bootstrap/Card';
 
 const events = [
-	{ start: new Date() }
-
+	{
+		title: "VERDE +10",
+		start: getDate("YEAR-MONTH-06"),
+		backgroundColor: "green"
+	  },
 ]
 
 
+function getDate(dayString) {
+	const today = new Date();
+	const year = today.getFullYear().toString();
+	let month = (today.getMonth() + 1).toString();
+  
+	if (month.length === 1) {
+	  month = "0" + month;
+	}
+  
+	return dayString.replace("YEAR", year).replace("MONTH", month);
+  }
+  
+
 const Asistencia = () => {
 	const [show, setShow] = useState(false);
-	
 	const [dia, setDay] = useState(false);
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
@@ -38,6 +53,10 @@ const Asistencia = () => {
 
 			<Fragment>
 				<Container fluid className="p-12">
+
+				<Card>
+				<Card.Body>
+				<h5 style={{fontWeight: "900" }}>Asistencia de personal en tienda </h5>
 
 					<Row >
 						<Col xs={6} md={4}>
@@ -65,19 +84,24 @@ const Asistencia = () => {
 						<Col md={12} >
 							<FullCalendar
 								id="calendar"
+								headerToolbar={{
+									start: "prev next today",
+									center: "title",
+									end: "dayGridMonth dayGridWeek dayGridDay",
+								  }}
 								views={["month", "week", "day"]}
 								plugins={[dayGridPlugin, interactionPlugin]}
-								initialView='dayGridMonth'
 								dateClick={(e) => handleShow(e)}
 								weekends={true}
 								events={events}
-
 								eventContent={renderEventContent}
 							/>
 
 
 						</Col>
 					</Row>
+					</Card.Body>
+					</Card>
 				</Container>
 
 			</Fragment>
@@ -178,7 +202,7 @@ const Asistencia = () => {
 
 						<Row>
 							<Col>
-								<Table striped bordered hover>
+								<Table >
 									<thead>
 										<tr>
 											<th>ID</th>
