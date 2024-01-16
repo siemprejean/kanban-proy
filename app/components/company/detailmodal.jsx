@@ -24,7 +24,7 @@ export function DetailModal() {
     };
     return (
         <div>
-            <Button style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "100%", color: "HighlightText", flex: "auto"}} onClick={handleOpen}>
+            <Button style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "100%", color: "HighlightText", flex: "auto" }} onClick={handleOpen}>
                 <AddIcon /> CREAR
             </Button>
             <Modal
@@ -51,7 +51,7 @@ export function DetailModal() {
                                 <h4 style={{ fontWeight: "bold" }} id="modal-modal-title" variant="h6" component="h2">
                                     EDITAR MARCA
                                 </h4>
-                                <Divider style={{border:'double'}} />
+                                <Divider style={{ border: 'double' }} />
                                 <Row style={{ width: "100%" }}>
                                     <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px", width: "100%" }}>
                                         <FormControl variant="outlined" style={{ width: "100%" }}>
@@ -70,7 +70,7 @@ export function DetailModal() {
                                     <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
                                         <FormControl variant="outlined" style={{ width: "100%" }}>
                                             <h5>No. Empleados:</h5>
-                                            <Input style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }}/>
+                                            <Input style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }} />
                                         </FormControl>
                                     </Col>
                                 </Row>
