@@ -2,41 +2,31 @@
 
 import DashboardLayout from "@/app/(home)/layout";
 import Link from "next/link";
-import TextField from '@mui/material/TextField';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import SearchIcon from '@mui/icons-material/Search';
-import AddIcon from '@mui/icons-material/Add';
 import DownloadIcon from '@mui/icons-material/Download';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 //import { CardBody, CardHeader, Col, Row } from "react-bootstrap";
-import { Box, Button, Card, FormControl, IconButton, InputLabel, Input, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, List, ListItem, ListItemButton, Checkbox, ListItemIcon, ListItemText, CardContent, CardHeader, Grid, styled, Divider, Stack, Chip } from "@mui/material";
-import React from "react";
+import { Box, Button, Card, FormControl, IconButton, InputLabel, Input, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, List, ListItem, ListItemButton, Checkbox, ListItemIcon, ListItemText, CardContent, CardHeader, Grid, styled, Divider, Stack, Chip, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import BasicModal from "./basicmodal";
 import { DetailModal } from "./detailmodal";
-import { Col, Row } from "react-bootstrap";
-//import { DetailModal } from "./detailmodal";
-//import DetailModal from "./detailmodal";
-
+import { getBrands, getCompanies } from "@/app/data/api";
 
 function createData(name, calories, fat, carbs, protein) {
+
   return { name, calories, fat, carbs, protein };
 }
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 'Frozen yoghurt', 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 'Frozen yoghurt', 4.3),
-  createData('Eclair', 262, 16.0, 'Frozen yoghurt', 6.0),
-  createData('Cupcake', 305, 3.7,'Frozen yoghurt', 4.3),
-  createData('Gingerbread', 356, 16.0, 'Frozen yoghurt', 3.9),
-];
-
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 export default function Company() {
 
   const [open, setOpen, page, setPage] = React.useState(0);
   const [checked, setChecked] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
@@ -53,8 +43,28 @@ export default function Company() {
     setPage(0);
   };
 
-  const [name, setName] = React.useState('Cat in the Hat');
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const companies = await getCompanies();
+            const brands = await getBrands();
 
+            // Asociar marcas a empresas según la lógica de tu aplicación
+            const dataWithBrands = companies.map((company) => ({
+                ...company,
+                brands: brands.filter((brand) => brand.id_company === company.id),
+            }));
+
+            setData(dataWithBrands);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    fetchData();
+}, []);
+  console.log("Esto tiene data", data);
   return (
     <>
       <DashboardLayout className="justify-content-center">
@@ -116,24 +126,51 @@ export default function Company() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
+                    {data.map((row) => (
                       <TableRow
-                        key={row.name}
+                        key={row.id}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
                         <TableCell component="th" scope="row">
-                          {row.name}
+                          {row.id}
                         </TableCell>
-                        <TableCell align="right">{row.calories}</TableCell>
-                        <TableCell align="right">{row.fat}</TableCell>
+                        <TableCell align="right">{row.name}</TableCell>
+                        <TableCell align="right">{row.id_country}</TableCell>
                         <TableCell align="right">
                           <Stack direction="row" spacing={1} alignItems="center">
-                            <Chip label={row.carbs} style={{backgroundColor: 'honeydew', color: 'green', borderColor: 'green'}} size="small" variant="outlined" />
+                          {row.brands.map((brand) => (<Chip label= {brand.name } style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />))}
                           </Stack>
                         </TableCell>
-                        <TableCell align="right">{row.protein} </TableCell>
+                        <TableCell align="right">Panama</TableCell>
                         <TableCell align="right"><BasicModal /></TableCell>
-                        <TableCell align="right"><Button style={{ backgroundColor: "#03386a" }}><DeleteOutlineIcon /> </Button></TableCell>
+                        <TableCell align="right">
+                          <React.Fragment>
+                            <Button style={{ backgroundColor: "#03386a" }} onClick={handleOpen}>
+                              <DeleteOutlineIcon />
+                            </Button>
+                            <Dialog
+                              open={open}
+                              TransitionComponent={Transition}
+                              keepMounted
+                              onClose={handleClose}
+                              aria-describedby="alert-dialog-slide-description"
+                            >
+                              <DialogTitle>
+                                {"Desea eleminar esta empresa?"}
+                              </DialogTitle>
+                              <DialogContent>
+                                <DialogContentText id="alert-dialog-slide-description">
+                                  Al eliminar esta empresa se eliminaran todas las configuraciones relacionadas a ella.<br />
+                                  Esta seguro de continuar?
+                                </DialogContentText>
+                              </DialogContent>
+                              <DialogActions>
+                                <Button onClick={handleClose}>Si</Button>
+                                <Button onClick={handleClose}>No</Button>
+                              </DialogActions>
+                            </Dialog>
+                          </React.Fragment>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -142,7 +179,7 @@ export default function Company() {
               <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={rows.length}
+                count={data.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

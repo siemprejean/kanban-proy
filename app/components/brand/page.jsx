@@ -10,7 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DownloadIcon from '@mui/icons-material/Download';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 //import { CardBody, CardHeader, Col, Row } from "react-bootstrap";
-import { Box, Button, Card, FormControl, IconButton, InputLabel, Input, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, List, ListItem, ListItemButton, Checkbox, ListItemIcon, ListItemText, CardContent, CardHeader, Grid, styled, Divider, Stack, Chip } from "@mui/material";
+import { Box, Button, Card, FormControl, IconButton, InputLabel, Input, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, List, ListItem, ListItemButton, Checkbox, ListItemIcon, ListItemText, CardContent, CardHeader, Grid, styled, Divider, Stack, Chip, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import React from "react";
 import BasicModal from "./basicmodal";
 import { DetailModal } from "./detailmodal";
@@ -121,14 +121,39 @@ export default function Brand() {
                                                 <TableCell component="th" scope="row">
                                                     {row.name}
                                                 </TableCell>
-                                                 <TableCell align="right">{row.calories}</TableCell>
+                                                <TableCell align="right">{row.calories}</TableCell>
                                                 <TableCell align="right">
                                                     <Stack direction="row" spacing={1} alignItems="center">
                                                         <Chip label={row.name} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />
                                                     </Stack>
                                                 </TableCell>
                                                 <TableCell align="right"><BasicModal /></TableCell>
-                                                <TableCell align="right"><Button style={{ backgroundColor: "#03386a" }}><DeleteOutlineIcon /> </Button></TableCell>
+                                                <TableCell align="right">
+                                                    <React.Fragment>
+                                                        <Button style={{ backgroundColor: "#03386a" }} onClick={handleOpen}>
+                                                            <DeleteOutlineIcon />
+                                                        </Button>
+                                                        <Dialog
+                                                            open={open}
+                                                            TransitionComponent={Transition}
+                                                            keepMounted
+                                                            onClose={handleClose}
+                                                            aria-describedby="alert-dialog-slide-description"
+                                                        >
+                                                            <DialogTitle>{"Desea eleminar esta empresa?"}</DialogTitle>
+                                                            <DialogContent>
+                                                                <DialogContentText id="alert-dialog-slide-description">
+                                                                    Al eliminar esta empresa se eliminaran todas las configuraciones relacionadas a ella.<br />
+                                                                    Esta seguro de continuar?
+                                                                </DialogContentText>
+                                                            </DialogContent>
+                                                            <DialogActions>
+                                                                <Button onClick={handleClose}>Si</Button>
+                                                                <Button onClick={handleClose}>No</Button>
+                                                            </DialogActions>
+                                                        </Dialog>
+                                                    </React.Fragment>
+                                                </TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
