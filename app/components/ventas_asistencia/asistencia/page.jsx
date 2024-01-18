@@ -4,7 +4,7 @@ import React from "react";
 import Carousel from 'react-bootstrap/Carousel';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
@@ -16,13 +16,28 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction';
 import Card from 'react-bootstrap/Card';
+import Select from 'react-select'
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 
 const events = [
 	{
-		title: "VERDE +10",
+		title: "5/5",
 		start: getDate("YEAR-MONTH-06"),
-		backgroundColor: "green"
-	  },
+		backgroundColor: "#64EA8F",
+
+	},
+]
+
+
+const colourOptions = [
+	{ value: 'VS Albrook', label: 'VS Albrook' },
+	{ value: 'BBW Albrook', label: 'BBW Albrook' },
+	{ value: 'VS Multiplaza', label: 'VS Multiplaza' },
+	{ value: 'BBW Multiplaza', label: 'BBW Multiplaza' }
 ]
 
 
@@ -30,22 +45,21 @@ function getDate(dayString) {
 	const today = new Date();
 	const year = today.getFullYear().toString();
 	let month = (today.getMonth() + 1).toString();
-  
+
 	if (month.length === 1) {
-	  month = "0" + month;
+		month = "0" + month;
 	}
-  
+
+
 	return dayString.replace("YEAR", year).replace("MONTH", month);
-  }
-  
+}
+
 
 const Asistencia = () => {
 	const [show, setShow] = useState(false);
-	const [dia, setDay] = useState(false);
+	const [startDate, setStartDate] = useState(new Date());
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
-
-
 
 	return (
 
@@ -54,53 +68,67 @@ const Asistencia = () => {
 			<Fragment>
 				<Container fluid className="p-12">
 
-				<Card>
-				<Card.Body>
-				<h5 style={{fontWeight: "900" }}>Asistencia de personal en tienda </h5>
+					<Card  >
+						<Card.Body>
+							<h5 style={{ fontWeight: "900" }}>Asistencia de personal en tienda </h5>
 
-					<Row >
-						<Col xs={6} md={4}>
-							<Form className="d-flex align-items-center">
-								<Form.Control type="search" placeholder="Search" />
+							<Row >
+								<Col xs={6} md={4}>
+									<Select
 
-							</Form>
-						</Col>
+										isMulti
+										name="colors"
+										options={colourOptions}
+										className="basic-multi-select"
+										classNamePrefix="select"
+									/>
+								</Col>
 
-						<Col xs={6} md={4}>
-							<Form className="d-flex align-items-center">
-								<Form.Control type="search" placeholder="Search" />
-							</Form>
-						</Col>
+								<Col xs={6} md={3}>
+								<LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DatePicker']}>
+	  <DatePicker
+          label={'Año'}
+          openTo="year"
+          views={['year']}
+        />
+      </DemoContainer>
+    </LocalizationProvider>
+								
+								</Col>
 
-						<Col xs={6} md={4}>
-							<Form className="d-flex align-items-center">
-								<Form.Control type="search" placeholder="Search" />
+								<Col xs={6} md={3}>
+								<LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DatePicker']}>
+	  <DatePicker
+          label={'Mes'}
+          openTo="monthr"
+          views={['month']}
+        />
+      </DemoContainer>
+    </LocalizationProvider>
+								</Col>
+							</Row>
+							<br></br>
+							<Row >
+								<Col md={12} >
+									<FullCalendar
+										headerToolbar={{
+											start: "prev next today",
+											center: "title",
+											end: "dayGridMonth dayGridWeek dayGridDay",
+										}}
+										views={["month", "week", "day"]}
+										plugins={[dayGridPlugin, interactionPlugin]}
+										dateClick={(e) => { handleShow(e) }}
+										weekends={true}
+										events={events}
+										eventContent={renderEventContent}
+									/>
 
-							</Form>
-						</Col>
-					</Row>
-					<br></br>
-					<Row >
-						<Col md={12} >
-							<FullCalendar
-								id="calendar"
-								headerToolbar={{
-									start: "prev next today",
-									center: "title",
-									end: "dayGridMonth dayGridWeek dayGridDay",
-								  }}
-								views={["month", "week", "day"]}
-								plugins={[dayGridPlugin, interactionPlugin]}
-								dateClick={(e) => handleShow(e)}
-								weekends={true}
-								events={events}
-								eventContent={renderEventContent}
-							/>
-
-
-						</Col>
-					</Row>
-					</Card.Body>
+								</Col>
+							</Row>
+						</Card.Body>
 					</Card>
 				</Container>
 
@@ -202,15 +230,15 @@ const Asistencia = () => {
 
 						<Row>
 							<Col>
-								<Table >
+								<Table responsive>
 									<thead>
 										<tr>
-											<th>ID</th>
-											<th>Usuario</th>
-											<th>Nombre</th>
-											<th>Apellido</th>
-											<th>Correo</th>
-											<th>Roles</th>
+											<th style={{fontWeight: "900" }}>ID</th>
+											<th style={{fontWeight: "900" }}>Usuario</th>
+											<th style={{fontWeight: "900" }}>Nombre</th>
+											<th style={{fontWeight: "900" }}>Apellido</th>
+											<th style={{fontWeight: "900" }}>Correo</th>
+											<th style={{fontWeight: "900" }}>Roles</th>
 
 
 										</tr>
