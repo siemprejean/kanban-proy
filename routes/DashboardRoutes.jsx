@@ -36,7 +36,7 @@ export const DashboardMenu = [
 		icon: 'account_balance_wallet',
 		children: [
 			{ id: uuid(), link: '', name: 'Ventas' },
-			{ id: uuid(), link: '', name: 'Asistencia' },
+			{ id: uuid(), link: '/components/ventas_asistencia/asistencia', name: 'Asistencia' },
 			{ id: uuid(), link: '', name: 'Detalle de Empleado' }
 		]
 	},
@@ -69,11 +69,11 @@ export const DashboardMenu = [
 		title: 'Configuraciones',
 		icon: 'settings',
 		children: [
-			{ id: uuid(), link: '/authentication/sign-in', name: 'Usuarios' },
-			{ id: uuid(), link: '/authentication/sign-up', name: 'Roles y Permisos' },
-			{ id: uuid(), link: '/authentication/forget-password', name: 'Empresas' },	
-			{ id: uuid(), link: '/authentication/sign-up', name: 'Marcas' },
-			{ id: uuid(), link: '/authentication/forget-password', name: 'Tiendas' }
+			{ id: uuid(), link: '/components/usuarios', name: 'Usuarios' },
+			{ id: uuid(), link: '/', name: 'Roles y Permisos' },
+			{ id: uuid(), link: '/components/company', name: 'Empresas' },	
+			{ id: uuid(), link: '/components/brand', name: 'Marcas' },
+			{ id: uuid(), link: '/', name: 'Tiendas' }
 		]
 	},
 

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import 'styles/theme.scss';
 
 // import sub components
+import Login from '../components/login/page';
 import NavbarVertical from '../components/navbar/NavbarVertical';
 import NavbarTop from '../components/navbar/NavbarTop';
 
@@ -16,7 +17,11 @@ export default function DashboardLayout({ children }) {
 	};
 
 	return (
+
+	<div>
+	
 		<div id="db-wrapper" className={`${showMenu ? '' : 'toggled'}`}>
+			
 			<div className="navbar-vertical navbar">
 				<NavbarVertical
 					showMenu={showMenu}
@@ -34,6 +39,7 @@ export default function DashboardLayout({ children }) {
 				</div>
 				{children}
 			</div>
+		</div>
 		</div>
 	)
 }
