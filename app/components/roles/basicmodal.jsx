@@ -71,67 +71,27 @@ export default function BasicModal() {
                         <CardContent>
                             <SimpleBar style={{ maxHeight: '100vh' }}>
                                 <h4 style={{ fontWeight: "bold" }} id="modal-modal-title" variant="h6" component="h2">
-                                    EDITAR EMPRESA
+                                    EDITAR PERMISO
                                 </h4>
                                 <Divider style={{ border: 'double' }} />
                                 <Row style={{ width: "100%" }}>
                                     <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px", width: "100%" }}>
                                         <FormControl variant="outlined" style={{ width: "100%" }}>
-                                            <h5>Nombre de la Empresa:</h5>
+                                            <h5>Nombre Corto</h5>
                                             <Input style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }} />
                                         </FormControl>
                                     </Col>
                                 </Row>
                                 <Row style={{ width: "100%" }}>
-                                    <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
+                                <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
                                         <FormControl variant="outlined" style={{ width: "100%" }}>
-                                            <h5>ID Fiscal:</h5>
-                                            <Input style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }} />
+                                            <h5>Descripción:</h5>
+                                            <textarea name="postContent" rows={4} cols={40} style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }} />
                                         </FormControl>
                                     </Col>
-                                    <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-                                        <FormControl variant="outlined" style={{ width: "100%" }}>
-                                            <h5>No. Empleados:</h5>
-                                            <Input style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }} />
-                                        </FormControl>
-                                    </Col>
+                                    
                                 </Row>
-                                <Row style={{ width: "100%" }}>
-                                    <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-
-                                        <List sx={{ width: '100%', maxWidth: '100%', bgcolor: 'ghostwhite', border: 'inset', padding: '10px', paddingTop: '10px', paddingBottom: '10px' }}>
-                                            <h3>Marcas</h3>
-                                            {[0, 1, 2, 3].map((value) => {
-                                                const labelId = `checkbox-list-label-${value}`;
-
-                                                return (
-                                                    <ListItem
-                                                        key={value}
-                                                        secondaryAction={
-                                                            <IconButton edge="end" aria-label="comments">
-                                                                <Comment />
-                                                            </IconButton>
-                                                        }
-                                                        disablePadding
-                                                    >
-                                                        <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
-                                                            <ListItemIcon>
-                                                                <Checkbox
-                                                                    edge="start"
-                                                                    //checked={checked.indexOf(value) !== -1}
-                                                                    tabIndex={-1}
-                                                                    disableRipple
-                                                                    inputProps={{ 'aria-labelledby': labelId }}
-                                                                />
-                                                            </ListItemIcon>
-                                                            <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
-                                                        </ListItemButton>
-                                                    </ListItem>
-                                                );
-                                            })}
-                                        </List>
-                                    </Col>
-                                </Row>
+                              
                                 <Row style={{ width: "100%" }}>
                                     <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
                                         <Button style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "100%", color: "HighlightText", flex: "auto" }}>

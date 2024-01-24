@@ -264,7 +264,7 @@ const NavbarVertical = (props) => {
 										{/* Aqui se cambian los iconos*/}
 										<Link href={menu.link} className={`nav-link item-sidebar ${location === menu.link ? 'active' : ''} ${menu.title === 'Download' ? 'bg-primary text-white' : ''}`}>
 											{typeof menu.icon === 'string' ? (
-												<span class="nav-icon material-symbols-outlined">
+												<span className="nav-icon material-symbols-outlined">
 													{menu.icon}
 												</span>
 

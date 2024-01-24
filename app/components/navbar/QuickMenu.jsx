@@ -57,7 +57,7 @@ const QuickMenu = () => {
                         bsPrefix=' '
                         id="dropdownNotification"
                         className="btn btn-light btn-icon rounded-circle indicator indicator-primary text-muted">
-                        <span class="material-symbols-outlined"> notifications </span>
+                        <span className="material-symbols-outlined"> notifications </span>
                     </Dropdown.Toggle>
                     <Dropdown.Menu
                         className="dashboard-dropdown notifications-dropdown dropdown-menu-lg dropdown-menu-end py-0"
@@ -138,7 +138,7 @@ const QuickMenu = () => {
                         bsPrefix=' '
                         id="dropdownNotification"
                         className="btn btn-light btn-icon rounded-circle indicator indicator-primary text-muted">
-                        <span class="material-symbols-outlined">notifications</span>
+                        <span className="material-symbols-outlined">notifications</span>
                     </Dropdown.Toggle>
                     <Dropdown.Menu
                         className="dashboard-dropdown notifications-dropdown dropdown-menu-lg dropdown-menu-end py-0"
