@@ -1,4 +1,5 @@
 'use client'
+
 import DashboardLayout from "@/app/(home)/layout";
 import Link from "next/link";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -7,38 +8,49 @@ import DownloadIcon from '@mui/icons-material/Download';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import SaveIcon from '@mui/icons-material/Save';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import CancelIcon from '@mui/icons-material/Cancel';
 //import { CardBody, CardHeader, Col, Row } from "react-bootstrap";
-import { Box, Button, Card, FormControl, Input, Paper, TableCell, TableRow, CardContent, Grid, styled, Divider, Stack, Chip, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide } from "@mui/material";
+import { Box, Button, Card, FormControl, IconButton, InputLabel, Input, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, List, ListItem, ListItemButton, Checkbox, ListItemIcon, ListItemText, CardContent, CardHeader, Grid, styled, Divider, Stack, Chip, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getBrands, getCompanies, getCompany } from "@/app/data/api";
-import MuiModal from "../customcomponent/modal";
+
+import { getStore, getStores } from "@/app/data/api";
+import MuiTable from "../customcomponent/table";
 import MuiFormControl from "../customcomponent/formcontrol";
 import { Col, Row } from "react-bootstrap";
-import MuiCheckList from "../customcomponent/checklist";
-import MuiTable from "../customcomponent/table";
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Cancel';
+import MuiModal from "../customcomponent/modal";
 import MuiDialog from "../customcomponent/dialog";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-export default function Company() {
-  //Variables de estados
+
+function createData(name, calories, fat, carbs, protein) {
+
+  return { name, calories, fat, carbs, protein };
+}
+
+
+export default function Store() {
+
   const [open, setOpen, page, setPage] = React.useState(0);
+  const [checked, setChecked] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [detail, setDetail] = React.useState([]);
-  const [getsbrand, setBrands] = React.useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalCreateOpen, setModalCreateOpen] = useState(false);
-  const [data, setData] = useState([]);
-  
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [detail, setDetail] = React.useState([]);
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
   const openModalCreate = () => setModalCreateOpen(true);
   const closeModalCreate = () => setModalCreateOpen(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const columnsTable = [{ label: 'Id', field: 'id' },
+  { label: 'Tienda', field: 'name' }];
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  }));
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -47,19 +59,8 @@ export default function Company() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
 
-  const columnsTable = [{ label: 'Fiscal Id', field: 'id' },
-  { label: 'Nombre', field: 'name' },
-  { label: 'No. Empleados', field: 'id_country' },
-  { label: 'Marcas', field: 'brands', render: (row) => row.brands.join(', ') },
-  { label: 'Pais', field: 'country' }];
+  const [data, setData] = useState([]);
 
   //Estilos
   const listStyles = {
@@ -86,86 +87,49 @@ export default function Company() {
     p: 4
   };
   console.log(MuiModal.PropTypes);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const companies = await getCompanies();
-        const brands = await getBrands();
-        setBrands(brands);
-        // Asociar marcas a empresas
-        const dataWithBrands = companies.map((company) => ({
-          ...company,
-          brands: brands.filter((brand) => brand.id_company === company.id),
-        }));
-
-        setData(dataWithBrands);
+        const stores = await getStores();
+        setData(stores);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-
     fetchData();
   }, []);
 
-
-  const fetchBrands = async () => {
-    try {
-      const brandmasters = await getBrands();
-      setBrands(brandmasters);
-
-      
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-  console.log('Esto tiene brandmasters:', getsbrand);
   const fetchDetail = async (id) => {
     try {
-      const company = await getCompany(id);
-      const brandsd = await getBrands();
-      // Asociar marcas a empresa
-      const companyWithBrands = {
-        ...company,
-        brandsd: brandsd.filter((brand) => brand.id_company === company.id),
-      };
-      setDetail(companyWithBrands);
+      const store = await getStore(id);
+
+      setDetail(store);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }
-  const titledialog = (<>
-    
-    <h4 style={{ color:"black"}}><DeleteForeverIcon style={{ backgroundColor:"white", color:"#FF3D57"}}/> ELIMINAR TIENDA</h4>
-    <Divider style={{ border: '1px solid', color:"#AAAAAA"}} />
-  </>
-  );
-  const actions = (<>
-    <Button style={{ backgroundColor:"#7E7E7E", color:"white", borderRadius: "20px", border: "outset"}} onClick={handleClose}>CANCELAR</Button>
-    <Button style={{ backgroundColor:"#FF3D57", color:"white", borderRadius: "20px", border: "outset"}} onClick={handleClose}>ACEPTAR</Button>
-  </>);
-  const contentDialog = (
-    <DialogContentText  style={{ color:"black"}}>
-      ¿Esta seguro que desea eliminar esta tienda?
-    </DialogContentText>);
+  console.log("Esto tiene data", data);
   const modalCreate = (
     <div>
       <Row style={{ width: "100%" }}>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px", width: "100%" }}>
-          <MuiFormControl title="Nombre de la Empresa:" value={''} />
+          <MuiFormControl title="Nombre de la Tienda:" value={''} style={{ align: "center" }} />
         </Col>
       </Row>
       <Row style={{ width: "100%" }}>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="ID Fiscal:" value={''} />
+          <MuiFormControl title="Tipo de comisión:" value={''} />
         </Col>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="No. Empleados:" value={''} />
+          <MuiFormControl title="Retención:" value={''} />
         </Col>
       </Row>
       <Row style={{ width: "100%" }}>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiCheckList title="Marcas" items={getsbrand} customStyles={listStyles} />
+          <MuiFormControl title="Excedente:" value={''} />
+        </Col>
+        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
+          <MuiFormControl title="Incentivo de domingos:" value={''} />
         </Col>
       </Row>
       <Row style={{ width: "100%" }}>
@@ -186,20 +150,23 @@ export default function Company() {
     <div>
       <Row style={{ width: "100%" }}>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px", width: "100%" }}>
-          <MuiFormControl title="Nombre de la Empresa:" value={detail.name} />
+          <MuiFormControl title="Nombre de la Tienda:" value={detail.name} style={{ align: "center" }} />
         </Col>
       </Row>
       <Row style={{ width: "100%" }}>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="ID Fiscal:" value={detail.id} />
+          <MuiFormControl title="Tipo de comisión:" value={''} />
         </Col>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="No. Empleados:" value={detail.id} />
+          <MuiFormControl title="Retención:" value={detail.retention} />
         </Col>
       </Row>
       <Row style={{ width: "100%" }}>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiCheckList title="Marcas" items={detail.brandsd} customStyles={listStyles} />
+          <MuiFormControl title="Excedente:" value={detail.surplus} />
+        </Col>
+        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
+          <MuiFormControl title="Incentivo de domingos:" value={detail.incentive_sunday} />
         </Col>
       </Row>
       <Row style={{ width: "100%" }}>
@@ -216,8 +183,20 @@ export default function Company() {
       </Row>
     </div>
   );
-  console.log(MuiModal.PropTypes);
-  console.log(MuiCheckList.propTypes);
+  const titledialog = (<>
+    
+    <h4 style={{ color:"black"}}><DeleteForeverIcon style={{ backgroundColor:"white", color:"#FF3D57"}}/> ELIMINAR TIENDA</h4>
+    <Divider style={{ border: '1px solid', color:"#AAAAAA"}} />
+  </>
+  );
+  const actions = (<>
+    <Button style={{ backgroundColor:"#7E7E7E", color:"white", borderRadius: "20px", border: "outset"}} onClick={handleClose}>CANCELAR</Button>
+    <Button style={{ backgroundColor:"#FF3D57", color:"white", borderRadius: "20px", border: "outset"}} onClick={handleClose}>ACEPTAR</Button>
+  </>);
+  const contentDialog = (
+    <DialogContentText  style={{ color:"black"}}>
+      ¿Esta seguro que desea eliminar esta tienda?
+    </DialogContentText>);
   const body = (
     <>
       {data.map((row) => (
@@ -229,19 +208,12 @@ export default function Company() {
             {row.id}
           </TableCell>
           <TableCell align="center">{row.name}</TableCell>
-          <TableCell align="center">{row.id_country}</TableCell>
-          <TableCell align="center">
-            <Stack direction="row" spacing={1} alignItems="center" style={{ flexWrap: 'wrap' }} >
-              {row.brands.map((brand) => (<Chip label={brand.name} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />))}
-            </Stack>
-          </TableCell>
-          <TableCell align="center">Panama</TableCell>
           <TableCell align="center">
             <Button style={{ backgroundColor: "#03386a", color:"HighlightText" }} onClick={() => { fetchDetail(row.id); openModal() }}><EditIcon /> </Button>
             <MuiModal
               open={isModalOpen}
               onClose={closeModal}
-              title="EDITAR EMPRESA"
+              title="EDITAR TIENDA"
               content={modalContent}
               customStyles={modalStyles}
             />
@@ -252,6 +224,7 @@ export default function Company() {
                 <DeleteOutlineIcon />
               </Button>
               <MuiDialog open={open} onClose={handleClose} title={titledialog} content={contentDialog} actions={actions} />
+
             </React.Fragment>
           </TableCell>
         </TableRow>
@@ -271,7 +244,7 @@ export default function Company() {
               <div className="ms-lg-3 d-none d-md-none d-lg-block">
                 {/* Search Form */}
                 <h3 style={{ fontWeight: "bold" }} id="modal-modal-title" variant="h6" component="h2">
-                  Configuración de Empresas
+                  Configuración de Tiendas
                 </h3>
               </div>
             </div>
@@ -290,7 +263,7 @@ export default function Company() {
                 </Grid>
                 <Grid item xs={2}>
                   <Item >
-                    <Button style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => { fetchBrands(); openModalCreate() }}>
+                    <Button style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => { openModalCreate() }}>
                       <AddIcon /> CREAR
                     </Button>
                     <MuiModal
@@ -311,11 +284,12 @@ export default function Company() {
                 </Grid>
               </Grid>
             </Box>
+
           </CardContent>
           <div style={{ height: 400, width: '100%', align: 'center' }}>
             <MuiTable columns={columnsTable} body={body} rowsPerPage={rowsPerPage} page={page} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} count={data.count} />
-          </div >
-        </Card >
+          </div>
+        </Card>
       </DashboardLayout >
     </>
   );

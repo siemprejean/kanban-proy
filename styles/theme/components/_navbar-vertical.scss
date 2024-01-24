@@ -12,10 +12,12 @@
   padding: 0rem;
   background-color: $gray-800;
   border-right: 1px solid $gray-800;
-  -webkit-transition: margin 0.25s ease-out;
-  -moz-transition: margin 0.25s ease-out;
-  -o-transition: margin 0.25s ease-out;
-  transition: margin 0.25s ease-out;
+  // -webkit-transition: margin 0.25s ease-out;
+  // -moz-transition: margin 0.25s ease-out;
+  // -o-transition: margin 0.25s ease-out;
+  // transition: margin 0.25s ease-out;
+  transition: margin 0.3s cubic-bezier(0.4, 0, 1, 1);
+  z-index: 1000;
 
   .slimScrollDiv {
     height: 100% !important;
@@ -51,7 +53,7 @@
   .navbar-nav {
     .nav-item {
       .nav-link {
-        padding: 0.5rem 1.5rem;
+        // padding: 0.5rem 1.5rem;
         display: flex;
         align-items: center;
         color: #fff;
@@ -61,15 +63,30 @@
         white-space: nowrap;
         transition: all 0.5s;
 
+        padding-top: 0;
+        padding-bottom: 0;
+        margin: auto 6.5px;
+        padding-left: 0;
+        gap: 5px;
+
         span {
           color: #fff;
           opacity: 1;
           font-size: 20px;
           margin-right: 10px;
+          padding: 10px 15px;
+          border-radius: 3px;
+
+          &:hover {
+            background: $gray-500;
+          }
+
         }
 
         &:hover {
           color: $gray-200;
+          border-radius: 3px;
+          background: $gray-500;
         }
 
         &:hover .nav-icon {
@@ -86,6 +103,10 @@
           color: $gray-200;
           opacity: 1;
         }
+
+
+
+
       }
 
       .nav-link[data-bs-toggle="collapse"] {
@@ -100,7 +121,7 @@
           margin-left: auto;
           transition: 0.5s ease;
           position: absolute;
-          right: 1.5rem;
+          right: 0.15rem;
           height: 24px;
           width: 24px;
           -webkit-filter: brightness(0) invert(1);
@@ -134,7 +155,7 @@
       .nav-item {
         .nav-link {
           color: $gray-500;
-          padding: 0.25rem 3rem;
+          padding: 0.25rem 1.5rem 0.25rem 4rem;
 
           &:hover {
             color: $white;
@@ -182,6 +203,7 @@
     }
   }
 }
+
 
 
 .collapse.in {
