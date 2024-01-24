@@ -47,12 +47,22 @@ export const getBrands = async () => {
         throw new Error('Failed to fetch brands');
     }
 };
+<<<<<<< Updated upstream
 export const getBrand = async (id) => {
     try {
         const result = await fetch(`http://10.2.1.174:35789/general/brands/${id}`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token}`
+=======
+
+export const getRoles = async () => {
+    try {
+        const result = await fetch('http://10.2.1.174:35789/admin/roles', {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2MDM3NDE2fQ.oLMuxhVJLJQOv6LKLnjEolFXwvl0EcNNSh7eesJ_1pU'
+>>>>>>> Stashed changes
             })
         });
         const data = await result.json();
@@ -60,6 +70,7 @@ export const getBrand = async (id) => {
         return data;
     } catch (error) {
         console.error('Error fetching brands:', error);
+<<<<<<< Updated upstream
         throw new Error('Failed to fetch brand');
     }
 };
@@ -93,5 +104,8 @@ export const getStore = async (id) => {
     } catch (error) {
         console.error('Error fetching stores:', error);
         throw new Error('Failed to fetch stores');
+=======
+        throw new Error('Failed to fetch brands');
+>>>>>>> Stashed changes
     }
 };
