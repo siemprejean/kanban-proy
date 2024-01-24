@@ -6,6 +6,7 @@ import { Col, Row } from "react-bootstrap";
 import CommentIcon from '@mui/icons-material/Comment';
 import AddIcon from '@mui/icons-material/Add';
 import SimpleBar from "simplebar-react";
+import TextField from '@mui/material/TextField';
 
 
 export function DetailModal() {
@@ -29,7 +30,7 @@ export function DetailModal() {
             <Button style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "100%", color: "HighlightText", flex: "auto" }} onClick={handleOpen}>
                 <AddIcon /> CREAR
             </Button>
-            <Modal
+            <Modal resposive
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
@@ -39,26 +40,35 @@ export function DetailModal() {
                     position: 'absolute',
                     margin: 1,
                     flex: "auto",
-                    right: '10%',
-                    width: '75%',
+                    right: '20%',
+                    maxWidth:'960px',
+                    minWidth:'600px',
                     bgcolor: 'background.paper',
                     border: '2px solid #000',
                     boxShadow: 24,
-                    p: 4
+                    p: 4,
+                  
+                    
                 }}>
 
-                    <Card>
+                    <Card
+                    sx={{
+                        
+                        overflow:'scroll',
+                        maxHeight:'100%',
+                        
+                    }}>
                         <CardContent>
                             <SimpleBar style={{ maxHeight: '100vh' }}>
                                 <h4 style={{ fontWeight: "bold" }} id="modal-modal-title" variant="h6" component="h2">
                                     EDITAR ROL
                                 </h4>
                                 <Divider style={{ border: 'double' }} />
-                                <Row style={{ width: "40%" }}>
+                                <Row style={{ width: "100%" }}>
                                     <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px", width: "100%" }}>
                                         <FormControl variant="outlined" style={{ width: "100%" }}>
                                             <h5>Nombre del Rol:</h5>
-                                            <Input style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }} />
+                                            <TextField id="outlined-basic" label="" variant="outlined" />
                                         </FormControl>
                                     </Col>
                                 </Row>
@@ -66,16 +76,21 @@ export function DetailModal() {
                                     <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
                                         <FormControl variant="outlined" style={{ width: "100%" }}>
                                             <h5>Descripción:</h5>
-                                            <textarea name="postContent" rows={4} cols={40} style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }} />
+                                            <TextField
+                                                id="outlined-multiline-flexible"
+                                                label=""
+                                                multiline
+                                                maxRows={4}
+                                            />
                                         </FormControl>
                                     </Col>
 
                                 </Row>
                                 <Row style={{ width: "100%" }}>
                                     <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-
-                                        <List sx={{ width: '100%', maxWidth: '100%', bgcolor: 'ghostwhite', border: 'inset', padding: '10px', paddingTop: '10px', paddingBottom: '10px' }}>
-                                            <h3>Marcas</h3>
+                                    <h5>Permisos</h5>
+                                        <List sx={{ width: '50%', maxWidth: '100%', bgcolor: 'ghostwhite', border: 'inset', padding: '10px', paddingTop: '10px', paddingBottom: '10px' }}>
+                                           
                                             {[0, 1, 2, 3].map((value) => {
                                                 const labelId = `checkbox-list-label-${value}`;
 
@@ -84,7 +99,6 @@ export function DetailModal() {
                                                         key={value}
                                                         secondaryAction={
                                                             <IconButton edge="end" aria-label="comments">
-                                                                <CommentIcon />
                                                             </IconButton>
                                                         }
                                                         disablePadding
@@ -99,7 +113,7 @@ export function DetailModal() {
                                                                     inputProps={{ 'aria-labelledby': labelId }}
                                                                 />
                                                             </ListItemIcon>
-                                                            <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+                                                            <ListItemText id={labelId} primary={`Permiso ${value + 1}`} />
                                                         </ListItemButton>
                                                     </ListItem>
                                                 );

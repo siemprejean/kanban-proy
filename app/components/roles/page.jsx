@@ -11,7 +11,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 //import { CardBody, CardHeader, Col, Row } from "react-bootstrap";
 import { Box, Button, Card, FormControl, IconButton, InputLabel, Input, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, List, ListItem, ListItemButton, Checkbox, ListItemIcon, ListItemText, CardContent, CardHeader, Grid, styled, Divider, Stack, Chip } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import BasicModal from "./basicmodal";
 
 import { DetailModal } from "./detailmodal";
@@ -24,6 +24,7 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import { getRoles } from "@/app/data/api";
 
 
 function createData(name, calories, fat, carbs, protein) {
@@ -67,6 +68,22 @@ export default function Company() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   }
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const roles = await getRoles();
+           
+
+          console.log("estyo tiene data", data)
+            setData(roles);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    fetchData();
+}, []);
   return (
     <>
       <DashboardLayout className="justify-content-center">
@@ -131,16 +148,16 @@ export default function Company() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
+                    {data.map((row) => (
                       <TableRow
                         key={row.name}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
                         <TableCell component="th" scope="row">
-                          {row.name}
+                          {row.id}
                         </TableCell>
-                        <TableCell align="right">{row.calories}</TableCell>
-                        <TableCell align="right">{row.fat}</TableCell>
+                        <TableCell align="right">{row.name}</TableCell>
+                        <TableCell align="right">{row.slug}</TableCell>
                         <TableCell align="right">
                           <Stack direction="row" spacing={1} alignItems="center">
                             <Chip label={row.carbs} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />
@@ -183,16 +200,16 @@ export default function Company() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
+                    {data.map((row) => (
                       <TableRow
                         key={row.name}
                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                       >
                         <TableCell component="th" scope="row">
-                          {row.name}
+                          {row.id}
                         </TableCell>
-                        <TableCell align="right">{row.calories}</TableCell>
-                        <TableCell align="right">{row.fat}</TableCell>
+                        <TableCell align="right">{row.name}</TableCell>
+                        <TableCell align="right">{row.slug}</TableCell>
                         <TableCell align="right">
                           <Stack direction="row" spacing={1} alignItems="center">
                             <Chip label={row.carbs} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />

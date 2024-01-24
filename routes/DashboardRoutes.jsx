@@ -70,7 +70,7 @@ export const DashboardMenu = [
 		icon: 'settings',
 		children: [
 			{ id: uuid(), link: '/components/usuarios', name: 'Usuarios' },
-			{ id: uuid(), link: '/', name: 'Roles y Permisos' },
+			{ id: uuid(), link: '/components/roles', name: 'Roles y Permisos' },
 			{ id: uuid(), link: '/components/company', name: 'Empresas' },	
 			{ id: uuid(), link: '/components/brand', name: 'Marcas' },
 			{ id: uuid(), link: '/components/store', name: 'Tiendas' }
