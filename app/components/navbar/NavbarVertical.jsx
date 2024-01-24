@@ -39,7 +39,7 @@ const NavbarVertical = (props) => {
 					data-bs-target="#navDashboard"
 					aria-expanded={isCurrentEventKey ? true : false}
 					aria-controls="navDashboard">
-					{icon ? <span class="nav-icon material-symbols-outlined">
+					{icon ? <span className="nav-icon material-symbols-outlined">
 						{icon}
 					</span> : ''}{' '}
 					{children}
@@ -220,7 +220,7 @@ const NavbarVertical = (props) => {
 										{/* Aqui se cambian los iconos*/}
 										<Link href={menu.link} className={`nav-link ${location === menu.link ? 'active' : ''} ${menu.title === 'Download' ? 'bg-primary text-white' : ''}`}>
 											{typeof menu.icon === 'string' ? (
-												<span class="nav-icon material-symbols-outlined">
+												<span className="nav-icon material-symbols-outlined">
 													{menu.icon}
 												</span>
 
