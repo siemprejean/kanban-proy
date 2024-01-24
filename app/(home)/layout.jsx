@@ -17,29 +17,26 @@ export default function DashboardLayout({ children }) {
 	};
 
 	return (
-
-	<div>
-	
-		<div id="db-wrapper" className={`${showMenu ? '' : 'toggled'}`}>
-			
-			<div className="navbar-vertical navbar">
-				<NavbarVertical
-					showMenu={showMenu}
-					onClick={(value) => setShowMenu(value)}
-				/>
-			</div>
-			<div id="page-content">
-				<div className="header">
-					<NavbarTop
-						data={{
-							showMenu: showMenu,
-							SidebarToggleMenu: ToggleMenu
-						}}
+		<div>
+			<div id="db-wrapper" className={`${showMenu ? '' : 'toggled'}`}>
+				<div className="navbar-vertical navbar">
+					<NavbarVertical
+						showMenu={showMenu}
+						onClick={(value) => setShowMenu(value)}
 					/>
 				</div>
-				{children}
+				<div id="page-content">
+					<div className="header">
+						<NavbarTop
+							data={{
+								showMenu: showMenu,
+								SidebarToggleMenu: ToggleMenu
+							}}
+						/>
+					</div>
+					{children}
+				</div>
 			</div>
-		</div>
 		</div>
 	)
 }

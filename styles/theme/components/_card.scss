@@ -1,11 +1,35 @@
-//
-// Extended from bootstrap
-//
-// card
+.col-sm-6 {
+    margin-top: 15px;
 
+    .css-1ri6ub7-MuiPaper-root-MuiCard-root {
+        max-width: 700px !important;
+    }
 
-.card{
-    box-shadow: $smooth-shadow-sm;
-    border: 0px;
-    border-radius: $border-radius-lg;
+    .MuiCardHeader-title {
+        color: #818181;
+    }
+
+    .MuiCardHeader-subheader {
+        color: #59adda;
+        font-weight: 600;
+    }
+}
+
+.dashboard-card {
+    padding: 20px;
+    margin-top: 15px;
+
+    .nav-icon {
+        font-size: 36px !important;
+        color: #59adda;
+    }
+}
+
+.cardDoughnutChart {
+    margin-top: 15px;
+
+    canvas {
+        margin: 0 auto;
+        padding: 20px;
+    }
 }

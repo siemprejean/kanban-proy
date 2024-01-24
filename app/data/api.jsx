@@ -47,13 +47,61 @@ export const getBrands = async () => {
         throw new Error('Failed to fetch brands');
     }
 };
+export const getBrand = async (id) => {
+    try {
+        const result = await fetch(`http://10.2.1.174:35789/general/brands/${id}`, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        });
+        const data = await result.json();
+        console.log('Esto tiene marca:', data);
+        return data;
+    } catch (error) {
+        console.error('Error fetching brands:', error);
+        throw new Error('Failed to fetch brand');
+    }
+};
+export const getStores = async () => {
+    try {
+        const result = await fetch('http://10.2.1.174:35789/general/stores', {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        });
+        const data = await result.json();
+        console.log('Esto tiene store:', data);
+        return data;
+    } catch (error) {
+        console.error('Error fetching stores:', error);
+        throw new Error('Failed to fetch stores');
+    }
+};
+export const getStore = async (id) => {
+    try {
+        const result = await fetch(`http://10.2.1.174:35789/general/stores/${id}`, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        });
+        const data = await result.json();
+        console.log('Esto tiene store:', data);
+        return data;
+    } catch (error) {
+        console.error('Error fetching stores:', error);
+        throw new Error('Failed to fetch stores');
+    }
+};
 
 export const getRoles = async () => {
     try {
         const result = await fetch('http://10.2.1.174:35789/admin/roles', {
             method: 'GET',
             headers: new Headers({
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2MjE0NjMzfQ.13JUQNV--JwAGeeu4Sy69uI_IAeR7Togr5yWUnp9dvY'
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2MDM3NDE2fQ.oLMuxhVJLJQOv6LKLnjEolFXwvl0EcNNSh7eesJ_1pU'
             })
         });
         const data = await result.json();
