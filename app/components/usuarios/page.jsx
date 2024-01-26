@@ -36,7 +36,7 @@ const Usuarios = () => {
     const rol_use = []
     const [user_id, setUser_id] = useState([]);
     const [role_id, setRole_id] = useState([]);
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2MTUwODA1fQ.orKYn_oHyvSxKcp7BFyhMxqtFqfBd6mvgLGDmh1KgpQ"
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2MjM3ODcwfQ.wct3jlp4e3A5-YBbr77Nq5MhQt0QM-8kmOXDozrNnqI"
 
 
     async function getUser() {
@@ -265,13 +265,13 @@ const Usuarios = () => {
                                     <Form.Group className="mb-3" as={Row} controlId="formGridEmail">
                                         <Form.Label style={{ fontWeight: "900" }} column sm={5}>Nombre</Form.Label>
                                         <Col sm="8">
-                                        <Form.Control readOnly defaultValue={usu.name} />
-</Col>
+                                            <Form.Control readOnly defaultValue={usu.name} />
+                                        </Col>
                                     </Form.Group>
 
                                 </Col>
 
-                                <Col >
+                                <Col sm={6} >
                                     <Form.Group as={Row} controlId="formGridEmail" className="mb-3">
                                         <Form.Label style={{ fontWeight: "900" }} column sm={5}>Apellido</Form.Label>
                                         <Col sm="8">
@@ -300,13 +300,15 @@ const Usuarios = () => {
 
                                 </Col>
                             </Row>
-                            <Row className="justify-content-md-center">
+                          
 
-                                <Col sm={4}>
-                                    <Button size="lg" type="submit" style={{ backgroundColor: "#f6a700", borderColor: "#f6a700", borderRadius: "30px" }} >Guardar</Button>
+                            <Row className="justify-content-md-end">
+                                <Col sm={6}>
+                                    <Button size="lg" type="submit" style={{ width: "12em", backgroundColor: "#f6a700", borderColor: "#f6a700", borderRadius: "30px" }} >Guardar</Button>
                                     <div >{message ? <p>{message}</p> : null}</div>
-                                </Col>
-                            </Row>
+                                </Col>    
+                                </Row>
+        
 
                         </Container>
 
@@ -335,21 +337,19 @@ const Usuarios = () => {
 
                                         <Col sm="8">
 
-                                            <Form.Control readOnly defaultValue={usu.name} />
+                                            <Form.Control readOnly column  defaultValue={usu.name} />
 
                                         </Col>
 
                                     </Form.Group>
                                 </Col>
 
-                                <Col>
-                                    <Form.Group as={Row} controlId="formGridEmail" htmlFor="mb-3">
-                                        <Form.Label style={{ fontWeight: "900" }} column sm={5}>Apellido</Form.Label>
+                                <Col sm={6}>
+                                    <Form.Group htmlFor="mb-3" as={Row} controlId="formGridEmail">
+                                        <Form.Label style={{ fontWeight: "900" }} column sm={10}>Apellido</Form.Label>
 
                                         <Col sm="8">
-
                                             <Form.Control readOnly defaultValue={usu.username} />
-
 
                                         </Col>
 
@@ -358,11 +358,11 @@ const Usuarios = () => {
 
                             </Row>
                             <Row>
-                                <Col sm={6}>
+                                <Col sm={5}>
                                     <Form.Group htmlFor="mb-3" as={Row} controlId="formGridEmail">
                                         <Form.Label style={{ fontWeight: "900" }} column sm={5}>Usuario</Form.Label>
 
-                                        <Col sm="8">
+                                        <Col sm="12">
 
                                             <Form.Control readOnly defaultValue={usu.username} />
 
@@ -372,11 +372,11 @@ const Usuarios = () => {
 
                                 </Col>
 
-                                <Col >
+                                <Col sm={5}>
                                     <Form.Group as={Row} controlId="formGridEmail" htmlFor="mb-3">
                                         <Form.Label style={{ fontWeight: "900" }} column sm={12}>Correo</Form.Label>
 
-                                        <Col sm="8">
+                                        <Col sm="12">
 
                                             <Form.Control readOnly defaultValue={usu.email} />
 
@@ -388,7 +388,7 @@ const Usuarios = () => {
                             </Row>
 
                             <Row>
-                                <Col sm={6}>
+                                <Col sm={12}>
                                     <Form.Group htmlFor="mb-3" as={Row} controlId="formGridEmail">
                                         <Form.Label style={{ fontWeight: "900" }} column sm={10}>Nueva contraseña</Form.Label>
                                         <Col sm="8">
@@ -399,12 +399,14 @@ const Usuarios = () => {
                                 </Col>
 
                             </Row>
-                            <Row className="justify-content-md-center">
+                            <br></br>
 
-                                <Col sm={4}>
-                                    <Button size="lg" type="submit" style={{ backgroundColor: "#f6a700", borderColor: "#f6a700", borderRadius: "30px" }} >Guardar</Button>
-                                </Col>
-                            </Row>
+                            <Row className="justify-content-md-center">
+                                <Col sm={6}>
+                                    <Button size="lg" type="submit" style={{ width: "15rem", backgroundColor: "#f6a700", borderColor: "#f6a700", borderRadius: "30px" }} >Guardar</Button>
+                                </Col>    
+                                </Row>
+
 
                         </Container>
 
