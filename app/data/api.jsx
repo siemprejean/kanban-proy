@@ -1,4 +1,4 @@
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2MTIwOTA4fQ.G0aVzk1ez0pgn6wTiI1dfjLghJi31aGKigE6i4h5-Ps'
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2MjYzNzUzfQ.WgXStWjTRXRgeazLowLBYHZqL3RXOEZmc-TU1eB4g1c'
 export const getCompanies = async () => {
     try {
         const res = await fetch('http://10.2.1.174:35789/general/companies', {
@@ -101,7 +101,7 @@ export const getRoles = async () => {
         const result = await fetch('http://10.2.1.174:35789/admin/roles', {
             method: 'GET',
             headers: new Headers({
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2MDM3NDE2fQ.oLMuxhVJLJQOv6LKLnjEolFXwvl0EcNNSh7eesJ_1pU'
+                'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2MjYzNzUzfQ.WgXStWjTRXRgeazLowLBYHZqL3RXOEZmc-TU1eB4g1c'
             })
         });
         const data = await result.json();
