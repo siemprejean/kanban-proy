@@ -49,7 +49,7 @@ const NavbarVertical = (props) => {
 						data-bs-target="#navDashboard"
 						aria-expanded={false}
 						aria-controls="navDashboard">
-						{icon ? <span class="nav-icon material-symbols-outlined">
+						{icon ? <span className="nav-icon material-symbols-outlined">
 							{icon}
 						</span> : ''}{' '}
 						{children}
@@ -63,7 +63,7 @@ const NavbarVertical = (props) => {
 						data-bs-toggle="dropdown"
 						data-bs-target="#navDashboard"
 						aria-controls="navDashboard">
-						{icon ? <span class="nav-icon material-symbols-outlined">
+						{icon ? <span className="nav-icon material-symbols-outlined">
 							{icon}
 						</span> : ''}{' '}
 						{children}
@@ -241,7 +241,7 @@ const NavbarVertical = (props) => {
 											<Dropdown drop='end' className='dropdown-sidebar'>
 												<Dropdown.Toggle eventKey={index} variant="secondary" id="dropdown-basic" className='dropdown-sidebar-button'>
 													{typeof menu.icon === 'string' ? (
-														<span class="nav-icon material-symbols-outlined">
+														<span className="nav-icon material-symbols-outlined">
 															{menu.icon}
 														</span>
 
