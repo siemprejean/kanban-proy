@@ -11,6 +11,7 @@ const MuiModal = ({ open, onClose, title, content, customStyles }) => {
         aria-describedby="modal-description"
       >
         <Box sx={{ ...customStyles }}>
+          
           <h4 style={{ fontWeight: "bold" }} id="modal-title" variant="h6" component="h2">{title}</h4>
           <Divider style={{ border: '1px solid' }} />
           <div id="modal-description">
