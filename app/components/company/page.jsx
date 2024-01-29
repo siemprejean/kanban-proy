@@ -21,11 +21,14 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import MuiDialog from "../customcomponent/dialog";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import MuiSelect from "../customcomponent/Select";
-import { useRef } from "react";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 export default function Company() {
+  useEffect(() => {
+    fetchData();
+    fetchCountries();
+ }, []);
   //Variables de estados
   const [open, setOpen, page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -35,9 +38,9 @@ export default function Company() {
   const [isModalCreateOpen, setModalCreateOpen] = useState(false);
   const [data, setData] = useState([]);
   const [preselectedItems, setPreselectedItems] = useState([]);
-  const companyNameRef = useRef();
-  const companyFiscalIdRef = useRef();
-  const companyIdCountryRef = useRef();
+  const [companyName, setcompanyName] = useState('');
+  const [companyFiscalId, setcompanyFiscalId] = useState('');
+  const [companyIdCountry, setcompanyIdCountry] = useState(0);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const openModal = () => setModalOpen(true);
@@ -49,8 +52,16 @@ export default function Company() {
   };
 
   const handleChangeRowsPerPage = (event) => {
+    //setcompanyIdCountry(event.target.value);
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+  const handleChangeCountry = async (event) => {
+    //event.preventDefault();
+    //console.log("esto tiene event", event.target.value)
+    const selectedCountry = event;
+    setcompanyIdCountry(selectedCountry);
+    console.log("esto tiene selectedCountry", selectedCountry)
   };
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -103,9 +114,7 @@ export default function Company() {
   };
   console.log(MuiModal.PropTypes);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  
 
   const fetchData = async () => {
     try {
@@ -113,6 +122,7 @@ export default function Company() {
       const brands = await getBrands();
       const stores = await getStores();
       const employees = await getEmployees();
+      const countries = await getCountries();
       // Asociar marcas a empresas
       const dataWithBrands = companies.map((company) => ({
         ...company,
@@ -129,6 +139,7 @@ export default function Company() {
       }));
       console.log("esto tiene dataWithEmployees ", dataWithEmployees)
       setData(dataWithEmployees);
+      setCountries(countries);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -140,6 +151,7 @@ export default function Company() {
       const brandsd = await getBrands();
       const stores = await getStores();
       const employees = await getEmployees();
+      
       // Asociar marcas a empresa
       const companyWithBrands = {
         ...company,
@@ -168,7 +180,6 @@ export default function Company() {
       const countries = await getCountries();
       setCountries(countries);
 
-
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -178,10 +189,10 @@ export default function Company() {
   const handleCreateCompany = async () => {
     try {
       // Obtener los valores de las refs
-      console.log("Esto tiene companyNameRef ", companyNameRef.current)
-      const companyName = companyNameRef.current.value;
+      /*console.log("Esto tiene companyNameRef ", companyNameRef.current)
+      const companyName = companyNameRef.current ? companyNameRef.current.value : '';
       const companyFiscalId = companyFiscalIdRef.current.value;
-      const companyIdCountry = companyIdCountryRef.current.value;
+      const companyIdCountry = companyIdCountryRef.current.value;*/
 
       console.log("Esto tiene responseData ", {
         name: companyName,
@@ -203,6 +214,8 @@ export default function Company() {
     }
   };
 
+  
+
   const titledialog = (<>
 
     <h4 style={{ color: "black" }}><DeleteForeverIcon style={{ backgroundColor: "white", color: "#FF3D57" }} /> ELIMINAR TIENDA</h4>
@@ -223,15 +236,15 @@ export default function Company() {
     <div>
       <Row style={{ width: "100%" }}>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="Nombre de la Empresa:" inputRef={companyNameRef} type="text"/>
+          <MuiFormControl title="Nombre de la Empresa:" value={companyName} onChange={(e) => setcompanyName()} type="text"/>
         </Col>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="ID Fiscal:" inputRef={companyFiscalIdRef} type="text"/>
+          <MuiFormControl title="ID Fiscal:" value={companyFiscalId} onChange={(e) => setcompanyFiscalId(e.target.value)} type="text"/>
         </Col>
       </Row>
       <Row style={{ width: "100%" }}>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px", width: "100%" }}>
-          <MuiSelect title="Pais:" items={getscountries} selectRef={companyIdCountryRef}/>
+          <MuiSelect title="Pais:" items={getscountries} value={companyIdCountry} onChange={handleChangeCountry}/>
         </Col>
       </Row>
       <Row style={{ width: "100%" }}>
@@ -328,6 +341,7 @@ export default function Company() {
   return (
     <>
       <DashboardLayout className="justify-content-center">
+        
         <Card className="align-items-center justify-content-center g-0 min-vh-100 ">
           <div className='d-flex justify-content-between w-100 m-2'>
             <div className="d-flex align-items-center">
