@@ -1,0 +1,110 @@
+.calendar-container {
+    padding: 12px;
+
+    .card {
+        border: none;
+        -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+        transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+        border-radius: 4px;
+        box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+        overflow: hidden;
+
+        .card-body {
+            padding: 36px;
+
+            .calendar-title {
+                font-weight: 600;
+                margin-bottom: 24px;
+            }
+
+            .calendar-filters {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 2%;
+                flex-wrap: nowrap;
+                width: 100%;
+                margin: 0 auto;
+
+                .col-6 {
+                    width: 48%;
+
+                    .select__control {
+                        height: 56px !important;
+                    }
+                }
+
+                .col-3 {
+                    width: 23%;
+                }
+
+                .calendar-filter {
+                    padding: 0;
+
+                    .css-4jnixx-MuiStack-root {
+                        padding-top: 0;
+
+                        .MuiTextField-root {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+
+            .cal-calendar-content {
+                margin: 40px auto;
+                padding: 0 10%;
+
+                .fc-header-toolbar {
+                    button {
+                        margin: 0px;
+                    }
+
+                    .fc-prev-button,
+                    .fc-dayGridMonth-button {
+                        border-radius: 3px 0 0 3px;
+                    }
+
+                    .fc-next-button,
+                    .fc-dayGridWeek-button {
+                        border-radius: 0px;
+                    }
+
+                    .fc-today-button {
+                        height: 37.16px;
+                        border-radius: 0 3px 3px 0;
+                    }
+
+                    .fc-dayGridDay-button {
+                        border-radius: 0 3px 3px 0;
+                    }
+                }
+
+                // AQUI DEBEN COLCARSE LAS CLASES PARA CAMBIAR LOS COLORES SEGÚN LA CANTIDAD DE DINERO //
+                .fc-event {
+                    padding: 2px;
+                    background-color: #C0FFC3;
+                    border: none;
+                    margin: auto 20px;
+                    text-align: center;
+                    color: black !important;
+
+                    i {
+                        color: #039900;
+                        font-style: normal;
+                        font-weight: 900;
+                    }
+                }
+
+                .fc-col-header-cell-cushion {
+                    color: #000;
+                }
+
+                .fc-daygrid-day-number {
+                    color: #000;
+                }
+            }
+        }
+
+    }
+}
