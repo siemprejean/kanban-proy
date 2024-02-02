@@ -1,4 +1,4 @@
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2NjQwNTUwfQ.WJcCbeRRJNTtC6o-T3dV_gHSXt5KYNzZqzXsxNuOfoU'
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3MDA2MTE4fQ.IhZJVuJnRzC-ife1y25MTOA6XpF4LTVSn4OQAlSPlMg'
 //EndPoints de Empresas
 export const getCompanies = async () => {
     try {
@@ -34,17 +34,22 @@ export const getCompany = async (id) => {
 };
 export const postCompany = async (companyData) => {
     try {
+        console.log("companyData", companyData);
         const response = await fetch('http://10.2.1.174:35789/general/companies/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(companyData),
+            body: JSON.stringify({
+                name: companyData.name,
+                id_country: companyData.id_country
+            }),
         });
 
         if (response.ok) {
             const data = await response.json();
+            console.log("Esto tiene data:", data)
             return data; // Puedes devolver datos adicionales si es necesario
         } else {
             throw new Error('Error al crear la empresa');
@@ -67,6 +72,33 @@ export const getBrands = async () => {
     } catch (error) {
         console.error('Error fetching brands:', error);
         throw new Error('Failed to fetch brands');
+    }
+};
+export const postBrand = async (brandData) => {
+    try {
+        console.log("brandData", brandData);
+        const response = await fetch('http://10.2.1.174:35789/general/brands/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                name: brandData.name,
+                slug: brandData.name,
+                id_company: brandData.id_company
+            }, console.log("brandData", brandData.name)),
+            
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Esto tiene data:", data)
+            return data; // Puedes devolver datos adicionales si es necesario
+        } else {
+            throw new Error('Error al crear la marcas');
+        }
+    } catch (error) {
+        throw new Error('Error en la solicitud:', error);
     }
 };
 export const getRoles = async () => {
