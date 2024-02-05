@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import propTypes from 'prop-types';
 import {
   List,
   ListItem,
@@ -72,10 +72,10 @@ const MuiCheckList = ({ customStyles, title, items, preselectedItems }) => {
 };
 
 MuiCheckList.propTypes = {
-  title: PropTypes.string.isRequired,
-  items: PropTypes.array.isRequired,
-  customStyles: PropTypes.object,
-  preselectedItems: PropTypes.array,
+  title: propTypes.string.isRequired,
+  items: propTypes.array.isRequired,
+  customStyles: propTypes.object,
+  preselectedItems: propTypes.array,
 };
 
 export default MuiCheckList;

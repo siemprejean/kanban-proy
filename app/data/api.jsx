@@ -1,4 +1,4 @@
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2NjQwNTUwfQ.WJcCbeRRJNTtC6o-T3dV_gHSXt5KYNzZqzXsxNuOfoU'
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3MjQ0MTE3fQ.EETpDGDjTwMaiRiDiJUQKgOClWEHz16aIthWBRN7zog'
 //EndPoints de Empresas
 export const getCompanies = async () => {
     try {

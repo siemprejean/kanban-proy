@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Box, Button, Divider }  from '@mui/material';
-import PropTypes from 'prop-types';
+import propTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 //import { propTypes } from 'react-bootstrap/esm/Image';
 const MuiModal = React.memo(({ open, onClose, title, content, customStyles }) => {
@@ -25,12 +25,12 @@ const MuiModal = React.memo(({ open, onClose, title, content, customStyles }) =>
     );
   });
   
-  MuiModal.PropTypes = {
-    open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    title: PropTypes.string.isRequired,
-    content: PropTypes.node.isRequired,
-    customStyles: PropTypes.object,
+  MuiModal.propTypes = {
+    open: propTypes.bool.isRequired,
+    onClose: propTypes.func.isRequired,
+    title: propTypes.string.isRequired,
+    content: propTypes.node.isRequired,
+    customStyles: propTypes.object,
   };
   
   export default MuiModal;
