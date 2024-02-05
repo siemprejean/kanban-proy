@@ -23,6 +23,7 @@
         font-size: 36px !important;
         color: #59adda;
     }
+
 }
 
 .cardDoughnutChart {
@@ -32,4 +33,32 @@
         margin: 0 auto;
         padding: 20px;
     }
+}
+
+.card-configuraciones {
+    .card {
+        padding: 30px;
+        margin: 20px;
+
+        .card-header-row {
+            justify-content: space-between;
+            align-items: end;
+
+            .MuiFormControl-root {
+                width: 35%;
+            }
+
+            .card-header-buttons {
+                width: 35%;
+                display: flex;
+                gap: 2%;
+
+                button {
+                    width: 48%;
+                    padding: 15px;
+                }
+            }
+        }
+    }
+
 }

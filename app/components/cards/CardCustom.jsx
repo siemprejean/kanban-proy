@@ -37,7 +37,6 @@ const CardCustom = (props) => {
     const [typeCard, setTypeCard] = useState(true)
 
     useEffect(() => {
-        console.log(props.data.type)
         if (props.data.type === 'simple' ? setTypeCard(true) : setTypeCard(false));
     })
 

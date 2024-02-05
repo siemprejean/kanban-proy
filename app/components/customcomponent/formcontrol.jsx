@@ -1,22 +1,30 @@
 import propTypes from 'prop-types';
 
-import { FormControl, Input } from '@mui/material';
+import { FormControl, Input, TextField } from '@mui/material';
+import { useCallback } from 'react';
 
-const MuiFormControl = ({ title, value, onChange, type }) => {
+const MuiTextField = ({ title, value, onChange, inputKey, defaultValue }) => {
     console.log("Esto tiene onChange", onChange)
     return (
-        <FormControl variant="outlined" style={{ width: "100%" }}>
+        <FormControl variant="outlined" style={{ width: "100%" }} >
             <h5>{title}</h5>
-            <Input style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }} value={value} onChange={onChange} type={type} />
+            <TextField
+                style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }}
+                defaultValue={defaultValue}
+                value={value}
+                id={inputKey}
+                onChange={onChange}
+                onBlur={() => console.log('El campo ha perdido el foco')}
+                onFocus={() => console.log('El campo ha obtenido el foco')}
+            />
         </FormControl>
 
     );
 
 }
-MuiFormControl.propTypes = {
-    title: propTypes.string.isRequired,
-    value: propTypes.node.isRequired,
-    type: propTypes.string.isRequired,
-    onChange: propTypes.func.isRequired,
+MuiTextField.PropTypes = {
+    title: PropTypes.string.isRequired,
+    value: PropTypes.node.isRequired,
+    onChange: PropTypes.func.isRequired,
 }
-export default MuiFormControl;
+export default MuiTextField;
