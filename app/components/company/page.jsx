@@ -236,7 +236,7 @@ export default function Company() {
     <div>
       <Row style={{ width: "100%" }}>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="Nombre de la Empresa:" value={companyName} onChange={(e) => setcompanyName()} type="text"/>
+          <MuiFormControl title="Nombre de la Empresa:" value={companyName} onChange={(e) => setcompanyName(e.target.value)} type="text"/>
         </Col>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
           <MuiFormControl title="ID Fiscal:" value={companyFiscalId} onChange={(e) => setcompanyFiscalId(e.target.value)} type="text"/>
@@ -361,15 +361,12 @@ export default function Company() {
             <Box sx={{ flexGrow: 1 }}>
               <Grid container spacing={1}>
                 <Grid item xs={8}>
-                  <Item>
                     <FormControl variant="outlined" style={{ width: "100%" }}>
                       <Input style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }} placeholder="Search" />
                       <SearchIcon style={{ width: "15%", right: 0, position: "absolute", margin: "5px", padding: "1px" }} />
                     </FormControl>
-                  </Item>
                 </Grid>
                 <Grid item xs={2}>
-                  <Item >
                     <Button style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => { fetchCountries(), openModalCreate() }}>
                       <AddIcon /> CREAR
                     </Button>
@@ -380,14 +377,11 @@ export default function Company() {
                       content={modalCreate}
                       customStyles={modalStyles}
                     />
-                  </Item>
                 </Grid>
                 <Grid item xs={2}>
-                  <Item>
                     <Button style={{ borderRadius: "10px", backgroundColor: "gray", width: "100%", color: "HighlightText", flex: "auto" }}>
                       <DownloadIcon /> IMPORTAR
                     </Button>
-                  </Item>
                 </Grid>
               </Grid>
             </Box>

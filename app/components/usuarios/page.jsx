@@ -30,13 +30,18 @@ const Usuarios = () => {
     const [gets, setGets] = useState([]);
     const [usu, setUser] = useState([]);
     const [rol, setRoles] = useState([]);
-    const [user_password, setPassword] = useState('');
     const [idModal, setModalid] = useState(null)
     const [message, setMessage] = useState('');
     const rol_use = []
+    const [user_password, setPassword] = useState('');
+    const [remember_password, setRemPass] = useState('');
+    const [username, setUsername] = useState('')
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [id_company, setIdCompany] = useState(null)
     const [user_id, setUser_id] = useState([]);
     const [role_id, setRole_id] = useState([]);
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2MjM3ODcwfQ.wct3jlp4e3A5-YBbr77Nq5MhQt0QM-8kmOXDozrNnqI"
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2NzI0NzMyfQ.Nrdul4D12UrbuMDCLzPVK2VgymwrwCosN8WM1qjxPF4"
 
 
     async function getUser() {
@@ -109,8 +114,11 @@ const Usuarios = () => {
 
 
 
-    async function cambiarPass() {
-
+    let cambiarPass = async (e) => {
+        e.preventDefault();
+        console.log(idModal)
+        console.log("password nuevo" + user_password)
+        console.log(`Form submitted, ${user_password}`);
 
         try {
             const res = await fetch(`http://10.2.1.174:35789/admin/users/update/${idModal}`, {
@@ -118,23 +126,33 @@ const Usuarios = () => {
                 headers: new Headers({
 
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                     'Authorization': 'Bearer ' + token
                 }),
                 body: JSON.stringify({
-
-                    user_password: user_password
+                    name: name,
+                    username: username,
+                    email: email,
+                    user_password: user_password,
+                    remember_password: user_password,
+                    avatar: null,
+                    id_company: id_company
 
                 })
             })
 
             let resJson = await res.json();
             console.log(resJson)
-            console.log("logro put ");
             if (res.status === 200) {
-
+                console.log("logro put ");
+                setName(res.name);
+                setUsername(res.username);
+                setEmail(res.email);
                 setPassword(res.user_password);
+                setIdCompany(res.id_company);
                 setMessage("bien");
             } else {
+
                 setMessage("Ocurrio un error");
             }
         } catch (err) {
@@ -234,7 +252,7 @@ const Usuarios = () => {
                                                     <td> <Badge bg="success">Success</Badge></td>
                                                     <td>{dateFormat(get.created_at, "mmmm d, yyyy ")}</td>
                                                     <td> <Button style={{ backgroundColor: "#03386a" }} onClick={() => { handleShow(); mostrar(get.id) }}>Agregar Rol</Button></td>
-                                                    <td><a onClick={() => { handleShow1(); mostrar(get.id); setUser([]); setModalid(get.id); }}> <LockIcon /> </a></td>
+                                                    <td><a onClick={() => { handleShow1(); mostrar(get.id); setUser([]); setMessage([]); setModalid(get.id); setName(get.name); setUsername(get.username); setEmail(get.email); setIdCompany(get.id_company); setPassword('') }}> <LockIcon /> </a></td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -263,7 +281,7 @@ const Usuarios = () => {
                             <Row>
                                 <Col sm={6}>
                                     <Form.Group className="mb-3" as={Row} controlId="formGridEmail">
-                                        <Form.Label style={{ fontWeight: "900" }} column sm={5}>Nombre</Form.Label>
+                                        <Form.Label style={{ fontWeight: "900" }} sm={5}>Nombre</Form.Label>
                                         <Col sm="8">
                                             <Form.Control readOnly defaultValue={usu.name} />
                                         </Col>
@@ -273,7 +291,7 @@ const Usuarios = () => {
 
                                 <Col sm={6} >
                                     <Form.Group as={Row} controlId="formGridEmail" className="mb-3">
-                                        <Form.Label style={{ fontWeight: "900" }} column sm={5}>Apellido</Form.Label>
+                                        <Form.Label style={{ fontWeight: "900" }} sm={5}>Apellido</Form.Label>
                                         <Col sm="8">
                                             <Form.Control readOnly defaultValue={usu.username} />
 
@@ -287,7 +305,7 @@ const Usuarios = () => {
                             <Row>
                                 <Col sm={6}>
 
-                                    <Form.Label style={{ fontWeight: "900" }} column sm={4}>Roles</Form.Label>
+                                    <Form.Label style={{ fontWeight: "900" }} sm={4}>Roles</Form.Label>
 
                                     {rol.map(role => (
                                         <div key={role.id} className="mb-3">
@@ -300,15 +318,15 @@ const Usuarios = () => {
 
                                 </Col>
                             </Row>
-                          
+
 
                             <Row className="justify-content-md-end">
                                 <Col sm={6}>
                                     <Button size="lg" type="submit" style={{ width: "12em", backgroundColor: "#f6a700", borderColor: "#f6a700", borderRadius: "30px" }} >Guardar</Button>
                                     <div >{message ? <p>{message}</p> : null}</div>
-                                </Col>    
-                                </Row>
-        
+                                </Col>
+                            </Row>
+
 
                         </Container>
 
@@ -332,12 +350,12 @@ const Usuarios = () => {
                         <Container>
                             <Row>
                                 <Col sm={6}>
-                                    <Form.Group htmlFor="mb-3" as={Row} controlId="formGridEmail">
-                                        <Form.Label style={{ fontWeight: "900" }} column sm={5}>Nombre</Form.Label>
+                                    <Form.Group className="mb-3" as={Row} controlId="formGridEmail">
+                                        <Form.Label style={{ fontWeight: "900" }} sm={5}>Nombre</Form.Label>
 
                                         <Col sm="8">
 
-                                            <Form.Control readOnly column  defaultValue={usu.name} />
+                                            <Form.Control readOnly defaultValue={usu.name} />
 
                                         </Col>
 
@@ -345,8 +363,8 @@ const Usuarios = () => {
                                 </Col>
 
                                 <Col sm={6}>
-                                    <Form.Group htmlFor="mb-3" as={Row} controlId="formGridEmail">
-                                        <Form.Label style={{ fontWeight: "900" }} column sm={10}>Apellido</Form.Label>
+                                    <Form.Group className="mb-3" as={Row} controlId="formGridEmail">
+                                        <Form.Label style={{ fontWeight: "900" }} sm={10}>Apellido</Form.Label>
 
                                         <Col sm="8">
                                             <Form.Control readOnly defaultValue={usu.username} />
@@ -358,9 +376,9 @@ const Usuarios = () => {
 
                             </Row>
                             <Row>
-                                <Col sm={5}>
-                                    <Form.Group htmlFor="mb-3" as={Row} controlId="formGridEmail">
-                                        <Form.Label style={{ fontWeight: "900" }} column sm={5}>Usuario</Form.Label>
+                                <Col sm={6}>
+                                    <Form.Group className="mb-3" as={Row} controlId="formGridEmail">
+                                        <Form.Label style={{ fontWeight: "900" }} sm={5}>Usuario</Form.Label>
 
                                         <Col sm="12">
 
@@ -372,9 +390,9 @@ const Usuarios = () => {
 
                                 </Col>
 
-                                <Col sm={5}>
+                                <Col sm={6}>
                                     <Form.Group as={Row} controlId="formGridEmail" htmlFor="mb-3">
-                                        <Form.Label style={{ fontWeight: "900" }} column sm={12}>Correo</Form.Label>
+                                        <Form.Label style={{ fontWeight: "900" }} sm={10}>Correo</Form.Label>
 
                                         <Col sm="12">
 
@@ -389,13 +407,12 @@ const Usuarios = () => {
 
                             <Row>
                                 <Col sm={12}>
-                                    <Form.Group htmlFor="mb-3" as={Row} controlId="formGridEmail">
-                                        <Form.Label style={{ fontWeight: "900" }} column sm={10}>Nueva contraseña</Form.Label>
+                                    <Form.Group className="mb-3" as={Row} >
+                                        <Form.Label style={{ fontWeight: "900" }} sm={10}>Nueva contraseña</Form.Label>
                                         <Col sm="8">
-                                            <Form.Control />
+                                            <Form.Control type="password" defaultValue={user_password} onChange={(e) => setPassword(e.target.value)} />
                                         </Col>
                                     </Form.Group>
-
                                 </Col>
 
                             </Row>
@@ -404,8 +421,9 @@ const Usuarios = () => {
                             <Row className="justify-content-md-center">
                                 <Col sm={6}>
                                     <Button size="lg" type="submit" style={{ width: "15rem", backgroundColor: "#f6a700", borderColor: "#f6a700", borderRadius: "30px" }} >Guardar</Button>
-                                </Col>    
-                                </Row>
+                                    <div >{message ? <p>{message}</p> : null}</div>
+                                </Col>
+                            </Row>
 
 
                         </Container>

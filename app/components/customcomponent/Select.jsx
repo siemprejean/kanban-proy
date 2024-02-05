@@ -1,7 +1,7 @@
 import { FormControl, InputLabel, NativeSelect } from "@mui/material";
 import PropTypes from 'prop-types';
 import { useCallback } from "react";
-const MuiSelect = ({ title, items, values, onChange }) => {
+const MuiSelect = ({ title, items, values, onChange, selectKey }) => {
     console.log("Esto tiene values: ", values)
     console.log("Esto tiene onChange: ", onChange)
     console.log("Esto tiene items: ", items)
@@ -13,13 +13,15 @@ const MuiSelect = ({ title, items, values, onChange }) => {
         [onChange]
       );
     return (
-        <FormControl fullWidth>
+        <FormControl fullWidth onChange={handleChange}>
             <InputLabel variant="standard" htmlFor="uncontrolled-native">
                 {title}
             </InputLabel>
             <NativeSelect
                 value={values}
-                onChange={handleChange}
+                key={selectKey}
+                onBlur={() => console.log('El campo ha perdido el foco')}
+                onFocus={() => console.log('El campo ha obtenido el foco')}
                 inputProps={{
                     name: 'name',
                     id: 'uncontrolled-native',
