@@ -1,24 +1,21 @@
-//
-// Extend from bootstrap
-//
+// .table thead th {
+//   font-weight: 500;
+//   padding: 0.75rem 1.5rem;
+//   text-transform: capitalize;
 
-// Table
+//   font-size: 0.875rem;
+// }
 
+.table-custom-container {
+  margin: 40px 0 0 0;
 
+  .MuiPaper-elevation {
+    padding: 0;
 
-.table .thead-light th{
-  color: $gray-600;
-}
-
-
-
-
-.table thead th {
-  font-weight: 500;
-  padding: 0.75rem 1.5rem;
-  text-transform: capitalize;
-  
-  font-size: 0.875rem;
-  color: $gray-600;
-
+    thead {
+      background-color: ghostwhite;
+      border: none;
+      border-bottom: 2px #c2c2c2 solid;
+    }
+  }
 }
