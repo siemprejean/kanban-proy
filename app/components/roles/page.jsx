@@ -71,19 +71,19 @@ export default function Company() {
   const [data, setData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-        try {
-            const roles = await getRoles();
-           
+      try {
+        const roles = await getRoles();
 
-          console.log("estyo tiene data", data)
-            setData(roles);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
+
+        console.log("estyo tiene data", data)
+        setData(roles);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     };
 
     fetchData();
-}, []);
+  }, []);
   return (
     <>
       <DashboardLayout className="justify-content-center">
@@ -103,7 +103,7 @@ export default function Company() {
           </div>
           <Divider style={{ border: 'double' }} />
           <TabContext value={value}>
-            
+
             <TabList
               value={value}
               onChange={handleChange}
@@ -113,131 +113,131 @@ export default function Company() {
               <Tab value="two" label="Gestionar Permisos" />
             </TabList>
             <CardContent className="p-6" style={{ justifyContent: 'center' }}>
-            <Box sx={{ flexGrow: 1 }}>
-              <Grid container spacing={1}>
-                <Grid item xs={4}>
-                  <Item>
-                    <FormControl variant="outlined" style={{ width: "100%" }}>
-                      <Input style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }} placeholder="Search" />
-                      <SearchIcon style={{ width: "15%", right: 0, position: "absolute", margin: "5px", padding: "1px" }} />
-                    </FormControl>
-                  </Item>
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={1}>
+                  <Grid item xs={4}>
+                    <Item>
+                      <FormControl variant="outlined" style={{ width: "100%" }}>
+                        <Input style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }} placeholder="Search" />
+                        <SearchIcon style={{ width: "15%", right: 0, position: "absolute", margin: "5px", padding: "1px" }} />
+                      </FormControl>
+                    </Item>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Item >
+                      <DetailModal />
+                    </Item>
+                  </Grid>
                 </Grid>
-                <Grid item xs={2}>
-                  <Item >
-                    <DetailModal />
-                  </Item>
-                </Grid>
-              </Grid>
-            </Box>
-          </CardContent>
+              </Box>
+            </CardContent>
             <TabPanel value="one" index={0}>
-            <div style={{ height: 400, width: '100%', align: 'center' }}>
-            <Paper sx={{ width: '100%', margin: 0, padding: '20px' }}>
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead style={{ backgroundColor: 'ghostwhite', border: 'inset' }}>
-                    <TableRow>
-                      <TableCell style={{ fontWeight: "bold" }}>ID</TableCell>
-                      <TableCell style={{ fontWeight: "bold" }} align="right">Nombre</TableCell>
-                      <TableCell style={{ fontWeight: "bold" }} align="right">Descripcion</TableCell>
-                      <TableCell style={{ fontWeight: "bold" }} align="right">Permisos</TableCell>
-                      <TableCell style={{ fontWeight: "bold" }} align="right">Creado En</TableCell>
-                      <TableCell style={{ fontWeight: "bold" }} align="right"></TableCell>
-                      <TableCell style={{ fontWeight: "bold" }} align="right"></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {data.map((row) => (
-                      <TableRow
-                        key={row.name}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {row.id}
-                        </TableCell>
-                        <TableCell align="right">{row.name}</TableCell>
-                        <TableCell align="right">{row.slug}</TableCell>
-                        <TableCell align="right">
-                          <Stack direction="row" spacing={1} alignItems="center">
-                            <Chip label={row.carbs} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />
-                          </Stack>
-                        </TableCell>
-                        <TableCell align="right">{row.protein} </TableCell>
-                        <TableCell align="right"><BasicModal /></TableCell>
-                        <TableCell align="right"><Button style={{ backgroundColor: "#03386a" }}><DeleteOutlineIcon /> </Button></TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </Paper>
-          </div>
+              <div style={{ height: 400, width: '100%', align: 'center' }}>
+                <Paper sx={{ width: '100%', margin: 0, padding: '20px' }}>
+                  <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                      <TableHead style={{ backgroundColor: 'ghostwhite', border: 'inset' }}>
+                        <TableRow>
+                          <TableCell style={{ fontWeight: "bold" }}>ID</TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right">Nombre</TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right">Descripcion</TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right">Permisos</TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right">Creado En</TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right"></TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right"></TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {data.map((row) => (
+                          <TableRow
+                            key={row.name}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {row.id}
+                            </TableCell>
+                            <TableCell align="right">{row.name}</TableCell>
+                            <TableCell align="right">{row.slug}</TableCell>
+                            <TableCell align="right">
+                              <Stack direction="row" spacing={1} alignItems="center">
+                                <Chip label={row.carbs} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />
+                              </Stack>
+                            </TableCell>
+                            <TableCell align="right">{row.protein} </TableCell>
+                            <TableCell align="right"><BasicModal /></TableCell>
+                            <TableCell align="right"><Button style={{ backgroundColor: "#03386a" }}><DeleteOutlineIcon /> </Button></TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <TablePagination
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={rows.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </Paper>
+              </div>
             </TabPanel>
             <TabPanel value="two" index={1}>
-            <div style={{ height: 400, width: '100%', align: 'center' }}>
-            <Paper sx={{ width: '100%', margin: 0, padding: '20px' }}>
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead style={{ backgroundColor: 'ghostwhite', border: 'inset' }}>
-                    <TableRow>
-                      <TableCell style={{ fontWeight: "bold" }}>ID</TableCell>
-                      <TableCell style={{ fontWeight: "bold" }} align="right">Nombre</TableCell>
-                      <TableCell style={{ fontWeight: "bold" }} align="right">Descripcion</TableCell>
-                      <TableCell style={{ fontWeight: "bold" }} align="right">Creado En</TableCell>
-                      <TableCell style={{ fontWeight: "bold" }} align="right">Actualizado En</TableCell>
-                      <TableCell style={{ fontWeight: "bold" }} align="right"></TableCell>
-                      <TableCell style={{ fontWeight: "bold" }} align="right"></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {data.map((row) => (
-                      <TableRow
-                        key={row.name}
-                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {row.id}
-                        </TableCell>
-                        <TableCell align="right">{row.name}</TableCell>
-                        <TableCell align="right">{row.slug}</TableCell>
-                        <TableCell align="right">
-                          <Stack direction="row" spacing={1} alignItems="center">
-                            <Chip label={row.carbs} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />
-                          </Stack>
-                        </TableCell>
-                        <TableCell align="right">{row.protein} </TableCell>
-                        <TableCell align="right"><BasicModal /></TableCell>
-                        <TableCell align="right"><Button style={{ backgroundColor: "#03386a" }}><DeleteOutlineIcon /> </Button></TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </Paper>
-          </div>
+              <div style={{ height: 400, width: '100%', align: 'center' }}>
+                <Paper sx={{ width: '100%', margin: 0, padding: '20px' }}>
+                  <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                      <TableHead style={{ backgroundColor: 'ghostwhite', border: 'inset' }}>
+                        <TableRow>
+                          <TableCell style={{ fontWeight: "bold" }}>ID</TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right">Nombre</TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right">Descripcion</TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right">Creado En</TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right">Actualizado En</TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right"></TableCell>
+                          <TableCell style={{ fontWeight: "bold" }} align="right"></TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {data.map((row) => (
+                          <TableRow
+                            key={row.name}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {row.id}
+                            </TableCell>
+                            <TableCell align="right">{row.name}</TableCell>
+                            <TableCell align="right">{row.slug}</TableCell>
+                            <TableCell align="right">
+                              <Stack direction="row" spacing={1} alignItems="center">
+                                <Chip label={row.carbs} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />
+                              </Stack>
+                            </TableCell>
+                            <TableCell align="right">{row.protein} </TableCell>
+                            <TableCell align="right"><BasicModal /></TableCell>
+                            <TableCell align="right"><Button style={{ backgroundColor: "#03386a" }}><DeleteOutlineIcon /> </Button></TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <TablePagination
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={rows.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </Paper>
+              </div>
             </TabPanel>
           </TabContext>
-         
-    
+
+
         </Card>
       </DashboardLayout >
     </>
