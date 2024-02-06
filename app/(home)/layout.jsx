@@ -11,7 +11,7 @@ import NavbarVertical from '../components/navbar/NavbarVertical';
 import NavbarTop from '../components/navbar/NavbarTop';
 
 export default function DashboardLayout({ children }) {
-	const [showMenu, setShowMenu] = useState(true);
+ 	const [showMenu, setShowMenu] = useState(true);
 	const ToggleMenu = () => {
 		return setShowMenu(!showMenu);
 	};

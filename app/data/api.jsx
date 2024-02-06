@@ -1,4 +1,4 @@
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3MzUwMzY3fQ.HqFWxqt2JWvX9qBgnSHL_1KhIso174-A2BJF_cy45hM'
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3MzEyMTAzfQ.0Pc-zV2cm01NuCOoO7jsT6FiB81yWoQ1AoZ3Z1WLTKE'
 //EndPoints de Empresas
 export const getCompanies = async () => {
     try {
@@ -195,5 +195,24 @@ export const getCountries = async () => {
     } catch (error) {
         console.error('Error fetching countries:', error);
         throw new Error('Failed to fetch countries');
+    }
+};
+
+
+//DETALLE DE EMPLEADO
+export const getEmployee = async () => {
+    try {
+        const result = await fetch(`http://10.2.1.174:35789/general/employees`, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        });
+        const data = await result.json();
+        console.log('Esto tiene empleados:', data);
+        return data; countries
+    } catch (error) {
+        console.error('Error fetching empleados:', error);
+        throw new Error('Failed to fetch empleados');
     }
 };
