@@ -21,9 +21,9 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import MuiDialog from "../customcomponent/dialog";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import MuiSelect from "../customcomponent/Select";
-const Transition = React.forwardRef(function Transition(props, ref) {
+/* const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
-});
+}); */
 export default function Company() {
   useEffect(() => {
     fetchData();
@@ -112,7 +112,7 @@ export default function Company() {
     boxShadow: 24,
     p: 4
   };
-  console.log(MuiModal.PropTypes);
+/*   console.log(MuiModal.propTypes); */
 
   
 
@@ -295,8 +295,8 @@ export default function Company() {
       </Row>
     </div>
   );
-  console.log(MuiModal.PropTypes);
-  console.log(MuiCheckList.propTypes);
+/*   console.log(MuiModal.propTypes);
+  console.log(MuiCheckList.propTypes); */
   const body = (
     <>
       {data.map((row) => (

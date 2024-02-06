@@ -32,18 +32,16 @@ const Usuarios = () => {
     const [rol, setRoles] = useState([]);
     const [idModal, setModalid] = useState(null)
     const [message, setMessage] = useState('');
-    const rol_use = []
     const [user_password, setPassword] = useState('');
-    const [remember_password, setRemPass] = useState('');
     const [username, setUsername] = useState('')
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [id_company, setIdCompany] = useState(null)
-    const [user_id, setUser_id] = useState([]);
     const [role_id, setRole_id] = useState([]);
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2NzI0NzMyfQ.Nrdul4D12UrbuMDCLzPVK2VgymwrwCosN8WM1qjxPF4"
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3MjcyNTczfQ.iecXL18sIquR9gtJ2kVWQTKLfJjQiVzjZWHaVJUeI4I"
+    const [filterValue, setFilterValue] = useState('');
 
-
+    /*MOSTRAR USUARIOS*/
     async function getUser() {
         try {
             const response = await fetch('http://10.2.1.174:35789/admin/users', {
@@ -58,12 +56,15 @@ const Usuarios = () => {
             const result = await response.json();
             console.log(result)
             setGets(result)
+
             return result;
         } catch (err) {
             console.log(err);
         }
     }
 
+
+    /*MOSTRAR ROLES*/
     async function getRol() {
         try {
             const response = await fetch('http://10.2.1.174:35789/admin/roles', {
@@ -91,6 +92,8 @@ const Usuarios = () => {
     }, [])
 
 
+
+    /*MOSTRAR USUARIOS POR ID*/
     let mostrar = async (id) => {
         setUser([])
         try {
@@ -113,7 +116,7 @@ const Usuarios = () => {
     }
 
 
-
+    /*CAMBIAR PASSWORD DE USUSARIO*/
     let cambiarPass = async (e) => {
         e.preventDefault();
         console.log(idModal)
@@ -161,6 +164,7 @@ const Usuarios = () => {
     };
 
 
+    /*ASIGNAR ROLES A USUARIOS*/
     let crearRol_usuario = async (e) => {
         e.preventDefault();
         const checked = e.target.checked;
@@ -168,39 +172,49 @@ const Usuarios = () => {
         console.log(checked); //New Boolean
         console.log("VALOR DEL CHECKED");
         const checkedValue = e.target.value;
-        console.log(checkedValue); //ID del permiso
+        console.log(checkedValue); //ID del rol
         /* const d = datos.map((dat) => dat.idrol); */
 
-
-
         if (checked === true) {
-            let res = await fetch('http://10.2.1.174:35789/admin/users/role_users', {
-                method: "POST",
+            let res = await fetch(`http://10.2.1.174:35789/admin/users/update/${idModal}`, {
+                method:'PUT',
                 headers: new Headers({
 
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token
                 }),
                 body: JSON.stringify({
-                    user_id: user_id,
-                    role_id: checkedValue,
+                    name: name,
+                    username: username,
+                    email: email,
+                    user_password: user_password,
+                    remember_password: user_password,
+                    avatar: null,
+                    id_company: id_company,
+                    roles: checkedValue,
 
                 }),
             });
             let resJson = await res.json();
             if (res.status === 200) {
-                setUser_id(res.user_id);
-                setRole_id(res.role_id);
-            }
+                setName(res.name);
+                setUsername(res.username);
+                setEmail(res.email);
+                setPassword(res.user_password);
+                setIdCompany(res.id_company);
+                setRole_id(res.roles[0])
 
+            }
         }
 
         else {
-
             console.log(checkedValue)
-
         }
     }
+
+    const handleFilterChange = e => {
+        setFilterValue(e.target.value);
+    };
 
 
     return (
@@ -213,7 +227,6 @@ const Usuarios = () => {
                     <Card.Body>
                         <h3>Usuarios </h3>
 
-
                         <Row >
                             <Col xs={5} md={3}>
                                 <Form >
@@ -224,11 +237,9 @@ const Usuarios = () => {
                         <br></br>
                         <Row>
                             <Col >
-
-
                                 <Table responsive >
                                     <thead>
-                                        <tr >
+                                        <tr>
                                             <th> <h5 >ID</h5></th>
                                             <th> <h5 style={{ fontWeight: "900" }}>Usuario</h5></th>
                                             <th> <h5 style={{ fontWeight: "900" }}>Nombre</h5></th>
@@ -249,7 +260,7 @@ const Usuarios = () => {
                                                     <td>{get.name}</td>
                                                     <td>{get.username}</td>
                                                     <td>{get.email}</td>
-                                                    <td> <Badge bg="success">Success</Badge></td>
+                                                    <td>   {get.roles.map((ro, index) => (<Badge key={index} bg="success">{ro.name}</Badge>))} </td>
                                                     <td>{dateFormat(get.created_at, "mmmm d, yyyy ")}</td>
                                                     <td> <Button style={{ backgroundColor: "#03386a" }} onClick={() => { handleShow(); mostrar(get.id) }}>Agregar Rol</Button></td>
                                                     <td><a onClick={() => { handleShow1(); mostrar(get.id); setUser([]); setMessage([]); setModalid(get.id); setName(get.name); setUsername(get.username); setEmail(get.email); setIdCompany(get.id_company); setPassword('') }}> <LockIcon /> </a></td>
@@ -265,6 +276,7 @@ const Usuarios = () => {
                 </Card>
             </Container>
 
+            {/*        MODAL ASIGNAR ROL */}
             <Modal size="md" show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <br></br>
@@ -275,38 +287,30 @@ const Usuarios = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-
                         <Container>
-
                             <Row>
                                 <Col sm={6}>
-                                    <Form.Group className="mb-3" as={Row} controlId="formGridEmail">
+                                    <Form.Group className="mb-3" as={Row} >
                                         <Form.Label style={{ fontWeight: "900" }} sm={5}>Nombre</Form.Label>
                                         <Col sm="8">
                                             <Form.Control readOnly defaultValue={usu.name} />
                                         </Col>
                                     </Form.Group>
-
                                 </Col>
 
                                 <Col sm={6} >
-                                    <Form.Group as={Row} controlId="formGridEmail" className="mb-3">
+                                    <Form.Group as={Row}  className="mb-3">
                                         <Form.Label style={{ fontWeight: "900" }} sm={5}>Apellido</Form.Label>
                                         <Col sm="8">
                                             <Form.Control readOnly defaultValue={usu.username} />
-
                                         </Col>
-
                                     </Form.Group>
                                 </Col>
-
                             </Row>
 
                             <Row>
                                 <Col sm={6}>
-
                                     <Form.Label style={{ fontWeight: "900" }} sm={4}>Roles</Form.Label>
-
                                     {rol.map(role => (
                                         <div key={role.id} className="mb-3">
                                             <Form.Check type='checkbox' >
@@ -326,10 +330,7 @@ const Usuarios = () => {
                                     <div >{message ? <p>{message}</p> : null}</div>
                                 </Col>
                             </Row>
-
-
                         </Container>
-
                     </Form>
 
                 </Modal.Body>
@@ -337,6 +338,7 @@ const Usuarios = () => {
             </Modal>
 
 
+            {/* MODAL CAMBIAR CONTRASEÑA */}
             <Modal size="md" show={show1} onHide={handleClose1}>
                 <Modal.Header closeButton>
                     <br></br>
@@ -350,20 +352,18 @@ const Usuarios = () => {
                         <Container>
                             <Row>
                                 <Col sm={6}>
-                                    <Form.Group className="mb-3" as={Row} controlId="formGridEmail">
+                                    <Form.Group className="mb-3" as={Row} >
                                         <Form.Label style={{ fontWeight: "900" }} sm={5}>Nombre</Form.Label>
 
                                         <Col sm="8">
-
                                             <Form.Control readOnly defaultValue={usu.name} />
-
                                         </Col>
 
                                     </Form.Group>
                                 </Col>
 
                                 <Col sm={6}>
-                                    <Form.Group className="mb-3" as={Row} controlId="formGridEmail">
+                                    <Form.Group className="mb-3" as={Row} >
                                         <Form.Label style={{ fontWeight: "900" }} sm={10}>Apellido</Form.Label>
 
                                         <Col sm="8">
@@ -377,15 +377,11 @@ const Usuarios = () => {
                             </Row>
                             <Row>
                                 <Col sm={6}>
-                                    <Form.Group className="mb-3" as={Row} controlId="formGridEmail">
+                                    <Form.Group className="mb-3" as={Row} >
                                         <Form.Label style={{ fontWeight: "900" }} sm={5}>Usuario</Form.Label>
-
                                         <Col sm="12">
-
                                             <Form.Control readOnly defaultValue={usu.username} />
-
                                         </Col>
-
                                     </Form.Group>
 
                                 </Col>
@@ -395,11 +391,8 @@ const Usuarios = () => {
                                         <Form.Label style={{ fontWeight: "900" }} sm={10}>Correo</Form.Label>
 
                                         <Col sm="12">
-
                                             <Form.Control readOnly defaultValue={usu.email} />
-
                                         </Col>
-
                                     </Form.Group>
                                 </Col>
 
@@ -414,7 +407,6 @@ const Usuarios = () => {
                                         </Col>
                                     </Form.Group>
                                 </Col>
-
                             </Row>
                             <br></br>
 
@@ -424,17 +416,11 @@ const Usuarios = () => {
                                     <div >{message ? <p>{message}</p> : null}</div>
                                 </Col>
                             </Row>
-
-
                         </Container>
 
                     </Form>
-
                 </Modal.Body>
-
             </Modal>
-
-
         </DashboardLayout>
 
 
