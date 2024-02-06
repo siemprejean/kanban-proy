@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
+import propTypes from 'prop-types';
 import {
   List,
   ListItem,
@@ -11,9 +11,13 @@ import {
 } from '@mui/material';
 import Comment from '@mui/icons-material/Comment';
 
-const MuiCheckList = ({ customStyles, title, items }) => {
-  const [checked, setChecked] = React.useState([]);
-
+const MuiCheckList = ({ customStyles, title, items, preselectedItems }) => {
+  const [checked, setChecked] = React.useState(preselectedItems || []);
+  console.log("Esto tiene Checked ", preselectedItems)
+  React.useEffect(() => {
+    // Establecer los elementos preseleccionados cuando cambien
+    setChecked(preselectedItems || []);
+  }, [preselectedItems]);
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
@@ -25,8 +29,9 @@ const MuiCheckList = ({ customStyles, title, items }) => {
     }
 
     setChecked(newChecked);
+    console.log("Esto tiene newChecked ", newChecked)
   };
-console.log("Esto tiene items: ", items)
+  console.log("Esto tiene items: ", items)
   return (
     <List sx={{ ...customStyles }}>
       <h3>{title}</h3>
@@ -44,7 +49,7 @@ console.log("Esto tiene items: ", items)
               }
               disablePadding
             >
-              <ListItemButton role={undefined} onClick={handleToggle(value.id)} dense>
+              <ListItemButton onClick={handleToggle(value.id)}>
                 <ListItemIcon>
                   <Checkbox
                     edge="start"
@@ -67,9 +72,10 @@ console.log("Esto tiene items: ", items)
 };
 
 MuiCheckList.propTypes = {
-  title: PropTypes.string.isRequired,
-  items: PropTypes.array.isRequired,
-  customStyles: PropTypes.object,
+  title: propTypes.string.isRequired,
+  items: propTypes.array.isRequired,
+  customStyles: propTypes.object,
+  preselectedItems: propTypes.array,
 };
 
 export default MuiCheckList;

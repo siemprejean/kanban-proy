@@ -41,26 +41,7 @@ const Home = () => {
             throw new Error('Failed to fetch employee');
         }
     };
-
-    // const getEmployee = async () => {
-    //     try {
-    //         const res = await fetch(`http://10.2.1.174:35789/general/employees`, {
-    //             method: 'GET',
-    //             headers: new Headers({
-    //                 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA1OTk2NDA1fQ.S4eTlMACfm_3wGbZEhww8EYQR8FNCpkqF91PP1l1vuw'
-    //             })
-    //         });
-    //         const data = await res.json();
-    //         setValor(data.length)
-    //         return data;
-    //     }
-    //     catch (error) {
-    //         console.error('Error fetching employee:', error);
-    //         throw new Error('Failed to fetch employee');
-    //     }
-    // };
-
-
+    
     return (
         <>
             <Fragment>

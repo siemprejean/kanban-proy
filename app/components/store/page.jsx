@@ -22,11 +22,6 @@ import { Col, Row } from "react-bootstrap";
 import MuiModal from "../customcomponent/modal";
 import MuiDialog from "../customcomponent/dialog";
 
-function createData(name, calories, fat, carbs, protein) {
-
-  return { name, calories, fat, carbs, protein };
-}
-
 
 export default function Store() {
 
@@ -36,6 +31,11 @@ export default function Store() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalCreateOpen, setModalCreateOpen] = useState(false);
   const [detail, setDetail] = React.useState([]);
+  const [storeName, setStoreName] = useState('');
+  const [storeComision, setStoreComision] = useState('');
+  const [storeRetention, setStoreRetention] = useState('');
+  const [storeExcedent, setStoreExcedent] = useState('');
+  const [storeIncentive, setStoreIncentive] = useState('');
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
   const openModalCreate = () => setModalCreateOpen(true);
@@ -113,23 +113,23 @@ export default function Store() {
     <div>
       <Row style={{ width: "100%" }}>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px", width: "100%" }}>
-          <MuiFormControl title="Nombre de la Tienda:" value={''} style={{ align: "center" }} />
+          <MuiFormControl title="Nombre de la Tienda:" value={storeName} onChange={(e) => setStoreName(e.target.value)} style={{ align: "center" }} />
         </Col>
       </Row>
       <Row style={{ width: "100%" }}>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="Tipo de comisión:" value={''} />
+          <MuiFormControl title="Tipo de comisión:" value={storeComision} onChange={(e) => setStoreComision(e.target.value)} />
         </Col>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="Retención:" value={''} />
+          <MuiFormControl title="Retención:" value={storeRetention} onChange={(e) => setStoreRetention(e.target.value)} />
         </Col>
       </Row>
       <Row style={{ width: "100%" }}>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="Excedente:" value={''} />
+          <MuiFormControl title="Excedente:" value={storeExcedent} onChange={(e) => setStoreExcedent(e.target.value)} />
         </Col>
         <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="Incentivo de domingos:" value={''} />
+          <MuiFormControl title="Incentivo de domingos:" value={storeIncentive} onChange={(e) => setStoreIncentive(e.target.value)} />
         </Col>
       </Row>
       <Row style={{ width: "100%" }}>
@@ -254,15 +254,12 @@ export default function Store() {
             <Box sx={{ flexGrow: 1 }}>
               <Grid container spacing={1}>
                 <Grid item xs={8}>
-                  <Item>
                     <FormControl variant="outlined" style={{ width: "100%" }}>
                       <Input style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }} placeholder="Search" />
                       <SearchIcon style={{ width: "15%", right: 0, position: "absolute", margin: "5px", padding: "1px" }} />
                     </FormControl>
-                  </Item>
                 </Grid>
                 <Grid item xs={2}>
-                  <Item >
                     <Button style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => { openModalCreate() }}>
                       <AddIcon /> CREAR
                     </Button>
@@ -273,14 +270,11 @@ export default function Store() {
                       content={modalCreate}
                       customStyles={modalStyles}
                     />
-                  </Item>
                 </Grid>
                 <Grid item xs={2}>
-                  <Item>
                     <Button style={{ borderRadius: "10px", backgroundColor: "gray", width: "100%", color: "HighlightText", flex: "auto" }}>
                       <DownloadIcon /> IMPORTAR
                     </Button>
-                  </Item>
                 </Grid>
               </Grid>
             </Box>

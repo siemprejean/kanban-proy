@@ -36,7 +36,7 @@ const NavbarVertical = (props) => {
 			console.log('totally custom!')
 		);
 		const isCurrentEventKey = activeEventKey === eventKey;
-		console.log(showMenu)
+		// console.log(showMenu)
 
 		return (
 			<li className="nav-item">

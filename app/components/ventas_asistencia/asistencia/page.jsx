@@ -102,7 +102,7 @@ const Asistencia = () => {
       <DemoContainer components={['DatePicker']}>
 	  <DatePicker
           label={'Mes'}
-          openTo="monthr"
+          openTo="month"
           views={['month']}
         />
       </DemoContainer>

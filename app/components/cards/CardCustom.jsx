@@ -37,7 +37,6 @@ const CardCustom = (props) => {
     const [typeCard, setTypeCard] = useState(true)
 
     useEffect(() => {
-        console.log(props.data.type)
         if (props.data.type === 'simple' ? setTypeCard(true) : setTypeCard(false));
     })
 
@@ -85,22 +84,6 @@ const CardCustom = (props) => {
                     </Card>
                 )}
         </>
-        // <Card sx={{ maxWidth: 345 }}>
-        //     <CardHeader className='dashboard-card'
-        //         avatar={
-        //             <span class="nav-icon material-symbols-outlined">
-        //                 {props.data.icon}
-        //             </span>
-        //         }
-        //         action={
-        //             <IconButton aria-label="settings">
-        //                 <ArrowRightAltIcon />
-        //             </IconButton>
-        //         }
-        //         title={props.data.titulo}
-        //         subheader={props.data.valor}
-        //     />            
-        // </Card>
     );
 }
 export default CardCustom;
