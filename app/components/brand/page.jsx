@@ -18,22 +18,31 @@ import MuiModal from "../customcomponent/modal";
 import MuiTable from "../customcomponent/table";
 import MuiTextField from "../customcomponent/formcontrol";
 import MuiCheckList from "../customcomponent/checklist";
-import { getBrand, getBrands, getCompanies, getStores, postBrand } from "@/app/data/api";
+import { getBrand, getBrands, getCompanies, getStores, postBrand, putBrand } from "@/app/data/api";
 import MuiDialog from "../customcomponent/dialog";
 import MuiSelect from "../customcomponent/Select";
+import { VerifiedOutlined } from "@mui/icons-material";
 
 export default function Brand() {
-    const [open, setOpen, page, setPage] = useState(0);
+    useEffect(() => {
+        fetchData();
+    }, []);
+    const [open, setOpen] = useState(0);
+    const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [detail, setDetail] = useState([]);
     const [getsstores, setStores] = useState([]);
     const [companyId, setCompanyID] = useState(0);
     const [brandName, setBrandName] = useState('');
+    const [updateBrandName, setUpdateBrandName] = useState('');
     const [getsCompanies, setCompanies] = useState([]);
     const [isModalCreateOpen, setModalCreateOpen] = useState(false);
     const [isModalOpen, setModalOpen] = useState(false);
     const [preselectedItems, setPreselectedItems] = useState([]);
     const [data, setData] = useState([]);
+    const [successModalOpen, setSuccessModalOpen] = useState(false);
+    const [message, setMessage] = useState('');
+    const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal() };
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const openModal = () => setModalOpen(true);
@@ -92,29 +101,42 @@ export default function Brand() {
             setBrandName(event.target.value);
             console.log("Esto tiene event.target.value: ", event.target.value)
         };
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const companies = await getCompanies();
-                const brands = await getBrands();
-                const stores = await getStores();
+    const handleRowClick = async (brandId) => {
+        try {
+            await fetchDetail(brandId); // Obtener detalles de la empresa
+            openModal(); // Abrir el modal después de obtener los detalles
+        } catch (error) {
+            console.error('Error fetching brand details:', error);
+        }
+    };
+    const handleRow1Click = async (brandId) => {
+        try {
+            console.log('brandId:', brandId);
+            //await fetchDetail(companyId); // Obtener detalles de la empresa
+            handleOpen(); // Abrir el modal después de obtener los detalles
+        } catch (error) {
+            console.error('Error fetching brand details:', error);
+        }
+    };
 
-                // Asociar tiendas a marcas
-                const dataWithStores = brands.map((brand) => ({
-                    ...brand,
-                    stores: stores.filter((store) => store.id_brand === brand.id),
-                }));
-                setCompanies(companies);
-                setData(dataWithStores);
-                console.log("Esto tiene compañia", companies)
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
+    const fetchData = async () => {
+        try {
+            const companies = await getCompanies();
+            const brands = await getBrands();
+            const stores = await getStores();
 
-        fetchData();
-    }, []);
-
+            // Asociar tiendas a marcas
+            const dataWithStores = brands.map((brand) => ({
+                ...brand,
+                stores: stores.filter((store) => store.id_brand === brand.id),
+            }));
+            setCompanies(companies);
+            setData(dataWithStores);
+            console.log("Esto tiene marca", companies)
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
     async function onSubmit() {
         //event.preventDefault();
         try {
@@ -131,29 +153,37 @@ export default function Brand() {
             });
             console.log("Esto tiene responseData ", responseData)
             // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-            console.log('Empresa creada exitosamente:', responseData);
+            console.log('Marca creada exitosamente:', responseData);
+            setMessage("Marca creada exitosamente!!");
+            setSuccessModalOpen(true);
+            closeModalCreate();
+            fetchData();
         } catch (error) {
             // Manejar errores en caso de que la creación falleç
             console.error('Error al crear la marca:', error.message);
         }
     }
-    async function updateBrand() {
+    async function updateBrand(id) {
         //event.preventDefault();
         try {
+            console.log("Esto tiene id: ", id)
             console.log("Esto tiene responseData ", {
-                name: brandName,
-                slug: brandName,
+                name: updateBrandName,
+                slug: updateBrandName,
                 id_company: companyId,
             })
             // Llamar a la función en api/empresas.js para crear una nueva empresa
-            let responseData = await postBrand({
-                name: brandName,
-                slug: brandName,
+            let responseData = await putBrand({
+                name: updateBrandName,
+                slug: updateBrandName,
                 id_company: companyId,
-            });
+            }, id);
             console.log("Esto tiene responseData ", responseData)
             // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-            console.log('Empresa creada exitosamente:', responseData);
+            console.log('Marca actualizada exitosamente:', responseData);
+            setMessage("Marca actualizada exitosamente!!");
+            setSuccessModalOpen(true);
+            fetchData();
         } catch (error) {
             // Manejar errores en caso de que la creación falleç
             console.error('Error al crear la marca:', error.message);
@@ -173,7 +203,8 @@ export default function Brand() {
                 .map((brand) => brand.id);
             setPreselectedItems(preselectedStores);
             setDetail(brandWithstores);
-
+            setUpdateBrandName(brandWithstores.name);
+            setCompanyID(brandWithstores.id_company);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -203,6 +234,19 @@ export default function Brand() {
         <DialogContentText style={{ color: "black" }}>
             ¿Esta seguro que desea eliminar esta tienda?
         </DialogContentText>);
+
+    const titledialogSucces = (<>
+        <h4 style={{ color: "black" }}><VerifiedOutlined style={{ backgroundColor: "white", color: "#FF3D57" }} /> REGISTRO EXITOSO</h4>
+        <Divider style={{ border: '1px solid', color: "#AAAAAA" }} />
+    </>
+    );
+    const actionsSucces = (
+        <Button style={{ backgroundColor: "#FF3D57", color: "white", borderRadius: "20px", border: "outset" }} onClick={handleCloseSuccessModal}>ACEPTAR</Button>
+    );
+    const contentDialogSucces = (
+        <DialogContentText style={{ color: "black" }}>
+            {message}
+        </DialogContentText>);
     const modalCreate = (
         <div>
             <Row style={{ width: "100%" }}>
@@ -212,14 +256,15 @@ export default function Brand() {
             </Row>
             <Row style={{ width: "100%" }}>
                 <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-                    <MuiSelect title="Empresa" items={getsCompanies} values={companyId} customStyles={listStyles} onChange={(event) => setCompanyID(event)} selectKey={'MuiSelect'} />
+                    <MuiSelect title="Empresa" items={getsCompanies} values={companyId} customStyles={listStyles} onChange={(event) => setCompanyID(parseInt(event))} selectKey={'MuiSelect'} />
                 </Col>
             </Row>
             <Row style={{ width: "100%" }}>
                 <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-                    <Button style={{ borderRadius: "10px", backgroundColor: "#FFAF38", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => { onSubmit(); closeModalCreate }}>
+                    <Button style={{ borderRadius: "10px", backgroundColor: "#FFAF38", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => { onSubmit() }}>
                         <SaveIcon /> GUARDAR
                     </Button>
+                    <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} />
                 </Col>
                 <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
                     <Button style={{ borderRadius: "10px", backgroundColor: "gray", width: "100%", color: "HighlightText", flex: "auto" }} onClick={closeModalCreate}>
@@ -233,7 +278,7 @@ export default function Brand() {
         <div>
             <Row style={{ width: "100%" }}>
                 <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px", width: "100%" }}>
-                    <MuiTextField title="Nombre de la Marca:" value={detail.name} onChange={handleChange} inputKey={'MuiTextField'} />
+                    <MuiTextField title="Nombre de la Marca:" value={updateBrandName} onChange={(e) => setUpdateBrandName(e.target.value)} type="text" />
                 </Col>
             </Row>
             <Row style={{ width: "100%" }}>
@@ -243,7 +288,7 @@ export default function Brand() {
             </Row>
             <Row style={{ width: "100%" }}>
                 <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-                    <Button style={{ borderRadius: "10px", backgroundColor: "#FFAF38", width: "100%", color: "HighlightText", flex: "auto" }} onClick={updateBrand}>
+                    <Button style={{ borderRadius: "10px", backgroundColor: "#FFAF38", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => updateBrand(detail.id)}>
                         <SaveIcon /> GUARDAR
                     </Button>
                 </Col>
@@ -255,9 +300,10 @@ export default function Brand() {
             </Row>
         </div>
     );
+
     const body = (
         <>
-            {data.map((row) => (
+            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                 <TableRow
                     key={row.id}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -274,25 +320,25 @@ export default function Brand() {
                     </TableCell>
                     <TableCell align="center">Panama</TableCell>
                     <TableCell align="center">
-                        <Button style={{ backgroundColor: "#03386a", color: "HighlightText" }} onClick={() => { fetchDetail(row.id); openModal() }}><EditIcon /> </Button>
-                        <MuiModal
-                            open={isModalOpen}
-                            onClose={closeModal}
-                            title="EDITAR MARCA"
-                            content={modalContent}
-                            customStyles={modalStyles}
-                        />
+                        <Button style={{ backgroundColor: "#03386a", color: "HighlightText" }} onClick={() => { handleRowClick(row.id) }}><EditIcon /> </Button>
                     </TableCell>
                     <TableCell align="center">
                         <React.Fragment>
-                            <Button style={{ backgroundColor: "#FF3D57", color: "HighlightText" }} onClick={handleOpen}>
+                            <Button style={{ backgroundColor: "#FF3D57", color: "HighlightText" }} onClick={() => { handleRow1Click(row.id) }}>
                                 <DeleteOutlineIcon />
                             </Button>
-                            <MuiDialog open={open} onClose={handleClose} title={titledialog} content={contentDialog} actions={actions} />
                         </React.Fragment>
                     </TableCell>
                 </TableRow>
             ))}
+            <MuiModal
+                open={isModalOpen}
+                onClose={closeModal}
+                title="EDITAR MARCA"
+                content={modalContent}
+                customStyles={modalStyles}
+            />
+            <MuiDialog open={open} onClose={handleClose} title={titledialog} content={contentDialog} actions={actions} />
         </>
     );
     return (
@@ -342,10 +388,9 @@ export default function Brand() {
                                 </Grid>
                             </Grid>
                         </Box>
-
                     </CardContent>
                     {<div style={{ height: 400, width: '100%', align: 'center' }}>
-                        <MuiTable columns={columnsTable} body={body} rowsPerPage={rowsPerPage} page={page} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} count={data.count} />
+                        <MuiTable columns={columnsTable} body={body} rowsPerPage={rowsPerPage} page={page} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} count={data.length} />
                     </div>}
                 </Card>
             </DashboardLayout >

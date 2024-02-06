@@ -41,7 +41,7 @@ const Usuarios = () => {
     const [id_company, setIdCompany] = useState(null)
     const [user_id, setUser_id] = useState([]);
     const [role_id, setRole_id] = useState([]);
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2NzI0NzMyfQ.Nrdul4D12UrbuMDCLzPVK2VgymwrwCosN8WM1qjxPF4"
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3MjQ4MTE1fQ.hqroioPWD-oBHRFWkDN6-wI2pCElIofLv4fpup5IK0Y"
 
 
     async function getUser() {
