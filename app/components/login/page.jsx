@@ -1,59 +1,70 @@
 'use client'
-
-// import node module libraries
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import axios from "axios";
 import { Row, Col, Card, Form, Button, Image } from 'react-bootstrap';
-import Link from 'next/link';
+import 'styles/theme/components/_login.scss';
 
 
-// import hooks
-import useMounted from 'hooks/useMounted';
 
-const SignIn = () => {
-    const hasMounted = useMounted();
-    return (
+const Formulario = () => {
 
+    const { register, formState: { errors, isSubmitting }, handleSubmit } = useForm();
+    const enviar = async (data) => {
+        const body = {
+            email: data.usuario,
+            user_password: data.contraseña
+        }
+        console.log(data)
 
-        <Row className=" align-items-center justify-content-center g-0 min-vh-100 " style={{ backgroundImage: `url(${"./images/Screenshot_2.jpg"})`, backgroundSize: "cover" }}>
-            <Col xxl={4} lg={6} md={8} xs={12} className="py-8 py-xl-0">
-                {/* Card */}
-                <Card style={{ borderRadius: "25px" }} className="smooth-shadow-md">
-                    {/* Card body */}
-                    <Card.Body className="p-6">
-                        <div className="mb-4 rounded mx-auto d-block">
-                            <Link href="/"><Image src="/images/logos/TEMIS - ATENEA LOGO_Temis solo.png" style={{ width: "300px" }} class="rounded mx-auto d-block" className="mb-2" alt="" /></Link>
-                            <p style={{ fontSize: "x-large", color: "black", fontWeight: "bold" }} class="text-center" >Inicio de Sesión</p>
+        const resp = await fetch("http://10.2.1.174:35789/admin/users/login", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(body)
+        })
+        console.log(resp)
+
+    }
+
+    return <div style={{ backgroundImage: `url(${"../images/Screenshot_2.jpg"})`, backgroundSize: "cover", height: "100vh" }}>
+        <div style={{ paddingTop: "100px" }}>
+            <Card style={{ width: '25rem', height: '25rem', margin: 'auto', borderRadius: "20px" }} className="smooth-shadow-md">
+                <Card.Body >
+                    <Image src="/images/logos/TEMIS - ATENEA LOGO_Temis solo.png" style={{ width: "250px" }} className="rounded mx-auto d-block mb-6"></Image>
+                    <Card.Title style={{ fontSize: "x-large", color: "black", fontWeight: "800", textAlign: "center", font: "inter", fontWeight: "800" }} >Inicio de Sesión</Card.Title>
+                    <form onSubmit={handleSubmit(enviar)}
+                    >
+                        
+                        <div>
+
+                            <input className="mb-4" style={{ borderRadius: "8px", borderColor: "#4791db", borderWidth: "2px", marginLeft: "2rem", padding: "10px 50px" }} type="email"  {...register('usuario', { required: true, maxLength: 20, })} placeholder="Usuario" />
+                            {errors.usuario?.type === 'required' && <p>Ingrese su usuario</p>}
+                            {errors.usuario?.type === 'maxLenght' && <p>Recuerde que son solo 8 caracteres</p>}
                         </div>
-                        {/* Form */}
-                        {hasMounted &&
-                            <Form>
-                                {/* Username */}
-                                <Form.Group className="mb-3" controlId="username">
+                        <div>
 
-                                    <Form.Control style={{ borderRadius: "10px", borderColor: "#4791db", borderWidth: "2px" }} type="email" name="username" placeholder="Usuario" required="" />
-                                </Form.Group>
+                            <input className="mb-4" style={{ borderRadius: "8px", borderColor: "#4791db", borderWidth: "2px", marginLeft: "2rem", padding: "10px 50px" }} type="password"  {...register('contraseña', { required: true, maxLenght: 20, })} placeholder="Contraseña" />
+                            {errors.contraseña?.type === 'required' && <p>Ingrese su password</p>}
+                            {errors.contr?.type === 'maxLength' && <p>Recuerde que son solo 8 caracteres</p>}
+                        </div>
+                        <button className="loginbutton" disabled={isSubmitting} style={{ borderRadius: "10px", backgroundColor: "#03386a", color: "white", marginLeft: "2rem", padding: "10px 85px", }} type="submit">{isSubmitting ? "Cargando..." : "INICIAR SESIÓN"}</button>
 
-                                {/* Password */}
-                                <Form.Group className="mb-3" controlId="password">
+                    </form>
 
-                                    <Form.Control style={{ borderRadius: "10px", borderColor: "#4791db", borderWidth: "2px" }} type="password" name="password" placeholder="Contraseña" required="" />
-                                </Form.Group>
-
-                                <div>
-                                    {/* Button */}
-                                    <div className="d-grid">
-                                        <Button variant="primary" type="submit" style={{ borderRadius: "10px", backgroundColor: "#03386a" }}>INICIAR SESIÓN</Button>
-                                    </div>
-
-                                </div>
-                            </Form>}
+                </Card.Body>
+            </Card>
+        </div>
+    </div>
 
 
-                    </Card.Body>
-                </Card>
-            </Col>
-        </Row>
-    )
+
+
+
+
+
 }
 
-
-export default SignIn
+export default Formulario;

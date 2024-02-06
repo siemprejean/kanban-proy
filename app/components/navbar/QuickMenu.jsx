@@ -10,6 +10,7 @@ import {
     ListGroup,
 } from 'react-bootstrap';
 
+
 // simple bar scrolling used for notification item scrolling
 import SimpleBar from 'simplebar-react';
 // import 'simplebar/dist/simplebar.min.css';
@@ -122,7 +123,7 @@ const QuickMenu = () => {
                             <i className="fe fe-settings me-2"></i> Account Settings
                         </Dropdown.Item>
                         <Dropdown.Item>
-                            <i className="fe fe-power me-2"></i>Sign Out
+                        <Link href="/components/login" className="fe fe-power " >Sign Out</Link>
                         </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
@@ -202,7 +203,7 @@ const QuickMenu = () => {
                             <i className="fe fe-settings me-2"></i> Account Settings
                         </Dropdown.Item>
                         <Dropdown.Item>
-                            <i className="fe fe-power me-2"></i>Sign Out
+                            <Link href="/components/login" className="fe fe-power " >Sign Out</Link>
                         </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>

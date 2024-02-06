@@ -24,7 +24,7 @@ import MuiSelect from "../customcomponent/Select";
 import { VerifiedOutlined } from "@mui/icons-material";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
-});
+}); 
 export default function Company() {
   useEffect(() => {
     fetchData();
@@ -119,7 +119,7 @@ export default function Company() {
     boxShadow: 24,
     p: 4
   };
-  console.log(MuiModal.PropTypes);
+/*   console.log(MuiModal.propTypes); */
 
 
 

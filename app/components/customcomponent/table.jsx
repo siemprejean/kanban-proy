@@ -32,7 +32,7 @@ const MuiTable = ({ columns, body, rowsPerPage, page, handleChangePage, handleCh
     );
 };
 
-/*MuiTable.PropTypes = {
+MuiTable.PropTypes = {
     columns: PropTypes.arrayOf(
         PropTypes.shape({
           label: PropTypes.string.isRequired,
@@ -44,7 +44,7 @@ const MuiTable = ({ columns, body, rowsPerPage, page, handleChangePage, handleCh
       body: PropTypes.node.isRequired,
       rowsPerPage: PropTypes.number.isRequired,
       page: PropTypes.number.isRequired,
-      handleChangePage: PropTypes.func.isRequired,
-      handleChangeRowsPerPage: PropTypes.func.isRequired,
-}*/
+      //handleChangePage: PropTypes.func.isRequired,
+      //handleChangeRowsPerPage: PropTypes.func.isRequired,
+}
 export default MuiTable;

@@ -1,0 +1,33 @@
+.card-configuraciones {
+    .modal-config-container {
+        right: 25vw !important;
+        height: 50vh;
+        width: 50vw;
+        top: 15vh;
+        border-radius: 5px;
+        border: none;
+
+        h4 {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .modal-description {
+            .modal-content {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+    }
+}
+
+.modal-col-12{
+
+}
+
+.modal-col-6{
+    
+}

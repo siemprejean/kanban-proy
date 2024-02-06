@@ -66,51 +66,51 @@ const Asistencia = () => {
 		<DashboardLayout>
 
 			<Fragment>
-				<Container fluid className="p-12">
+				<Container fluid className="calendar-container">
 
 					<Card  >
 						<Card.Body>
-							<h5 style={{ fontWeight: "900" }}>Asistencia de personal en tienda </h5>
+						<h4 className="calendar-title">Asistencia de personal en tienda </h4>
 
-							<Row >
-								<Col xs={6} md={4}>
+							<Row className="calendar-filters">
+								<Col xs={6} className="calendar-filter">
 									<Select
 
 										isMulti
-										name="colors"
+										name="tiendas"
 										options={colourOptions}
 										className="basic-multi-select"
 										classNamePrefix="select"
 									/>
 								</Col>
 
-								<Col xs={6} md={3}>
-								<LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker']}>
-	  <DatePicker
-          label={'Año'}
-          openTo="year"
-          views={['year']}
-        />
-      </DemoContainer>
-    </LocalizationProvider>
-								
+								<Col xs={3} className="calendar-filter">
+									<LocalizationProvider dateAdapter={AdapterDayjs}>
+										<DemoContainer components={['DatePicker']}>
+											<DatePicker
+												label={'Año'}
+												openTo="year"
+												views={['year']}
+											/>
+										</DemoContainer>
+									</LocalizationProvider>
+
 								</Col>
 
-								<Col xs={6} md={3}>
-								<LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker']}>
-	  <DatePicker
-          label={'Mes'}
-          openTo="month"
-          views={['month']}
-        />
-      </DemoContainer>
-    </LocalizationProvider>
+								<Col  xs={3} className="calendar-filter">
+									<LocalizationProvider dateAdapter={AdapterDayjs}>
+										<DemoContainer components={['DatePicker']}>
+											<DatePicker
+												label={'Mes'}
+												openTo="month"
+												views={['month']}
+											/>
+										</DemoContainer>
+									</LocalizationProvider>
 								</Col>
 							</Row>
 							<br></br>
-							<Row >
+							<Row className="cal-calendar-content">
 								<Col md={12} >
 									<FullCalendar
 										headerToolbar={{
@@ -233,12 +233,12 @@ const Asistencia = () => {
 								<Table responsive>
 									<thead>
 										<tr>
-											<th style={{fontWeight: "900" }}>ID</th>
-											<th style={{fontWeight: "900" }}>Usuario</th>
-											<th style={{fontWeight: "900" }}>Nombre</th>
-											<th style={{fontWeight: "900" }}>Apellido</th>
-											<th style={{fontWeight: "900" }}>Correo</th>
-											<th style={{fontWeight: "900" }}>Roles</th>
+											<th style={{ fontWeight: "900" }}>ID</th>
+											<th style={{ fontWeight: "900" }}>Usuario</th>
+											<th style={{ fontWeight: "900" }}>Nombre</th>
+											<th style={{ fontWeight: "900" }}>Apellido</th>
+											<th style={{ fontWeight: "900" }}>Correo</th>
+											<th style={{ fontWeight: "900" }}>Roles</th>
 
 
 										</tr>
