@@ -38,8 +38,7 @@ const Usuarios = () => {
     const [email, setEmail] = useState('')
     const [id_company, setIdCompany] = useState(null)
     const [role_id, setRole_id] = useState([]);
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3MjcyNTczfQ.iecXL18sIquR9gtJ2kVWQTKLfJjQiVzjZWHaVJUeI4I"
-    const [filterValue, setFilterValue] = useState('');
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2NzI0NzMyfQ.Nrdul4D12UrbuMDCLzPVK2VgymwrwCosN8WM1qjxPF4"
 
     /*MOSTRAR USUARIOS*/
     async function getUser() {

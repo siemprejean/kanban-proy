@@ -15,15 +15,16 @@ const MuiTextField = ({ title, value, onChange, inputKey, defaultValue, classNam
                 onChange={onChange} 
                 onBlur={() => console.log('El campo ha perdido el foco')}
                 onFocus={() => console.log('El campo ha obtenido el foco')}
+                htmlFor="uncontrolled-native"
             />
         </FormControl>
 
     );
 
 }
-MuiTextField.PropTypes = {
+/*MuiTextField.PropTypes = {
     title: PropTypes.string.isRequired,
     value: PropTypes.node.isRequired,
     onChange: PropTypes.func.isRequired,
-}
+}*/
 export default MuiTextField;

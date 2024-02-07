@@ -35,10 +35,10 @@ const MuiSelect = ({ title, items, values, onChange, selectKey }) => {
         </FormControl>
     );
 }
-MuiSelect.PropTypes = {
+/*MuiSelect.PropTypes = {
     title: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
     values: PropTypes.node.isRequired,
     onChange: PropTypes.func.isRequired,
-};
+};*/
 export default MuiSelect;

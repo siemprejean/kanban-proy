@@ -71,11 +71,11 @@ const MuiCheckList = ({ customStyles, title, items, preselectedItems }) => {
   );
 };
 
-MuiCheckList.propTypes = {
-  title: propTypes.string.isRequired,
-  items: propTypes.array.isRequired,
-  customStyles: propTypes.object,
-  preselectedItems: propTypes.array,
-};
+/*MuiCheckList.propTypes = {
+  title: PropTypes.string.isRequired,
+  items: PropTypes.array.isRequired,
+  customStyles: PropTypes.object,
+  preselectedItems: PropTypes.array,
+};*/
 
 export default MuiCheckList;

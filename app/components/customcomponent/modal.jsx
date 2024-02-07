@@ -2,8 +2,6 @@ import React from 'react';
 import { Modal, Box, Button, Divider } from '@mui/material';
 import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
-import Backdrop from '@mui/material/Backdrop';
-import 'styles/theme/components/_modal.scss';
 //import { propTypes } from 'react-bootstrap/esm/Image';
 const MuiModal = React.memo(({ open, onClose, title, content, customStyles }) => {
   console.log("Esto tiene open", open);
@@ -12,7 +10,6 @@ const MuiModal = React.memo(({ open, onClose, title, content, customStyles }) =>
     <Modal
       open={open}
       onClose={onClose}
-      closeAfterTransition
       disableAutoFocus={() => console.log('El modal ha perdido el foco')}
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
@@ -32,12 +29,12 @@ const MuiModal = React.memo(({ open, onClose, title, content, customStyles }) =>
   );
 });
 
-MuiModal.props = {
+/*MuiModal.props = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   content: PropTypes.node.isRequired,
   customStyles: PropTypes.object,
-};
+};*/
 
 export default MuiModal;

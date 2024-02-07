@@ -25,13 +25,13 @@ const MuiDialog = ({ open, onClose, title, content, actions }) => {
         </Dialog>
     );
 };
-MuiDialog.PropTypes = {
+/*MuiDialog.PropTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     title: PropTypes.node.isRequired,
     content: PropTypes.node.isRequired,
     actions: PropTypes.node.isRequired,
     customStyles: PropTypes.object,
-};
+};*/
 
 export default MuiDialog;
