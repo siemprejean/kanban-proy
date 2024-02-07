@@ -1,4 +1,4 @@
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3MzU0MjExfQ.XEvQzoHdoeu-qRcRzWwrBcXmRXLowJG7sF1-YfN8HMc'
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3Mzg0Mjg0fQ.s7bHGMxqVlM8PuxdUtxuc-jcTBLVXNNkIKLaJGrqUKc'
 //EndPoints de Empresas
 export const getCompanies = async () => {
     try {
@@ -35,20 +35,50 @@ export const getCompany = async (id) => {
 export const postCompany = async (companyData) => {
     try {
         console.log("companyData", companyData);
-        const response = await fetch('http://10.2.1.174:35789/general/companies/create', {
+        const response = await fetch(`http://10.2.1.174:35789/general/companies/create`, {
             method: 'POST',
-            headers: {
+            headers: new Headers({
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
-            },
+            }),
             body: JSON.stringify({
-                name: companyData.name,
-                id_country: companyData.id_country
+                "name": companyData.name,
+                "id_country": companyData.id_country
             }),
         });
-
+        console.log("Esto tiene response", response);
+        const data = await response.json();
         if (response.ok) {
-            const data = await response.json();
+
+            console.log("Esto tiene data:", data)
+            return data; // Puedes devolver datos adicionales si es necesario
+        } else {
+            throw new Error('Error al crear la empresa');
+        }
+    } catch (error) {
+        throw new Error('Error en la solicitud:', error);
+    }
+};
+export const putCompany = async (companyData, id) => {
+    try {
+        console.log("companyData", companyData);
+        console.log("id", id);
+        const response = await fetch(`http://10.2.1.174:35789/general/companies/update/${id}`, {
+            method: 'PUT',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }),
+            body: JSON.stringify({
+                "name": companyData.name,
+                "id_country": companyData.id_country
+            }),
+        });
+        console.log("Esto tiene response", response);
+        const data = await response.json();
+        if (response.ok) {
+
             console.log("Esto tiene data:", data)
             return data; // Puedes devolver datos adicionales si es necesario
         } else {
@@ -81,6 +111,34 @@ export const postBrand = async (brandData) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                name: brandData.name,
+                slug: brandData.name,
+                id_company: brandData.id_company
+            }, console.log("brandData", brandData.name)),
+            
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Esto tiene data:", data)
+            return data; // Puedes devolver datos adicionales si es necesario
+        } else {
+            throw new Error('Error al crear la marcas');
+        }
+    } catch (error) {
+        throw new Error('Error en la solicitud:', error);
+    }
+};
+export const putBrand = async (brandData, id) => {
+    try {
+        console.log("brandData", brandData);
+        const response = await fetch(`http://10.2.1.174:35789/general/brands/update/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
@@ -142,13 +200,14 @@ export const getStores = async () => {
             })
         });
         const data = await result.json();
-        console.log('Esto tiene store:', data);
         return data;
     } catch (error) {
         console.error('Error fetching stores:', error);
         throw new Error('Failed to fetch stores');
     }
 };
+
+
 export const getStore = async (id) => {
     try {
         const result = await fetch(`http://10.2.1.174:35789/general/stores/${id}`, {
@@ -195,5 +254,40 @@ export const getCountries = async () => {
     } catch (error) {
         console.error('Error fetching countries:', error);
         throw new Error('Failed to fetch countries');
+    }
+};
+
+
+export const getSales = async () => {
+    try {
+        const result = await fetch(`http://10.2.1.174:35789/payments/sales`, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        });
+        const data = await result.json();
+        return data; 
+    } catch (error) {
+        console.error('Error fetching ventas:', error);
+        throw new Error('Failed to fetch ventas');
+    }
+};
+
+
+//VENTAS Y ASISTENCIA //DETALLE DE EMPLEADO
+export const getEmployee = async () => {
+    try {
+        const result = await fetch(`http://10.2.1.174:35789/general/employees`, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        });
+        const data = await result.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching empleados:', error);
+        throw new Error('Failed to fetch empleados');
     }
 };

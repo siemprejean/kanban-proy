@@ -26,6 +26,11 @@ const Formulario = () => {
             body: JSON.stringify(body)
         })
         console.log(resp)
+        if (resp.ok) {
+            const data = await resp.json();
+            console.log("Esto tiene data:", data)
+        }
+        
 
     }
 
@@ -37,7 +42,7 @@ const Formulario = () => {
                     <Card.Title style={{ fontSize: "x-large", color: "black", fontWeight: "800", textAlign: "center", font: "inter", fontWeight: "800" }} >Inicio de Sesión</Card.Title>
                     <form onSubmit={handleSubmit(enviar)}
                     >
-                        
+
                         <div>
 
                             <input className="mb-4" style={{ borderRadius: "8px", borderColor: "#4791db", borderWidth: "2px", marginLeft: "2rem", padding: "10px 50px" }} type="email"  {...register('usuario', { required: true, maxLength: 20, })} placeholder="Usuario" />

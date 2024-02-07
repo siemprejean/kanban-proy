@@ -1,6 +1,8 @@
 'use client'
 // import node module libraries
 import React from "react";
+import Carousel from 'react-bootstrap/Carousel';
+import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useState, useRef, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
@@ -15,16 +17,14 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction';
 import Card from 'react-bootstrap/Card';
 import Select from 'react-select'
-import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-import { getEmployees, getStores, getSales } from "@/app/data/api";
-
 import 'styles/theme/components/_calendar.scss';
 import ModalVentasAsistencia from "../../customcomponent/ModalVentasAsistencia";
+
+import { getEmployee } from "@/app/data/api";
 
 
 const events = [
@@ -35,12 +35,12 @@ const events = [
     },
 ]
 
-// const colourOptions = [
-//     { value: 'VS Albrook', label: 'VS Albrook' },
-//     { value: 'BBW Albrook', label: 'BBW Albrook' },
-//     { value: 'VS Multiplaza', label: 'VS Multiplaza' },
-//     { value: 'BBW Multiplaza', label: 'BBW Multiplaza' }
-// ]
+const colourOptions = [
+    { value: 'VS Albrook', label: 'VS Albrook' },
+    { value: 'BBW Albrook', label: 'BBW Albrook' },
+    { value: 'VS Multiplaza', label: 'VS Multiplaza' },
+    { value: 'BBW Multiplaza', label: 'BBW Multiplaza' }
+]
 
 function getDate(dayString) {
     const today = new Date();
@@ -55,60 +55,54 @@ function getDate(dayString) {
 
 
 
-function Ventas() {
+
+
+const DetallesEmpleados = () => {
     const [show, setShow] = useState(false);
     const [startDate, setStartDate] = useState(new Date());
-    const [storesOption, setStoresOption] = useState([]);
-    const [sales, setSales] = useState([]);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const cont = useRef(0);
-    const [yearValue, setYearValue] = useState('');
-    const [monthValue, setMonthValue] = useState('');
-    const [calendarValue, setCalendarValue] = useState('');
+
+
+    const [open, setOpen, page, setPage] = React.useState(0);
+    const [checked, setChecked] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [isModalCreateOpen, setModalCreateOpen] = useState(false);
+    const [detail, setDetail] = React.useState([]);
+    const [storeName, setStoreName] = useState('');
+    const [storeComision, setStoreComision] = useState('');
+    const [storeRetention, setStoreRetention] = useState('');
+    const [storeExcedent, setStoreExcedent] = useState('');
+    const [storeIncentive, setStoreIncentive] = useState('');
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => setModalOpen(false);
+    const openModalCreate = () => setModalCreateOpen(true);
+    const closeModalCreate = () => setModalCreateOpen(false);
+    const handleOpen = () => setOpen(true);
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const stores = await getEmployee();
+                setData(stores);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
         fetchData();
     }, []);
 
-    const fetchData = async () => {
+    const fetchDetail = async (id) => {
         try {
-            const sales = await getSales();
-            const stores = await getStores();
-            console.log(sales);
-            console.log(stores);
+            const store = await getStore(id);
 
-            storeOptions(stores);
-            console.log(storesOption);
+            setDetail(store);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-    };
-
-    const storeOptions = (data) => {
-        data.map((data) => {
-            const option = {
-                value: data.id,
-                label: data.name
-            }
-            setStoresOption(storesOption => [...storesOption, option])
-        })
     }
 
-    const calendarFilters = (newValue, filtro) => {
-        console.log("entre")
-        // const storeSelected = calendarValue
-        calendarValue.map((val)=>{
-            console.log(val.value)
-        })
-        console.log(calendarValue)
-        console.log(filtro)
-        console.log(yearValue)
-        console.log(monthValue)
-        if (calendarValue) {
-            newValue
-        }
-    }
 
     return (
         <DashboardLayout>
@@ -116,27 +110,33 @@ function Ventas() {
                 <Container fluid className="calendar-container">
                     <Card>
                         <Card.Body>
-                            <h4 className="calendar-title">Ventas en Tienda</h4>
+                            <h4 className="calendar-title">Detalle de Empleado</h4>
                             <Row className="calendar-filters">
-                                <Col xs={6} className="calendar-filter">
+                                <Col xs={3} className="calendar-filter">
                                     <Select
                                         isMulti
                                         name="colors"
-                                        options={storesOption}
+                                        options={colourOptions}
                                         className="basic-multi-select"
                                         classNamePrefix="select"
-                                        onChange={(newValue) => calendarFilters(setCalendarValue(newValue), 'store')}
                                     />
                                 </Col>
-
+                                <Col xs={3} className="calendar-filter">
+                                    <Select
+                                        isMulti
+                                        name="colors"
+                                        options={colourOptions}
+                                        className="basic-multi-select"
+                                        classNamePrefix="select"
+                                    />
+                                </Col>
                                 <Col xs={3} className="calendar-filter">
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DemoContainer components={['DatePicker']}>
-                                            <DatePicker
+                                            <DatePickerg
                                                 label={'Año'}
                                                 openTo="year"
                                                 views={['year']}
-                                                onChange={(newValue) => calendarFilters(setYearValue(newValue), 'año')}
                                             />
                                         </DemoContainer>
                                     </LocalizationProvider>
@@ -149,7 +149,6 @@ function Ventas() {
                                                 label={'Mes'}
                                                 openTo="month"
                                                 views={['month']}
-                                                onChange={(newValue) => calendarFilters(setMonthValue(newValue), 'mes')}
                                             />
                                         </DemoContainer>
                                     </LocalizationProvider>
@@ -158,7 +157,6 @@ function Ventas() {
 
                             <br></br>
 
-                            {/* calendar.gotoDate( date ) */}
                             <Row className="cal-calendar-content">
                                 <Col md={12} >
                                     <FullCalendar
@@ -198,4 +196,4 @@ function renderEventContent(eventInfo) {
 
 
 
-export default Ventas;
+export default DetallesEmpleados;

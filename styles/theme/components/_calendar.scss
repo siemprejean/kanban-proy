@@ -1,5 +1,5 @@
 .calendar-container {
-    padding: 12px;
+    padding: 40px;
 
     .card {
         border: none;
@@ -42,11 +42,15 @@
                     padding: 0;
 
                     .css-4jnixx-MuiStack-root {
-                        padding-top: 0;
+                        padding-top: 5px;
 
                         .MuiTextField-root {
                             width: 100%;
                         }
+                    }
+
+                    .basic-multi-select{
+                        padding-top: 5px;
                     }
                 }
             }
