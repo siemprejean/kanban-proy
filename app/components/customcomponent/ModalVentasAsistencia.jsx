@@ -93,22 +93,38 @@ const ModalVentasAsistencia = ((data) => {
                             <Table responsive>
                                 <thead>
                                     <tr>
-                                        <th style={{ fontWeight: "900" }}>ID</th>
-                                        <th style={{ fontWeight: "900" }}>Usuario</th>
-                                        <th style={{ fontWeight: "900" }}>Nombre</th>
-                                        <th style={{ fontWeight: "900" }}>Apellido</th>
-                                        <th style={{ fontWeight: "900" }}>Correo</th>
-                                        <th style={{ fontWeight: "900" }}>Roles</th>
+                                        <th style={{ fontWeight: "900" }}>Codigo Vendedor</th>
+                                        <th style={{ fontWeight: "900" }}>Vendedor</th>
+                                        <th style={{ fontWeight: "900" }}>Ventas Hoy</th>
+                                        <th style={{ fontWeight: "900" }}>Ventas Mensuales</th>
+                                        <th style={{ fontWeight: "900" }}>Porcentaje vs total de tiendas</th>
+                                        <th style={{ fontWeight: "900" }}>Incentivo Inicial</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>1</td>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                        <td>1</td>
-                                        <td>Mark</td>
+                                        <td>PA-85443</td>
+                                        <td>Juan Gomez</td>
+                                        <td>$50</td>
+                                        <td>$700</td>
+                                        <td>30%</td>
+                                        <td>$19.10</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PA-855431</td>
+                                        <td>Pedro López</td>
+                                        <td>$65</td>
+                                        <td>$812</td>
+                                        <td>38%</td>
+                                        <td>$16.12</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PA-001820</td>
+                                        <td>Doralis Mela</td>
+                                        <td>$27</td>
+                                        <td>$510</td>
+                                        <td>15%</td>
+                                        <td>$21.70</td>
                                     </tr>
                                 </tbody>
                             </Table>
