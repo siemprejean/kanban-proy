@@ -15,12 +15,18 @@ import 'styles/theme/components/_modal.scss';
 //import { propTypes } from 'react-bootstrap/esm/Image';
 
 
-const ModalVentasAsistencia = (() => {
+const ModalVentasAsistencia = ((data) => {
+    console.log(data.fecha)
+    console.log(data.monto)
     return (
         <>
             <Modal.Header closeButton>
                 <Col sm={4} >
-                    <Modal.Title>Detalle de asistencia diaria
+                    <Modal.Title>Detalle de ventas diarias
+                    </Modal.Title>
+                </Col>
+                <Col sm={4} >
+                    <Modal.Title style={{textAlign:'center'}}>{data.fecha}
                     </Modal.Title>
                 </Col>
             </Modal.Header>
@@ -29,20 +35,28 @@ const ModalVentasAsistencia = (() => {
                 <Form>
                     <Container>
                         <Row>
-                            <Col sm={6}>
+                            <Col className="modal-ventas-col-4">
                                 <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
-                                    <Form.Label column sm={5}>Total de asistencia</Form.Label>
+                                    <Form.Label column sm={4}>Total de ventas diarias</Form.Label>
+                                    <Col sm={3}>
+                                        <Form.Control type="text" placeholder="5/5" value={data.monto}/>
+                                    </Col>
+                                </Form.Group>
+                            </Col>
+
+                            <Col className="modal-ventas-col-4">
+                                <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
+                                    <Form.Label column sm={4}>Total de vendedores</Form.Label>
                                     <Col sm={3}>
                                         <Form.Control type="text" placeholder="5/5" />
                                     </Col>
                                 </Form.Group>
                             </Col>
-
-                            <Col >
+                            <Col className="modal-ventas-col-4">
                                 <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
-                                    <Form.Label column sm={4}>Compensatorios</Form.Label>
+                                    <Form.Label column sm={4}>% de ventas diarias</Form.Label>
                                     <Col sm={3}>
-                                        <Form.Control type="text" placeholder="5/5" />
+                                        <Form.Control type="text" placeholder="8.72%" />
                                     </Col>
                                 </Form.Group>
                             </Col>
@@ -50,51 +64,20 @@ const ModalVentasAsistencia = (() => {
 
 
                         <Row>
-                            <Col sm={6}>
+                            <Col className="modal-ventas-col-4">
                                 <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
-                                    <Form.Label column sm={5}>Ausencias</Form.Label>
+                                    <Form.Label column sm={4}>Total Incentivos diarios</Form.Label>
                                     <Col sm={3}>
-                                        <Form.Control type="text" placeholder="0" />
+                                        <Form.Control type="text" placeholder="$69.90" />
                                     </Col>
                                 </Form.Group>
                             </Col>
 
-                            <Col>
-                                <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
-                                    <Form.Label column sm={4}>Licencias</Form.Label>
-                                    <Col sm={3}>
-                                        <Form.Control type="text" placeholder="0" />
-                                    </Col>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-
-
-                        <Row>
-                            <Col sm={6}>
-                                <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
-                                    <Form.Label column sm={5}>Ausencia justificada</Form.Label>
-                                    <Col sm={3}>
-                                        <Form.Control type="text" placeholder="0" />
-                                    </Col>
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
+                            <Col className="modal-ventas-col-8">
+                            <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
                                     <Form.Label column sm={4}>Observaciones</Form.Label>
                                     <Col sm={8}>
                                         <Form.Control as="textarea" />
-                                    </Col>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-
-                        <Row>
-                            <Col sm={6}>
-                                <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
-                                    <Form.Label column sm={5}>Tardanzas</Form.Label>
-                                    <Col sm={3}>
-                                        <Form.Control type="text" placeholder="1" />
                                     </Col>
                                 </Form.Group>
                             </Col>
@@ -103,7 +86,8 @@ const ModalVentasAsistencia = (() => {
                 </Form>
 
 
-                <Container fluid className="App">
+                <Container fluid className="App table-modal-container">
+                    <h5>Detalles por vendedor</h5>
                     <Row>
                         <Col>
                             <Table responsive>
