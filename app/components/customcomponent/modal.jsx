@@ -22,7 +22,7 @@ const MuiModal = React.memo(({ open, onClose, title, content, customStyles }) =>
 
         <h4>{title}</h4>
         <Divider style={{ border: '1px solid' }} />
-        <div id="modal-description">
+        <div id="modal-description" className="modal-description">
           <Form>
             {content}
           </Form>

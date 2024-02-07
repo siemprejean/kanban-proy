@@ -3,17 +3,16 @@ import PropTypes from 'prop-types';
 import { FormControl, Input, TextField } from '@mui/material';
 import { useCallback } from 'react';
 
-const MuiTextField = ({ title, value, onChange, inputKey, defaultValue }) => {
+const MuiTextField = ({ title, value, onChange, inputKey, defaultValue, className }) => {
     console.log("Esto tiene onChange", onChange)
     return (
-        <FormControl variant="outlined" style={{ width: "100%" }} >
+        <FormControl variant="outlined" className={className} >
             <h5>{title}</h5>
             <TextField
-                style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }}
                 defaultValue={defaultValue}
                 value={value}
                 id={inputKey}
-                onChange={onChange}
+                onChange={onChange} 
                 onBlur={() => console.log('El campo ha perdido el foco')}
                 onFocus={() => console.log('El campo ha obtenido el foco')}
             />

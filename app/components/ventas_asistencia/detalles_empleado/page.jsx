@@ -112,7 +112,7 @@ const DetallesEmpleados = () => {
                         <Card.Body>
                             <h4 className="calendar-title">Detalle de Empleado</h4>
                             <Row className="calendar-filters">
-                                <Col xs={6} className="calendar-filter">
+                                <Col xs={3} className="calendar-filter">
                                     <Select
                                         isMulti
                                         name="colors"
@@ -121,11 +121,19 @@ const DetallesEmpleados = () => {
                                         classNamePrefix="select"
                                     />
                                 </Col>
-
+                                <Col xs={3} className="calendar-filter">
+                                    <Select
+                                        isMulti
+                                        name="colors"
+                                        options={colourOptions}
+                                        className="basic-multi-select"
+                                        classNamePrefix="select"
+                                    />
+                                </Col>
                                 <Col xs={3} className="calendar-filter">
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DemoContainer components={['DatePicker']}>
-                                            <DatePicker
+                                            <DatePickerg
                                                 label={'Año'}
                                                 openTo="year"
                                                 views={['year']}

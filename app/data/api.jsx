@@ -1,4 +1,4 @@
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3MzEyMTAzfQ.0Pc-zV2cm01NuCOoO7jsT6FiB81yWoQ1AoZ3Z1WLTKE'
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3Mzg0Mjg0fQ.s7bHGMxqVlM8PuxdUtxuc-jcTBLVXNNkIKLaJGrqUKc'
 //EndPoints de Empresas
 export const getCompanies = async () => {
     try {
@@ -142,13 +142,14 @@ export const getStores = async () => {
             })
         });
         const data = await result.json();
-        console.log('Esto tiene store:', data);
         return data;
     } catch (error) {
         console.error('Error fetching stores:', error);
         throw new Error('Failed to fetch stores');
     }
 };
+
+
 export const getStore = async (id) => {
     try {
         const result = await fetch(`http://10.2.1.174:35789/general/stores/${id}`, {
@@ -199,7 +200,24 @@ export const getCountries = async () => {
 };
 
 
-//DETALLE DE EMPLEADO
+export const getSales = async () => {
+    try {
+        const result = await fetch(`http://10.2.1.174:35789/payments/sales`, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        });
+        const data = await result.json();
+        return data; 
+    } catch (error) {
+        console.error('Error fetching ventas:', error);
+        throw new Error('Failed to fetch ventas');
+    }
+};
+
+
+//VENTAS Y ASISTENCIA //DETALLE DE EMPLEADO
 export const getEmployee = async () => {
     try {
         const result = await fetch(`http://10.2.1.174:35789/general/employees`, {
@@ -209,8 +227,7 @@ export const getEmployee = async () => {
             })
         });
         const data = await result.json();
-        console.log('Esto tiene empleados:', data);
-        return data; countries
+        return data;
     } catch (error) {
         console.error('Error fetching empleados:', error);
         throw new Error('Failed to fetch empleados');

@@ -117,74 +117,28 @@ export default function Store() {
 
   const modalCreate = (
     <div className="modal-content">
+      <MuiFormControl title="Nombre de la Tienda:" value={storeName} onChange={(e) => setStoreName(e.target.value)}  className="modal-col-12" />
+      <MuiFormControl title="Tipo de comisión:" value={storeComision} onChange={(e) => setStoreComision(e.target.value)} className="modal-col-6" />
+      <MuiFormControl title="Retención:" value={storeRetention} onChange={(e) => setStoreRetention(e.target.value)} className="modal-col-6" />
+      <MuiFormControl title="Excedente:" value={storeExcedent} onChange={(e) => setStoreExcedent(e.target.value)} className="modal-col-6" />
+      <MuiFormControl title="Incentivo de domingos:" value={storeIncentive} onChange={(e) => setStoreIncentive(e.target.value)} className="modal-col-6" />
       <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px", width: "100%" }}>
-          <MuiFormControl title="Nombre de la Tienda:" value={storeName} onChange={(e) => setStoreName(e.target.value)} style={{ align: "center" }} />
-        </Col>
-      </Row>
-      <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="Tipo de comisión:" value={storeComision} onChange={(e) => setStoreComision(e.target.value)} />
-        </Col>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="Retención:" value={storeRetention} onChange={(e) => setStoreRetention(e.target.value)} />
-        </Col>
-      </Row>
-      <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="Excedente:" value={storeExcedent} onChange={(e) => setStoreExcedent(e.target.value)} />
-        </Col>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="Incentivo de domingos:" value={storeIncentive} onChange={(e) => setStoreIncentive(e.target.value)} />
-        </Col>
-      </Row>
-      <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <Button style={{ borderRadius: "10px", backgroundColor: "#FFAF38", width: "100%", color: "HighlightText", flex: "auto" }} onClick={closeModalCreate}>
-            <SaveIcon /> GUARDAR
-          </Button>
-        </Col>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <Button style={{ borderRadius: "10px", backgroundColor: "gray", width: "100%", color: "HighlightText", flex: "auto" }} onClick={closeModalCreate}>
-            <CancelIcon /> CANCELAR
-          </Button>
+        <Col className="modal-col-btn">
+          <Button onClick={closeModalCreate}>GUARDAR</Button>
         </Col>
       </Row>
     </div>
   );
   const modalContent = (
-    <div className="">
+    <div className="modal-content">
+      <MuiFormControl title="Nombre de la Tienda:" value={detail.name} className="modal-col-12" />
+      <MuiFormControl title="Tipo de comisión:" value={''} className="modal-col-6" />
+      <MuiFormControl title="Retención:" value={detail.retention} className="modal-col-6" />
+      <MuiFormControl title="Excedente:" value={detail.surplus} className="modal-col-6" />
+      <MuiFormControl title="Incentivo de domingos:" value={detail.incentive_sunday} className="modal-col-6" />
       <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px", width: "100%" }}>
-          <MuiFormControl title="Nombre de la Tienda:" value={detail.name} style={{ align: "center" }} />
-        </Col>
-      </Row>
-      <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="Tipo de comisión:" value={''} />
-        </Col>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="Retención:" value={detail.retention} />
-        </Col>
-      </Row>
-      <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="Excedente:" value={detail.surplus} />
-        </Col>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiFormControl title="Incentivo de domingos:" value={detail.incentive_sunday} />
-        </Col>
-      </Row>
-      <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <Button style={{ borderRadius: "10px", backgroundColor: "#FFAF38", width: "100%", color: "HighlightText", flex: "auto" }} onClick={closeModal}>
-            <SaveIcon /> GUARDAR
-          </Button>
-        </Col>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <Button style={{ borderRadius: "10px", backgroundColor: "gray", width: "100%", color: "HighlightText", flex: "auto" }} onClick={closeModal}>
-            <CancelIcon /> CANCELAR
-          </Button>
+        <Col className="modal-col-btn">
+          <Button onClick={closeModal}>GUARDAR</Button>
         </Col>
       </Row>
     </div>
@@ -243,10 +197,6 @@ export default function Store() {
     </>
   );
 
-
-
-
-
   return (
     <>
       <DashboardLayout>
@@ -267,7 +217,7 @@ export default function Store() {
               </div>
               <div className="card-config-header-right">
                 <Button style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => { openModalCreate() }}>
-                  <AddIcon/> CREAR
+                  <AddIcon /> CREAR
                 </Button>
                 <MuiModal
                   open={isModalCreateOpen}
@@ -277,7 +227,7 @@ export default function Store() {
                   customStyles={modalStyles}
                 />
                 <Button style={{ borderRadius: "10px", backgroundColor: "gray", width: "100%", color: "HighlightText", flex: "auto" }}>
-                  <DownloadIcon/> IMPORTAR
+                  <DownloadIcon /> IMPORTAR
                 </Button>
               </div>
             </Row>
