@@ -38,7 +38,8 @@ const Usuarios = () => {
     const [email, setEmail] = useState('')
     const [id_company, setIdCompany] = useState(null)
     const [role_id, setRole_id] = useState([]);
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2NzI0NzMyfQ.Nrdul4D12UrbuMDCLzPVK2VgymwrwCosN8WM1qjxPF4"
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3MjcyNTczfQ.iecXL18sIquR9gtJ2kVWQTKLfJjQiVzjZWHaVJUeI4I"
+    const [filterValue, setFilterValue] = useState('');
 
     /*MOSTRAR USUARIOS*/
     async function getUser() {
@@ -78,6 +79,14 @@ const Usuarios = () => {
             const result = await response.json();
             console.log(result)
             setRoles(result)
+            for (let i = 0; i < result.roles.length; i++) {
+                const found = rol_use.find(element => element === result.roles[i].id);
+                if (found === undefined ) {
+                    result[i]['statusRol'] = false;
+                } else {
+                    result[i]['statusRol'] = true;
+                }
+            }
             return result;
         } catch (err) {
             console.log(err);
@@ -166,17 +175,16 @@ const Usuarios = () => {
     /*ASIGNAR ROLES A USUARIOS*/
     let crearRol_usuario = async (e) => {
         e.preventDefault();
-        const checked = e.target.checked;
+    
         console.log("BOOLEANO DEL CHECKED");
         console.log(checked); //New Boolean
         console.log("VALOR DEL CHECKED");
-        const checkedValue = e.target.value;
-        console.log(checkedValue); //ID del rol
+        console.log(role_id); //ID del rol
         /* const d = datos.map((dat) => dat.idrol); */
 
-        if (checked === true) {
+        if (checked=== true) {
             let res = await fetch(`http://10.2.1.174:35789/admin/users/update/${idModal}`, {
-                method:'PUT',
+                method: 'PUT',
                 headers: new Headers({
 
                     'Content-Type': 'application/json',
@@ -190,7 +198,7 @@ const Usuarios = () => {
                     remember_password: user_password,
                     avatar: null,
                     id_company: id_company,
-                    roles: checkedValue,
+                    roles: role_id,
 
                 }),
             });
@@ -201,13 +209,13 @@ const Usuarios = () => {
                 setEmail(res.email);
                 setPassword(res.user_password);
                 setIdCompany(res.id_company);
-                setRole_id(res.roles[0])
+                setRole_id(res.roles[0].id)
 
             }
         }
 
         else {
-            console.log(checkedValue)
+            console.log("algo salio mal")
         }
     }
 
@@ -285,7 +293,7 @@ const Usuarios = () => {
                     </Col>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
+                    <Form onSubmit={crearRol_usuario}>
                         <Container>
                             <Row>
                                 <Col sm={6}>
@@ -298,7 +306,7 @@ const Usuarios = () => {
                                 </Col>
 
                                 <Col sm={6} >
-                                    <Form.Group as={Row}  className="mb-3">
+                                    <Form.Group as={Row} className="mb-3">
                                         <Form.Label style={{ fontWeight: "900" }} sm={5}>Apellido</Form.Label>
                                         <Col sm="8">
                                             <Form.Control readOnly defaultValue={usu.username} />
@@ -313,7 +321,7 @@ const Usuarios = () => {
                                     {rol.map(role => (
                                         <div key={role.id} className="mb-3">
                                             <Form.Check type='checkbox' >
-                                                <Form.Check.Input onChange={crearRol_usuario} defaultChecked={role.statusRol} type='checkbox' isValid />
+                                                <Form.Check.Input onChange={(e) =>{ setRole_id(e.target.value); setCheked(e.target.checked)}} value={role.id}  type='checkbox'  />
                                                 <Form.Check.Label>{role.name}</Form.Check.Label>
                                             </Form.Check>
                                         </div>
@@ -323,7 +331,7 @@ const Usuarios = () => {
                             </Row>
 
 
-                            <Row className="justify-content-md-end">
+                  <Row className="justify-content-md-end">
                                 <Col sm={6}>
                                     <Button size="lg" type="submit" style={{ width: "12em", backgroundColor: "#f6a700", borderColor: "#f6a700", borderRadius: "30px" }} >Guardar</Button>
                                     <div >{message ? <p>{message}</p> : null}</div>
