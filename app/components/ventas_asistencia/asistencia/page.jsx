@@ -1,10 +1,8 @@
 'use client'
 // import node module libraries
 import React from "react";
-import Carousel from 'react-bootstrap/Carousel';
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
@@ -21,6 +19,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { getStores} from "@/app/data/api";
+import 'styles/theme/components/_calendar.scss';
 
 
 const events = [
@@ -32,13 +32,6 @@ const events = [
 	},
 ]
 
-
-const colourOptions = [
-	{ value: 'VS Albrook', label: 'VS Albrook' },
-	{ value: 'BBW Albrook', label: 'BBW Albrook' },
-	{ value: 'VS Multiplaza', label: 'VS Multiplaza' },
-	{ value: 'BBW Multiplaza', label: 'BBW Multiplaza' }
-]
 
 
 function getDate(dayString) {
@@ -60,6 +53,54 @@ const Asistencia = () => {
 	const [startDate, setStartDate] = useState(new Date());
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
+	const [storesOption, setStoresOption] = useState([]);
+	const [yearValue, setYearValue] = useState('');
+    const [monthValue, setMonthValue] = useState('');
+    const [calendarValue, setCalendarValue] = useState('');
+
+
+	useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+           
+            const stores = await getStores();
+   
+            console.log(stores);
+
+            storeOptions(stores);
+            console.log(storesOption);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+	const storeOptions = (data) => {
+        data.map((data) => {
+            const option = {
+                value: data.id,
+                label: data.name
+            }
+            setStoresOption(storesOption => [...storesOption, option])
+        })
+    }
+
+	const calendarFilters = (newValue, filtro) => {
+        console.log("entre")
+        // const storeSelected = calendarValue
+        calendarValue.map((val)=>{
+            console.log(val.value)
+        })
+        console.log(calendarValue)
+        console.log(filtro)
+        console.log(yearValue)
+        console.log(monthValue)
+        if (calendarValue) {
+            newValue
+        }
+    }
 
 	return (
 
@@ -78,9 +119,10 @@ const Asistencia = () => {
 
 										isMulti
 										name="tiendas"
-										options={colourOptions}
+										options={storesOption}
 										className="basic-multi-select"
 										classNamePrefix="select"
+										onChange={(newValue) => calendarFilters(setCalendarValue(newValue), 'store')}
 									/>
 								</Col>
 

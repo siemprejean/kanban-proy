@@ -20,9 +20,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
 import { getEmployees, getStores, getSales } from "@/app/data/api";
-
 import 'styles/theme/components/_calendar.scss';
 import ModalVentasAsistencia from "../../customcomponent/ModalVentasAsistencia";
 
