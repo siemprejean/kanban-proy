@@ -15,12 +15,18 @@ import 'styles/theme/components/_modal.scss';
 //import { propTypes } from 'react-bootstrap/esm/Image';
 
 
-const ModalVentasAsistencia = (() => {
+const ModalVentasAsistencia = ((data) => {
+    console.log(data.fecha)
+    console.log(data.monto)
     return (
         <>
             <Modal.Header closeButton>
                 <Col sm={4} >
-                    <Modal.Title>Detalle de asistencia diaria
+                    <Modal.Title>Detalle de ventas diarias
+                    </Modal.Title>
+                </Col>
+                <Col sm={4} >
+                    <Modal.Title style={{textAlign:'center'}}>{data.fecha}
                     </Modal.Title>
                 </Col>
             </Modal.Header>
@@ -29,20 +35,28 @@ const ModalVentasAsistencia = (() => {
                 <Form>
                     <Container>
                         <Row>
-                            <Col sm={6}>
+                            <Col className="modal-ventas-col-4">
                                 <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
-                                    <Form.Label column sm={5}>Total de asistencia</Form.Label>
+                                    <Form.Label column sm={4}>Total de ventas diarias</Form.Label>
+                                    <Col sm={3}>
+                                        <Form.Control type="text" placeholder="5/5" value={data.monto}/>
+                                    </Col>
+                                </Form.Group>
+                            </Col>
+
+                            <Col className="modal-ventas-col-4">
+                                <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
+                                    <Form.Label column sm={4}>Total de vendedores</Form.Label>
                                     <Col sm={3}>
                                         <Form.Control type="text" placeholder="5/5" />
                                     </Col>
                                 </Form.Group>
                             </Col>
-
-                            <Col >
+                            <Col className="modal-ventas-col-4">
                                 <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
-                                    <Form.Label column sm={4}>Compensatorios</Form.Label>
+                                    <Form.Label column sm={4}>% de ventas diarias</Form.Label>
                                     <Col sm={3}>
-                                        <Form.Control type="text" placeholder="5/5" />
+                                        <Form.Control type="text" placeholder="8.72%" />
                                     </Col>
                                 </Form.Group>
                             </Col>
@@ -50,51 +64,20 @@ const ModalVentasAsistencia = (() => {
 
 
                         <Row>
-                            <Col sm={6}>
+                            <Col className="modal-ventas-col-4">
                                 <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
-                                    <Form.Label column sm={5}>Ausencias</Form.Label>
+                                    <Form.Label column sm={4}>Total Incentivos diarios</Form.Label>
                                     <Col sm={3}>
-                                        <Form.Control type="text" placeholder="0" />
+                                        <Form.Control type="text" placeholder="$69.90" />
                                     </Col>
                                 </Form.Group>
                             </Col>
 
-                            <Col>
-                                <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
-                                    <Form.Label column sm={4}>Licencias</Form.Label>
-                                    <Col sm={3}>
-                                        <Form.Control type="text" placeholder="0" />
-                                    </Col>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-
-
-                        <Row>
-                            <Col sm={6}>
-                                <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
-                                    <Form.Label column sm={5}>Ausencia justificada</Form.Label>
-                                    <Col sm={3}>
-                                        <Form.Control type="text" placeholder="0" />
-                                    </Col>
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
+                            <Col className="modal-ventas-col-8">
+                            <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
                                     <Form.Label column sm={4}>Observaciones</Form.Label>
                                     <Col sm={8}>
                                         <Form.Control as="textarea" />
-                                    </Col>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-
-                        <Row>
-                            <Col sm={6}>
-                                <Form.Group as={Row} className="mb-3" controlId="formGridEmail">
-                                    <Form.Label column sm={5}>Tardanzas</Form.Label>
-                                    <Col sm={3}>
-                                        <Form.Control type="text" placeholder="1" />
                                     </Col>
                                 </Form.Group>
                             </Col>
@@ -103,28 +86,45 @@ const ModalVentasAsistencia = (() => {
                 </Form>
 
 
-                <Container fluid className="App">
+                <Container fluid className="App table-modal-container">
+                    <h5>Detalles por vendedor</h5>
                     <Row>
                         <Col>
                             <Table responsive>
                                 <thead>
                                     <tr>
-                                        <th style={{ fontWeight: "900" }}>ID</th>
-                                        <th style={{ fontWeight: "900" }}>Usuario</th>
-                                        <th style={{ fontWeight: "900" }}>Nombre</th>
-                                        <th style={{ fontWeight: "900" }}>Apellido</th>
-                                        <th style={{ fontWeight: "900" }}>Correo</th>
-                                        <th style={{ fontWeight: "900" }}>Roles</th>
+                                        <th style={{ fontWeight: "900" }}>Codigo Vendedor</th>
+                                        <th style={{ fontWeight: "900" }}>Vendedor</th>
+                                        <th style={{ fontWeight: "900" }}>Ventas Hoy</th>
+                                        <th style={{ fontWeight: "900" }}>Ventas Mensuales</th>
+                                        <th style={{ fontWeight: "900" }}>Porcentaje vs total de tiendas</th>
+                                        <th style={{ fontWeight: "900" }}>Incentivo Inicial</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>1</td>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                        <td>1</td>
-                                        <td>Mark</td>
+                                        <td>PA-85443</td>
+                                        <td>Juan Gomez</td>
+                                        <td>$50</td>
+                                        <td>$700</td>
+                                        <td>30%</td>
+                                        <td>$19.10</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PA-855431</td>
+                                        <td>Pedro López</td>
+                                        <td>$65</td>
+                                        <td>$812</td>
+                                        <td>38%</td>
+                                        <td>$16.12</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PA-001820</td>
+                                        <td>Doralis Mela</td>
+                                        <td>$27</td>
+                                        <td>$510</td>
+                                        <td>15%</td>
+                                        <td>$21.70</td>
                                     </tr>
                                 </tbody>
                             </Table>

@@ -28,7 +28,37 @@ import ModalVentasAsistencia from "../../customcomponent/ModalVentasAsistencia";
 const events = [
     {
         title: "$2,500",
+        start: getDate("YEAR-MONTH-01"),
+        backgroundColor: "#FEFFC0",
+    },
+    {
+        title: "$210",
+        start: getDate("YEAR-MONTH-02"),
+        backgroundColor: "#FFC0C0",
+    },
+    {
+        title: "$1,054",
+        start: getDate("YEAR-MONTH-03"),
+        backgroundColor: "#FEFFC0",
+    },
+    {
+        title: "$100",
+        start: getDate("YEAR-MONTH-04"),
+        backgroundColor: "#FFC0C0",
+    },
+    {
+        title: "$5,054",
+        start: getDate("YEAR-MONTH-05"),
+        backgroundColor: "#64EA8F",
+    },
+    {
+        title: "$7,400",
         start: getDate("YEAR-MONTH-06"),
+        backgroundColor: "#64EA8F",
+    },
+    {
+        title: "$10,050",
+        start: getDate("YEAR-MONTH-07"),
         backgroundColor: "#64EA8F",
     },
 ]
@@ -63,10 +93,17 @@ function Ventas() {
     const cont = useRef(0);
     const [yearValue, setYearValue] = useState('');
     const [monthValue, setMonthValue] = useState('');
-    const [calendarValue, setCalendarValue] = useState('');
+    const [storeValue, setStoreValue] = useState('');
+    const yearVal = useRef(0);
+    const monthVal = useRef(0);
+    const storeVal = useRef(0);
+    const idStore = useRef(0);
+    const fechaModal = useRef(0);
+    const amountModal = useRef(0);
 
     useEffect(() => {
         fetchData();
+        calendarFilters();
     }, []);
 
     const fetchData = async () => {
@@ -75,7 +112,7 @@ function Ventas() {
             const stores = await getStores();
             console.log(sales);
             console.log(stores);
-
+            setSales(sales);
             storeOptions(stores);
             console.log(storesOption);
         } catch (error) {
@@ -93,19 +130,33 @@ function Ventas() {
         })
     }
 
-    const calendarFilters = (newValue, filtro) => {
-        console.log("entre")
-        // const storeSelected = calendarValue
-        calendarValue.map((val)=>{
-            console.log(val.value)
-        })
-        console.log(calendarValue)
-        console.log(filtro)
-        console.log(yearValue)
-        console.log(monthValue)
-        if (calendarValue) {
-            newValue
+    const calendarFilters = () => {
+        console.log(storeVal.current)
+        console.log(yearVal.current.$y)
+        console.log(monthVal.current.$m)
+        if (storeVal.current != 0 && yearVal.current != 0 && monthVal.current != 0) {
+            console.log("ENTRE A LOS 3");
+            storeVal.current.map((val) => {
+                console.log(val.value)
+                idStore.current = val.value;
+            })
+        } else {
+            console.log("AUN NO ENTRE A LOS 3")
         }
+    }
+
+    const dataHandleShow = (e, envents) => {
+        console.log("Aqui entró")
+        fechaModal.current = e.dateStr
+        console.log(fechaModal.current)
+        events.map((ev)=>{
+            if(ev.start == fechaModal.current){
+                console.log("encontro la fecha")
+                amountModal.current = ev.title
+            }
+        })
+        console.log(amountModal.current)
+        // amountModal
     }
 
     return (
@@ -123,7 +174,7 @@ function Ventas() {
                                         options={storesOption}
                                         className="basic-multi-select"
                                         classNamePrefix="select"
-                                        onChange={(newValue) => calendarFilters(setCalendarValue(newValue), 'store')}
+                                        onChange={(newValue) => calendarFilters(storeVal.current = newValue)}
                                     />
                                 </Col>
 
@@ -134,7 +185,7 @@ function Ventas() {
                                                 label={'Año'}
                                                 openTo="year"
                                                 views={['year']}
-                                                onChange={(newValue) => calendarFilters(setYearValue(newValue), 'año')}
+                                                onChange={(newValue) => calendarFilters(yearVal.current = newValue)}
                                             />
                                         </DemoContainer>
                                     </LocalizationProvider>
@@ -147,7 +198,7 @@ function Ventas() {
                                                 label={'Mes'}
                                                 openTo="month"
                                                 views={['month']}
-                                                onChange={(newValue) => calendarFilters(setMonthValue(newValue), 'mes')}
+                                                onChange={(newValue) => calendarFilters(monthVal.current = newValue)}
                                             />
                                         </DemoContainer>
                                     </LocalizationProvider>
@@ -167,7 +218,7 @@ function Ventas() {
                                         }}
                                         views={["month", "week", "day"]}
                                         plugins={[dayGridPlugin, interactionPlugin]}
-                                        dateClick={(e) => { handleShow(e) }}
+                                        dateClick={(e) => { handleShow(e), dataHandleShow(e, {events}) }}
                                         weekends={true}
                                         events={events}
                                         eventContent={renderEventContent}
@@ -178,8 +229,8 @@ function Ventas() {
                     </Card>
                 </Container>
             </Fragment>
-            <Modal size="lg" show={show} onHide={handleClose}>
-                <ModalVentasAsistencia />
+            <Modal show={show} onHide={handleClose} className="modal-calendar-config">
+                <ModalVentasAsistencia fecha={fechaModal.current} monto={amountModal.current} />
             </Modal>
         </DashboardLayout>
     );
