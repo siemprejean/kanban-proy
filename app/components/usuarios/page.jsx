@@ -1,10 +1,9 @@
 'use client'
 // import node module libraries
 import React from "react";
-import { useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useState, useRef } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
@@ -38,7 +37,8 @@ const Usuarios = () => {
     const [email, setEmail] = useState('')
     const [id_company, setIdCompany] = useState(null)
     const [role_id, setRole_id] = useState([]);
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA2NzI0NzMyfQ.Nrdul4D12UrbuMDCLzPVK2VgymwrwCosN8WM1qjxPF4"
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3NTI1MjY1fQ.hpOBfz-1idImTCzzP5SddC_pafbGtLj2q9NsDUHm7bY"
+    const [filterValue, setFilterValue] = useState('');
 
     /*MOSTRAR USUARIOS*/
     async function getUser() {
@@ -78,11 +78,21 @@ const Usuarios = () => {
             const result = await response.json();
             console.log(result)
             setRoles(result)
+            /*          for (let i = 0; i < result.roles.length; i++) {
+                         const found = rol_use.find(element => element === result.roles[i].id);
+                         if (found === undefined ) {
+                             result[i]['statusRol'] = false;
+                         } else {
+                             result[i]['statusRol'] = true;
+                         }
+                     }  */
             return result;
         } catch (err) {
             console.log(err);
         }
     }
+
+
 
 
     useEffect(() => {
@@ -105,9 +115,9 @@ const Usuarios = () => {
                 })
             });
             const result = await response.json();
-
+            setPassword(result.user_password)
             setUser(result)
-            console.log(result.name)
+
             return result;
         } catch (err) {
             console.log(err);
@@ -162,53 +172,58 @@ const Usuarios = () => {
         }
     };
 
+    /*CHECKBOX SELECCIONADO */
+    const handleChecked = (id) => {
+        const ro = [...role_id];
+        const index = ro.indexOf(id);
+        if (index === -1) {
+            ro.push(id);
+        } else {
+            ro.splice(index, 1);
+        }
+        setRole_id(ro);
+        console.log(role_id)
+
+    }
+
+
 
     /*ASIGNAR ROLES A USUARIOS*/
     let crearRol_usuario = async (e) => {
         e.preventDefault();
-        const checked = e.target.checked;
-        console.log("BOOLEANO DEL CHECKED");
-        console.log(checked); //New Boolean
-        console.log("VALOR DEL CHECKED");
-        const checkedValue = e.target.value;
-        console.log(checkedValue); //ID del rol
-        /* const d = datos.map((dat) => dat.idrol); */
+        console.log(role_id)
 
-        if (checked === true) {
-            let res = await fetch(`http://10.2.1.174:35789/admin/users/update/${idModal}`, {
-                method:'PUT',
-                headers: new Headers({
+        let res = await fetch(`http://10.2.1.174:35789/admin/users/update/${idModal}`, {
+            method: 'PUT',
+            headers: new Headers({
 
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                }),
-                body: JSON.stringify({
-                    name: name,
-                    username: username,
-                    email: email,
-                    user_password: user_password,
-                    remember_password: user_password,
-                    avatar: null,
-                    id_company: id_company,
-                    roles: checkedValue,
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }),
+            body: JSON.stringify({
+                name: name,
+                username: username,
+                email: email,
+                avatar: null,
+                id_company: id_company,
+                roles: role_id
 
-                }),
-            });
-            let resJson = await res.json();
-            if (res.status === 200) {
-                setName(res.name);
-                setUsername(res.username);
-                setEmail(res.email);
-                setPassword(res.user_password);
-                setIdCompany(res.id_company);
-                setRole_id(res.roles[0])
 
-            }
+            }),
+        });
+        console.log({ id_company, name, username, email, role_id })
+
+        let resJson = await res.json();
+        if (res.status === 200) {
+            setName(res.name);
+            setUsername(res.username);
+            setEmail(res.email);
+            setIdCompany(res.id_company);
+
+
         }
 
-        else {
-            console.log(checkedValue)
-        }
+
     }
 
     const handleFilterChange = e => {
@@ -261,7 +276,7 @@ const Usuarios = () => {
                                                     <td>{get.email}</td>
                                                     <td>   {get.roles.map((ro, index) => (<Badge key={index} bg="success">{ro.name}</Badge>))} </td>
                                                     <td>{dateFormat(get.created_at, "mmmm d, yyyy ")}</td>
-                                                    <td> <Button style={{ backgroundColor: "#03386a" }} onClick={() => { handleShow(); mostrar(get.id) }}>Agregar Rol</Button></td>
+                                                    <td> <Button style={{ backgroundColor: "#03386a" }} onClick={() => { handleShow(); setModalid(get.id); mostrar(get.id); setName(get.name); setUsername(get.username); setEmail(get.email); setIdCompany(get.id_company); }}>Agregar Rol</Button></td>
                                                     <td><a onClick={() => { handleShow1(); mostrar(get.id); setUser([]); setMessage([]); setModalid(get.id); setName(get.name); setUsername(get.username); setEmail(get.email); setIdCompany(get.id_company); setPassword('') }}> <LockIcon /> </a></td>
                                                 </tr>
                                             ))}
@@ -285,7 +300,7 @@ const Usuarios = () => {
                     </Col>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
+                    <Form onSubmit={crearRol_usuario}>
                         <Container>
                             <Row>
                                 <Col sm={6}>
@@ -298,7 +313,7 @@ const Usuarios = () => {
                                 </Col>
 
                                 <Col sm={6} >
-                                    <Form.Group as={Row}  className="mb-3">
+                                    <Form.Group as={Row} className="mb-3">
                                         <Form.Label style={{ fontWeight: "900" }} sm={5}>Apellido</Form.Label>
                                         <Col sm="8">
                                             <Form.Control readOnly defaultValue={usu.username} />
@@ -310,11 +325,11 @@ const Usuarios = () => {
                             <Row>
                                 <Col sm={6}>
                                     <Form.Label style={{ fontWeight: "900" }} sm={4}>Roles</Form.Label>
-                                    {rol.map(role => (
-                                        <div key={role.id} className="mb-3">
+                                    {rol.map((item, index) => (
+                                        <div key={index} className="mb-3">
                                             <Form.Check type='checkbox' >
-                                                <Form.Check.Input onChange={crearRol_usuario} defaultChecked={role.statusRol} type='checkbox' isValid />
-                                                <Form.Check.Label>{role.name}</Form.Check.Label>
+                                                <Form.Check.Input onClick={() => handleChecked(item.id)} type='checkbox' />
+                                                <Form.Check.Label>{item.name}</Form.Check.Label>
                                             </Form.Check>
                                         </div>
                                     ))}
@@ -403,6 +418,11 @@ const Usuarios = () => {
                                         <Form.Label style={{ fontWeight: "900" }} sm={10}>Nueva contraseña</Form.Label>
                                         <Col sm="8">
                                             <Form.Control type="password" defaultValue={user_password} onChange={(e) => setPassword(e.target.value)} />
+                                            <Form.Text id="passwordHelpBlock" muted>
+                                                Su contraseña debe tener de 8-20 caracteres, contener letras y números,
+                                                y no contener espacios, caracteres especiales o emojis.
+                                            </Form.Text>
+
                                         </Col>
                                     </Form.Group>
                                 </Col>
