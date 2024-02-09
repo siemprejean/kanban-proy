@@ -4,7 +4,7 @@ import React from "react";
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-const MuiDialog = ({ open, onClose, title, content, actions }) => {
+const MuiDialog = ({ open, onClose, title, content, actions, className}) => {
     return (
         <Dialog
             open={open}
@@ -12,14 +12,15 @@ const MuiDialog = ({ open, onClose, title, content, actions }) => {
             TransitionComponent={Transition}
             keepMounted
             aria-describedby="alert-dialog-slide-description"
+            className={className}
         >
-            <DialogTitle>
+            <DialogTitle className="modal-dialog-title">
                 {title}
             </DialogTitle>
             <DialogContent>
                 {content}
             </DialogContent>
-            <DialogActions>
+            <DialogActions className="modal-dialog-btn">
                 {actions}
             </DialogActions>
         </Dialog>

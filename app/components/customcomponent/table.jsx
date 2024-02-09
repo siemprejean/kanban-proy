@@ -1,11 +1,14 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
 import PropTypes from 'prop-types';
+import 'styles/theme/components/_card.scss';
+import 'styles/theme/components/_button.scss';
+import 'styles/theme/components/_table.scss';
 const MuiTable = ({ columns, body, rowsPerPage, page, handleChangePage, handleChangeRowsPerPage, count }) => {
     return (
-        <Paper sx={{ width: '100%', margin: 0, padding: '20px' }}>
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead style={{ backgroundColor: 'ghostwhite', border: 'inset' }}>
+        <Paper className="table-custom-container">
+            <TableContainer component={Paper} >
+                <Table id="table">
+                    <TableHead>
                         <TableRow>
                             {columns.map((column, index) => (
                                 <TableCell key={index} style={{ fontWeight: 'bold' }} align={column.align || 'left'}>
@@ -32,7 +35,7 @@ const MuiTable = ({ columns, body, rowsPerPage, page, handleChangePage, handleCh
     );
 };
 
-MuiTable.PropTypes = {
+/*MuiTable.PropTypes = {
     columns: PropTypes.arrayOf(
         PropTypes.shape({
           label: PropTypes.string.isRequired,
@@ -46,5 +49,5 @@ MuiTable.PropTypes = {
       page: PropTypes.number.isRequired,
       //handleChangePage: PropTypes.func.isRequired,
       //handleChangeRowsPerPage: PropTypes.func.isRequired,
-}
+}*/
 export default MuiTable;

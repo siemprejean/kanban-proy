@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
 import { getBrands, getCompanies, getCompany, getCountries, getEmployees, getStores, postCompany, putCompany } from "@/app/data/api";
 import MuiModal from "../customcomponent/modal";
 import MuiTextField from "../customcomponent/formcontrol";
-import { Col, Row } from "react-bootstrap";
+import { Col, Row, Form } from "react-bootstrap";
 import MuiCheckList from "../customcomponent/checklist";
 import MuiTable from "../customcomponent/table";
 import SaveIcon from '@mui/icons-material/Save';
@@ -22,9 +22,13 @@ import MuiDialog from "../customcomponent/dialog";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import MuiSelect from "../customcomponent/Select";
 import { VerifiedOutlined } from "@mui/icons-material";
+import CardHeader from '@mui/material/CardHeader';
+import 'styles/theme/components/_card.scss';
+import 'styles/theme/components/_button.scss';
+import 'styles/theme/components/_modal.scss';
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
-}); 
+});
 export default function Company() {
   useEffect(() => {
     fetchData();
@@ -54,6 +58,13 @@ export default function Company() {
   const closeModal = () => setModalOpen(false);
   const openModalCreate = () => setModalCreateOpen(true);
   const closeModalCreate = () => setModalCreateOpen(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+  const filteredData = data.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -64,8 +75,6 @@ export default function Company() {
     setPage(0);
   };
   const handleChangeCountry = async (event) => {
-    //event.preventDefault();
-    //console.log("esto tiene event", event.target.value)
     const selectedCountry = parseInt(event);
     setcompanyIdCountry(selectedCountry);
     console.log("esto tiene selectedCountry", selectedCountry)
@@ -99,17 +108,6 @@ export default function Company() {
 
   const modalStyles = {
     position: 'absolute',
-    margin: '30vh auto',
-    flex: "auto",
-    right: '10%',
-    width: '75%',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4
-  };
-  const modalStylesEdit = {
-    position: 'absolute',
     margin: 1,
     flex: "auto",
     right: '10%',
@@ -119,7 +117,7 @@ export default function Company() {
     boxShadow: 24,
     p: 4
   };
-/*   console.log(MuiModal.propTypes); */
+  /*   console.log(MuiModal.propTypes); */
 
 
 
@@ -259,29 +257,28 @@ export default function Company() {
     }
   };
 
-  const titledialog = (<>
-
-    <h4 style={{ color: "black" }}><DeleteForeverIcon style={{ backgroundColor: "white", color: "#FF3D57" }} /> ELIMINAR TIENDA</h4>
-    <Divider style={{ border: '1px solid', color: "#AAAAAA" }} />
-  </>
+  const titledialog = (
+    <>
+      <h4><DeleteForeverIcon /> ELIMINAR TIENDA</h4>
+      <Divider className="divider" />
+    </>
   );
   const actions = (<>
-    <Button style={{ backgroundColor: "#7E7E7E", color: "white", borderRadius: "20px", border: "outset" }} onClick={handleClose}>CANCELAR</Button>
-    <Button style={{ backgroundColor: "#FF3D57", color: "white", borderRadius: "20px", border: "outset" }} onClick={handleClose}>ACEPTAR</Button>
+    <Button onClick={handleClose}>ACEPTAR</Button>
   </>);
   const contentDialog = (
     <DialogContentText style={{ color: "black" }}>
       ¿Esta seguro que desea eliminar esta tienda?
     </DialogContentText>);
 
-  const titledialogSucces = (<>
-
-    <h4 style={{ color: "black" }}><VerifiedOutlined style={{ backgroundColor: "white", color: "#FF3D57" }} /> REGISTRO EXITOSO</h4>
-    <Divider style={{ border: '1px solid', color: "#AAAAAA" }} />
-  </>
+  const titledialogSucces = (
+    <>
+      <h4><VerifiedOutlined /> REGISTRO EXITOSO</h4>
+      <Divider className="divider" />
+    </>
   );
   const actionsSucces = (<>
-    <Button style={{ backgroundColor: "#FF3D57", color: "white", borderRadius: "20px", border: "outset" }} onClick={handleCloseSuccessModal}>ACEPTAR</Button>
+    <Button onClick={handleCloseSuccessModal}>ACEPTAR</Button>
   </>);
   const contentDialogSucces = (
     <DialogContentText style={{ color: "black" }}>
@@ -290,66 +287,30 @@ export default function Company() {
 
   //Contenido del modal de creación
   const modalCreate = (
-    <div>
+    <div className="modal-content">
+      <MuiTextField title="Nombre de la Empresa:" value={companyName} onChange={(e) => setcompanyName(e.target.value)} type="text" className="modal-col-12" />
+      <MuiSelect title="Pais:" items={getscountries} value={companyIdCountry} onChange={handleChangeCountry} className="modal-col-12" />
       <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiTextField title="Nombre de la Empresa:" value={companyName} onChange={(e) => setcompanyName(e.target.value)} type="text" />
-        </Col>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiTextField title="ID Fiscal:" value={companyFiscalId} onChange={(e) => setcompanyFiscalId(e.target.value)} type="text" />
-        </Col>
-      </Row>
-      <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px", width: "100%" }}>
-          <MuiSelect title="Pais:" items={getscountries} value={companyIdCountry} onChange={handleChangeCountry} />
-        </Col>
-      </Row>
-      <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <Button style={{ borderRadius: "10px", backgroundColor: "#FFAF38", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => { handleCreateCompany() }}>
+        <Col className="modal-col-btn">
+          <Button onClick={() => { handleCreateCompany() }}>
             <SaveIcon /> GUARDAR
           </Button>
-          <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} />
-        </Col>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <Button style={{ borderRadius: "10px", backgroundColor: "gray", width: "100%", color: "HighlightText", flex: "auto" }} onClick={closeModalCreate}>
-            <CancelIcon /> CANCELAR
-          </Button>
+          <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
         </Col>
       </Row>
     </div>
   );
   const modalContent = (
-    <div>
+    <div className="modal-content">
+      <MuiTextField title="Nombre de la Empresa:" value={updateCompanyName} onChange={(e) => setUpdateCompanyName(e.target.value)} type="text" className="modal-col-6" />
+      <MuiTextField title="No. Empleados:" value={detail.employeesd?.length || 0} className="modal-col-6" />
+      <MuiCheckList title="Marcas" items={detail.brandsd} customStyles={listStyles} preselectedItems={preselectedItems} className="modal-checklist" />
       <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px", width: "100%" }}>
-          <MuiTextField title="Nombre de la Empresa:" value={updateCompanyName} onChange={(e) => setUpdateCompanyName(e.target.value)} type="text" />
-        </Col>
-      </Row>
-      <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiTextField title="ID Fiscal:" value={detail.id} />
-        </Col>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiTextField title="No. Empleados:" value={detail.employeesd?.length || 0} />
-        </Col>
-      </Row>
-      <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <MuiCheckList title="Marcas" items={detail.brandsd} customStyles={listStyles} preselectedItems={preselectedItems} />
-        </Col>
-      </Row>
-      <Row style={{ width: "100%" }}>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
+        <Col className="modal-col-btn">
           <Button style={{ borderRadius: "10px", backgroundColor: "#FFAF38", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => { handleUpdateCompany(detail.id) }}>
             <SaveIcon /> GUARDAR
           </Button>
-          <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} />
-        </Col>
-        <Col style={{ position: "relative", borderRadius: "10px", backgroundColor: "#ffffff", padding: "20px" }}>
-          <Button style={{ borderRadius: "10px", backgroundColor: "gray", width: "100%", color: "HighlightText", flex: "auto" }} onClick={closeModal}>
-            <CancelIcon /> CANCELAR
-          </Button>
+          <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
         </Col>
       </Row>
     </div>
@@ -375,7 +336,7 @@ export default function Company() {
   };
   const body = (
     <>
-      {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+      {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
         <TableRow
           key={row.id}
           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -408,9 +369,9 @@ export default function Company() {
         onClose={closeModal}
         title="EDITAR EMPRESA"
         content={modalContent}
-        customStyles={modalStylesEdit}
+        customStyles={modalStyles}
       />
-      <MuiDialog open={open} onClose={handleClose} title={titledialog} content={contentDialog} actions={actions} />
+      <MuiDialog open={open} onClose={handleClose} title={titledialog} content={contentDialog} actions={actions} className="modal-dialog-container-delete" />
     </>
   );
 
@@ -418,31 +379,22 @@ export default function Company() {
     <>
       <DashboardLayout className="justify-content-center">
 
-        <Card className="align-items-center justify-content-center g-0 min-vh-100 ">
-          <div className='d-flex justify-content-between w-100 m-2'>
-            <div className="d-flex align-items-center">
-              <Link href="/">
-                <ArrowBackIcon size="18px" />
-              </Link>
-              <div className="ms-lg-3 d-none d-md-none d-lg-block">
-                {/* Search Form */}
-                <h3 style={{ fontWeight: "bold" }} id="modal-modal-title" variant="h6" component="h2">
-                  Configuración de Empresas
-                </h3>
-              </div>
-            </div>
-          </div>
-          <Divider style={{ border: '1px solid' }} />
-          <CardContent className="p-6" style={{ justifyContent: 'center' }}>
-            <Box sx={{ flexGrow: 1 }}>
-              <Grid container spacing={1}>
-                <Grid item xs={8}>
-                  <FormControl variant="outlined" style={{ width: "100%" }}>
-                    <Input style={{ backgroundColor: 'ghostwhite', borderRadius: "10px" }} placeholder="Search" />
-                    <SearchIcon style={{ width: "15%", right: 0, position: "absolute", margin: "5px", padding: "1px" }} />
-                  </FormControl>
-                </Grid>
-                <Grid item xs={2}>
+        <Card className="card-configuraciones">
+          <CardHeader className="card-header"
+            title={<h3> Configuración de Empresas </h3>}
+            subheader={
+              <Row className="card-config-header">
+                <div className="card-config-header-left">
+                  <Form className="card-config-search">
+                    <Form.Control type="search" placeholder="Search" onChange={handleSearch} />
+                    <span class="material-symbols-outlined"> search </span>
+                  </Form>
+                  {/* <FormControl className="card-config-search">
+                                        <Input type="search" placeholder="Search" />
+                                        <span class="material-symbols-outlined"> search </span>
+                                    </FormControl> */}
+                </div>
+                <div className="card-header-buttons">
                   <Button style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => { fetchCountries(), openModalCreate() }}>
                     <AddIcon /> CREAR
                   </Button>
@@ -453,18 +405,17 @@ export default function Company() {
                     content={modalCreate}
                     customStyles={modalStyles}
                   />
-                </Grid>
-                <Grid item xs={2}>
                   <Button style={{ borderRadius: "10px", backgroundColor: "gray", width: "100%", color: "HighlightText", flex: "auto" }}>
                     <DownloadIcon /> IMPORTAR
                   </Button>
-                </Grid>
-              </Grid>
-            </Box>
-          </CardContent>
-          <div style={{ height: 400, width: '100%', align: 'center' }}>
+                </div>
+              </Row>
+            }
+          />
+          <Divider className="divider" />
+          <CardContent className="card-content">
             <MuiTable columns={columnsTable} body={body} rowsPerPage={rowsPerPage} page={page} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} count={data.length} />
-          </div >
+          </CardContent>
         </Card >
       </DashboardLayout >
     </>

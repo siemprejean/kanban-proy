@@ -1,4 +1,5 @@
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3Mzg0Mjg0fQ.s7bHGMxqVlM8PuxdUtxuc-jcTBLVXNNkIKLaJGrqUKc'
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3NTg5MjY0fQ.sWqpEaLxtA9UnX8oHZiqft1jfWwC5UOV0rQnhvxaj_g';
+
 //EndPoints de Empresas
 export const getCompanies = async () => {
     try {
@@ -88,6 +89,8 @@ export const putCompany = async (companyData, id) => {
         throw new Error('Error en la solicitud:', error);
     }
 };
+
+//Endpoints de Marcas
 export const getBrands = async () => {
     try {
         const result = await fetch('http://10.2.1.174:35789/general/brands', {
@@ -118,7 +121,7 @@ export const postBrand = async (brandData) => {
                 slug: brandData.name,
                 id_company: brandData.id_company
             }, console.log("brandData", brandData.name)),
-            
+
         });
         if (response.ok) {
             const data = await response.json();
@@ -146,7 +149,7 @@ export const putBrand = async (brandData, id) => {
                 slug: brandData.name,
                 id_company: brandData.id_company
             }, console.log("brandData", brandData.name)),
-            
+
         });
         if (response.ok) {
             const data = await response.json();
@@ -191,6 +194,8 @@ export const getBrand = async (id) => {
         throw new Error('Failed to fetch brand');
     }
 };
+
+//Endpoints de Store
 export const getStores = async () => {
     try {
         const result = await fetch('http://10.2.1.174:35789/general/stores', {
@@ -206,7 +211,6 @@ export const getStores = async () => {
         throw new Error('Failed to fetch stores');
     }
 };
-
 
 export const getStore = async (id) => {
     try {
@@ -224,6 +228,81 @@ export const getStore = async (id) => {
         throw new Error('Failed to fetch store');
     }
 };
+
+export const postStore = async (storeData) => {
+    try {
+        console.log("storeData", storeData);
+        const response = await fetch('http://10.2.1.174:35789/general/stores/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                name: storeData.name,
+                slug: storeData.slug,
+                id_brand: storeData.id_brand,
+                retention: storeData.retention,
+                surplus: storeData.surplus,
+                incentive_sunday: storeData.incentive_sunday,
+                icg_brand: storeData.icg_brand,
+                icg_serie: storeData.icg_serie
+            }, console.log("storeData", {name: storeData.name,
+                slug: storeData.slug,
+                id_brand: storeData.id_brand,
+                retention: storeData.retention,
+                surplus: storeData.surplus,
+                incentive_sunday: storeData.incentive_sunday,
+                icg_brand: storeData.icg_brand,
+                icg_serie: storeData.icg_serie})),
+
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Esto tiene data:", data)
+            return data; // Puedes devolver datos adicionales si es necesario
+        } else {
+            throw new Error('Error al crear la marcas');
+        }
+    } catch (error) {
+        throw new Error('Error en la solicitud:', error);
+    }
+};
+export const putStore = async (storeData, id) => {
+    try {
+        console.log("storeData", storeData);
+        const response = await fetch(`http://10.2.1.174:35789/general/stores/update/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                name: storeData.name,
+                slug: storeData.slug,
+                id_brand: storeData.id_brand,
+                retention: storeData.retention,
+                surplus: storeData.surplus,
+                incentive_sunday: storeData.incentive_sunday,
+                icg_brand: storeData.icg_brand,
+                icg_serie: storeData.icg_serie
+            }, console.log("brandData", storeData.name)),
+
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Esto tiene data:", data)
+            return data; // Puedes devolver datos adicionales si es necesario
+        } else {
+            throw new Error('Error al crear la marcas');
+        }
+    } catch (error) {
+        throw new Error('Error en la solicitud:', error);
+    }
+};
+
+//Endpoints de Employees
 export const getEmployees = async () => {
     try {
         const result = await fetch(`http://10.2.1.174:35789/general/employees`, {
@@ -240,6 +319,8 @@ export const getEmployees = async () => {
         throw new Error('Failed to fetch employees');
     }
 };
+
+//Endpoints de Countries
 export const getCountries = async () => {
     try {
         const result = await fetch(`http://10.2.1.174:35789/general/countries`, {
@@ -257,7 +338,7 @@ export const getCountries = async () => {
     }
 };
 
-
+// Endpoints de Sales
 export const getSales = async () => {
     try {
         const result = await fetch(`http://10.2.1.174:35789/payments/sales`, {
@@ -267,7 +348,7 @@ export const getSales = async () => {
             })
         });
         const data = await result.json();
-        return data; 
+        return data;
     } catch (error) {
         console.error('Error fetching ventas:', error);
         throw new Error('Failed to fetch ventas');
