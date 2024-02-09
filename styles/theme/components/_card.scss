@@ -57,10 +57,11 @@
             height: 50px;
 
             .card-config-header-left {
-                width: 40%;
+                width: 100%;
                 height: 100%;
                 position: relative;
                 padding: 0;
+                max-width: 60%;
 
                 .card-config-search {
                     display: flex;
@@ -121,11 +122,13 @@
                             th {
                                 padding: 0 auto;
                             }
-                            td{
+
+                            td {
                                 text-align: left;
                                 padding: 0px !important;
                             }
-                            .button-td{
+
+                            .button-td {
                                 width: 10%;
                             }
                         }
@@ -150,4 +153,3 @@
         padding: 15px;
     }
 }
-
