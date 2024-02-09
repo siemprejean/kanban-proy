@@ -39,6 +39,7 @@ const Usuarios = () => {
     const [role_id, setRole_id] = useState([]);
     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3NTI1MjY1fQ.hpOBfz-1idImTCzzP5SddC_pafbGtLj2q9NsDUHm7bY"
     const [filterValue, setFilterValue] = useState('');
+ 
 
     /*MOSTRAR USUARIOS*/
     async function getUser() {
@@ -78,14 +79,6 @@ const Usuarios = () => {
             const result = await response.json();
             console.log(result)
             setRoles(result)
-            /*          for (let i = 0; i < result.roles.length; i++) {
-                         const found = rol_use.find(element => element === result.roles[i].id);
-                         if (found === undefined ) {
-                             result[i]['statusRol'] = false;
-                         } else {
-                             result[i]['statusRol'] = true;
-                         }
-                     }  */
             return result;
         } catch (err) {
             console.log(err);
@@ -172,6 +165,7 @@ const Usuarios = () => {
         }
     };
 
+
     /*CHECKBOX SELECCIONADO */
     const handleChecked = (id) => {
         const ro = [...role_id];
@@ -185,7 +179,6 @@ const Usuarios = () => {
         console.log(role_id)
 
     }
-
 
 
     /*ASIGNAR ROLES A USUARIOS*/
@@ -220,9 +213,7 @@ const Usuarios = () => {
             setEmail(res.email);
             setIdCompany(res.id_company);
 
-
         }
-
 
     }
 
@@ -327,8 +318,8 @@ const Usuarios = () => {
                                     <Form.Label style={{ fontWeight: "900" }} sm={4}>Roles</Form.Label>
                                     {rol.map((item, index) => (
                                         <div key={index} className="mb-3">
-                                            <Form.Check type='checkbox' >
-                                                <Form.Check.Input onClick={() => handleChecked(item.id)} type='checkbox' />
+                                            <Form.Check  type='checkbox' >
+                                                <Form.Check.Input tabIndex={-1} defaultChecked={role_id.indexOf(index) !== -1} onClick={() => handleChecked(item.id)} type='checkbox' />
                                                 <Form.Check.Label>{item.name}</Form.Check.Label>
                                             </Form.Check>
                                         </div>
