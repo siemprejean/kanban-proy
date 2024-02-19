@@ -37,7 +37,7 @@ const Usuarios = () => {
     const [email, setEmail] = useState('')
     const [id_company, setIdCompany] = useState(null)
     const [role_id, setRole_id] = useState([]);
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3NTI1MjY1fQ.hpOBfz-1idImTCzzP5SddC_pafbGtLj2q9NsDUHm7bY"
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA4NDYxOTMwfQ.mxbuAy6oIC5YK4WAIrlt2WhplqUnh4eGkMhOwVcNReo"
     const [filterValue, setFilterValue] = useState('');
  
 
@@ -126,7 +126,7 @@ const Usuarios = () => {
         console.log(`Form submitted, ${user_password}`);
 
         try {
-            const res = await fetch(`http://10.2.1.174:35789/admin/users/update/${idModal}`, {
+            const res = await fetch(`http://10.2.1.174:35789/admin/users/password-change/${idModal}`, {
                 method: 'PUT',
                 headers: new Headers({
 
@@ -135,13 +135,10 @@ const Usuarios = () => {
                     'Authorization': 'Bearer ' + token
                 }),
                 body: JSON.stringify({
-                    name: name,
-                    username: username,
-                    email: email,
+                    user_id: idModal,
                     user_password: user_password,
-                    remember_password: user_password,
-                    avatar: null,
-                    id_company: id_company
+                    remember_password: user_password
+            
 
                 })
             })
@@ -150,11 +147,9 @@ const Usuarios = () => {
             console.log(resJson)
             if (res.status === 200) {
                 console.log("logro put ");
-                setName(res.name);
-                setUsername(res.username);
-                setEmail(res.email);
+            
                 setPassword(res.user_password);
-                setIdCompany(res.id_company);
+            
                 setMessage("bien");
             } else {
 
