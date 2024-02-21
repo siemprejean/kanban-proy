@@ -16,7 +16,6 @@ const MuiModal = React.memo(({ open, onClose, title, content, customStyles }) =>
       className='modal-config'
     >
       <Box sx={{ ...customStyles }} className='modal-config-container'>
-
         <h4>{title}</h4>
         <Divider style={{ border: '1px solid' }} />
         <div id="modal-description" className="modal-description">

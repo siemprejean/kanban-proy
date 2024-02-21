@@ -1,7 +1,7 @@
 import { FormControl, InputLabel, NativeSelect } from "@mui/material";
 import PropTypes from 'prop-types';
 import { useCallback } from "react";
-const MuiSelect = ({ title, items, values, onChange, selectKey }) => {
+const MuiSelect = ({ title, items, values, onChange, selectKey, className }) => {
     console.log("Esto tiene values: ", values)
     console.log("Esto tiene onChange: ", onChange)
     console.log("Esto tiene items: ", items)
@@ -13,10 +13,10 @@ const MuiSelect = ({ title, items, values, onChange, selectKey }) => {
         [onChange]
       );
     return (
-        <FormControl fullWidth onChange={handleChange}>
-            <InputLabel variant="standard" htmlFor="uncontrolled-native">
+        <FormControl fullWidth onChange={handleChange} className={className}>
+            <h5 variant="standard" htmlFor="uncontrolled-native">
                 {title}
-            </InputLabel>
+            </h5>
             <NativeSelect
                 value={values}
                 key={selectKey}
