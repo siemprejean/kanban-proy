@@ -55,7 +55,7 @@ export default function Store() {
   const [updateStoreIncentive, setUpdateStoreIncentive] = useState('');
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [message, setMessage] = useState('');
-  const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal() };
+  const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal(); closeModalCreate() };
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
   const openModalCreate = () => setModalCreateOpen(true);
@@ -167,7 +167,6 @@ export default function Store() {
         console.log('Empresa creada exitosamente:', responseData);
         setMessage("Empresa creada exitosamente!!");
         setSuccessModalOpen(true);
-        closeModalCreate();
         fetchData();
       }
     } catch (error) {

@@ -1,8 +1,37 @@
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3NTg5MjY0fQ.sWqpEaLxtA9UnX8oHZiqft1jfWwC5UOV0rQnhvxaj_g';
+let token;
+if (typeof window !== 'undefined') {
+    token = localStorage.getItem('token');
+}
+export const postLogin = async (loginData) => {
+    try {
+        console.log("loginData", loginData);
+        const response = await fetch("http://10.2.1.174:35789/admin/users/login", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify(loginData)
+        })
+        console.log(response)
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Esto tiene login:", data);
+            //setToken(data.token);
+            return data; // Puedes devolver datos adicionales si es necesario
+        } else {
+            throw new Error('Error al crear el Role');
+        }
+    } catch (error) {
+        throw new Error('Error en la solicitud:', error);
+    }
+
+};
 
 //EndPoints de Empresas
 export const getCompanies = async () => {
     try {
+        console.log("Esto tiene token", token)
         const res = await fetch('http://10.2.1.174:35789/general/companies', {
             method: 'GET',
             headers: new Headers({
@@ -162,6 +191,25 @@ export const putBrand = async (brandData, id) => {
         throw new Error('Error en la solicitud:', error);
     }
 };
+
+export const getBrand = async (id) => {
+    try {
+        const result = await fetch(`http://10.2.1.174:35789/general/brands/${id}`, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        });
+        const data = await result.json();
+        console.log('Esto tiene marca:', data);
+        return data;
+    } catch (error) {
+        console.error('Error fetching brand:', error);
+        throw new Error('Failed to fetch brand');
+    }
+};
+
+//ENDPOINTS DE ROLES
 export const getRoles = async () => {
     try {
         const result = await fetch('http://10.2.1.174:35789/admin/roles', {
@@ -178,20 +226,172 @@ export const getRoles = async () => {
         throw new Error('Failed to fetch role');
     }
 }
-export const getBrand = async (id) => {
+
+export const getRole = async (id) => {
     try {
-        const result = await fetch(`http://10.2.1.174:35789/general/brands/${id}`, {
+        const result = await fetch(`http://10.2.1.174:35789/admin/roles/${id}`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token}`
             })
         });
         const data = await result.json();
-        console.log('Esto tiene marca:', data);
+        console.log('Esto tiene role:', data);
         return data;
     } catch (error) {
-        console.error('Error fetching brand:', error);
-        throw new Error('Failed to fetch brand');
+        console.error('Error fetching Roles:', error);
+        throw new Error('Failed to fetch role');
+    }
+}
+
+export const postRole = async (roleData) => {
+    try {
+        console.log("RoleData", roleData);
+        const response = await fetch('http://10.2.1.174:35789/admin/roles/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                name: roleData.name,
+                slug: roleData.slug,
+                status_role: roleData.status_role,
+                permissions: roleData.permissions
+            }, console.log("roleData", roleData.name)),
+
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Esto tiene data:", data)
+            return data; // Puedes devolver datos adicionales si es necesario
+        } else {
+            throw new Error('Error al crear el Role');
+        }
+    } catch (error) {
+        throw new Error('Error en la solicitud:', error);
+    }
+};
+export const putRole = async (roleData, id) => {
+    try {
+        console.log("RoleData", roleData);
+        const response = await fetch(`http://10.2.1.174:35789/admin/roles/update/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                name: roleData.name,
+                slug: roleData.slug,
+                status_role: roleData.status_role,
+                permissions: roleData.permissions
+            }, console.log("roleData", roleData.name)),
+
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Esto tiene data:", data)
+            return data; // Puedes devolver datos adicionales si es necesario
+        } else {
+            throw new Error('Error al actualizar el role');
+        }
+    } catch (error) {
+        throw new Error('Error en la solicitud:', error);
+    }
+};
+
+//ENDPOINTS DE PERMISOS
+export const getPermissions = async () => {
+    try {
+        const result = await fetch('http://10.2.1.174:35789/admin/permissions', {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        });
+        const data = await result.json();
+        console.log('Esto tiene Permission:', data);
+        return data;
+    } catch (error) {
+        console.error('Error fetching Permissions:', error);
+        throw new Error('Failed to fetch Permissions');
+    }
+}
+
+export const getPermission = async (id) => {
+    try {
+        const result = await fetch(`http://10.2.1.174:35789/admin/permissions/${id}`, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        });
+        const data = await result.json();
+        console.log('Esto tiene Permission:', data);
+        return data;
+    } catch (error) {
+        console.error('Error fetching Permission:', error);
+        throw new Error('Failed to fetch Permission');
+    }
+}
+
+export const postPermission = async (permissionData) => {
+    try {
+        console.log("permissionsData", permissionData);
+        const response = await fetch('http://10.2.1.174:35789/admin/permissions/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                name: permissionData.name,
+                slug: permissionData.slug,
+                http_method: permissionData.http_method,
+                http_path: permissionData.http_path
+            }, console.log("brandData", permissionData.name)),
+
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Esto tiene data:", data)
+            return data; // Puedes devolver datos adicionales si es necesario
+        } else {
+            throw new Error('Error al crear el permiso');
+        }
+    } catch (error) {
+        throw new Error('Error en la solicitud:', error);
+    }
+};
+export const putPermission = async (permissionData, id) => {
+    try {
+        console.log("permissionData", permissionData);
+        const response = await fetch(`http://10.2.1.174:35789/admin/permissions/update/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                name: permissionData.name,
+                slug: permissionData.slug,
+                http_method: permissionData.http_method,
+                http_path: permissionData.http_path
+            }, console.log("brandData", permissionData.name)),
+
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Esto tiene data:", data)
+            return data; // Puedes devolver datos adicionales si es necesario
+        } else {
+            throw new Error('Error al actualizar el permiso');
+        }
+    } catch (error) {
+        throw new Error('Error en la solicitud:', error);
     }
 };
 
@@ -247,14 +447,16 @@ export const postStore = async (storeData) => {
                 incentive_sunday: storeData.incentive_sunday,
                 icg_brand: storeData.icg_brand,
                 icg_serie: storeData.icg_serie
-            }, console.log("storeData", {name: storeData.name,
+            }, console.log("storeData", {
+                name: storeData.name,
                 slug: storeData.slug,
                 id_brand: storeData.id_brand,
                 retention: storeData.retention,
                 surplus: storeData.surplus,
                 incentive_sunday: storeData.incentive_sunday,
                 icg_brand: storeData.icg_brand,
-                icg_serie: storeData.icg_serie})),
+                icg_serie: storeData.icg_serie
+            })),
 
         });
         if (response.ok) {
@@ -302,24 +504,6 @@ export const putStore = async (storeData, id) => {
     }
 };
 
-//Endpoints de Employees
-export const getEmployees = async () => {
-    try {
-        const result = await fetch(`http://10.2.1.174:35789/general/employees`, {
-            method: 'GET',
-            headers: new Headers({
-                'Authorization': `Bearer ${token}`
-            })
-        });
-        const data = await result.json();
-        console.log('Esto tiene employees:', data);
-        return data;
-    } catch (error) {
-        console.error('Error fetching employees:', error);
-        throw new Error('Failed to fetch employees');
-    }
-};
-
 //Endpoints de Countries
 export const getCountries = async () => {
     try {
@@ -357,9 +541,9 @@ export const getSales = async () => {
 
 
 //VENTAS Y ASISTENCIA //DETALLE DE EMPLEADO
-export const getEmployee = async () => {
+export const getEmployee = async (id) => {
     try {
-        const result = await fetch(`http://10.2.1.174:35789/general/employees`, {
+        const result = await fetch(`http://10.2.1.174:35789/general/employees/${id}`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token}`
@@ -370,5 +554,22 @@ export const getEmployee = async () => {
     } catch (error) {
         console.error('Error fetching empleados:', error);
         throw new Error('Failed to fetch empleados');
+    }
+};
+
+export const getEmployees = async () => {
+    try {
+        const result = await fetch(`http://10.2.1.174:35789/general/employees`, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        });
+        const data = await result.json();
+        console.log('Esto tiene employees:', data);
+        return data;
+    } catch (error) {
+        console.error('Error fetching employees:', error);
+        throw new Error('Failed to fetch employees');
     }
 };

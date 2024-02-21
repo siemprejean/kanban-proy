@@ -51,7 +51,7 @@ export default function Company() {
   const [companyIdCountry, setcompanyIdCountry] = useState(0);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [message, setMessage] = useState('');
-  const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal() };
+  const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal(); closeModalCreate()};
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const openModal = () => setModalOpen(true);
@@ -156,7 +156,7 @@ export default function Company() {
 
   const fetchDetail = async (id) => {
     try {
-      const company = await getCompany(id);
+      const company = await getCompany(id);j
       const brandsd = await getBrands();
       const stores = await getStores();
       const employees = await getEmployees();
@@ -218,7 +218,6 @@ export default function Company() {
         console.log('Empresa creada exitosamente:', responseData);
         setMessage("Empresa creada exitosamente!!");
         setSuccessModalOpen(true);
-        closeModalCreate();
         fetchData();
       }
     } catch (error) {

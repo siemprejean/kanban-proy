@@ -36,14 +36,28 @@
 }
 
 .card-configuraciones {
-    padding: 30px;
-    margin: 20px;
+    padding: 20px;
+    margin: 0px;
 
     .card-header {
         background: #fff;
 
         h3 {
             font-weight: bold;
+        }
+
+        .card-header-tab {
+            width: 100%;
+            .css-aym9vq-MuiButtonBase-root-MuiTab-root.Mui-selected {
+                color: #f49c1d;
+            }
+            .css-szkm0s-MuiButtonBase-root-MuiTab-root.Mui-selected {
+                color: #f49c1d;
+            }
+            button {
+                width: 35%;
+                
+            }
         }
 
         .card-config-header {
@@ -88,6 +102,7 @@
                     height: 100%;
                 }
             }
+
         }
     }
 

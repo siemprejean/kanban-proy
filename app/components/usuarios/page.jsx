@@ -37,7 +37,7 @@ const Usuarios = () => {
     const [email, setEmail] = useState('')
     const [id_company, setIdCompany] = useState(null)
     const [role_id, setRole_id] = useState([]);
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA3NTI1MjY1fQ.hpOBfz-1idImTCzzP5SddC_pafbGtLj2q9NsDUHm7bY"
+    const token = localStorage.getItem('token');
     const [filterValue, setFilterValue] = useState('');
  
 
@@ -108,8 +108,11 @@ const Usuarios = () => {
                 })
             });
             const result = await response.json();
-            setPassword(result.user_password)
-            setUser(result)
+            setPassword(result.user_password);
+            setUser(result);
+            const preselectedRoles = result.roles.map((role) => role.id);
+            console.log("Esto tiene preselectedRoles", preselectedRoles)
+            setRole_id(preselectedRoles);
 
             return result;
         } catch (err) {
@@ -117,6 +120,14 @@ const Usuarios = () => {
         }
     }
 
+    const handleRowClick = async (id) => {
+        try {
+          await mostrar(id); // Obtener detalles de la empresa
+          handleShow(); // Abrir el modal después de obtener los detalles
+        } catch (error) {
+          console.error('Error fetching company details:', error);
+        }
+      };
 
     /*CAMBIAR PASSWORD DE USUSARIO*/
     let cambiarPass = async (e) => {
@@ -168,9 +179,10 @@ const Usuarios = () => {
 
     /*CHECKBOX SELECCIONADO */
     const handleChecked = (id) => {
+        console.log("Esto tiene role_id", role_id)
+        const currentIndex = role_id.indexOf(value);
         const ro = [...role_id];
-        const index = ro.indexOf(id);
-        if (index === -1) {
+        if (currentIndex === -1) {
             ro.push(id);
         } else {
             ro.splice(index, 1);
@@ -267,7 +279,7 @@ const Usuarios = () => {
                                                     <td>{get.email}</td>
                                                     <td>   {get.roles.map((ro, index) => (<Badge key={index} bg="success">{ro.name}</Badge>))} </td>
                                                     <td>{dateFormat(get.created_at, "mmmm d, yyyy ")}</td>
-                                                    <td> <Button style={{ backgroundColor: "#03386a" }} onClick={() => { handleShow(); setModalid(get.id); mostrar(get.id); setName(get.name); setUsername(get.username); setEmail(get.email); setIdCompany(get.id_company); }}>Agregar Rol</Button></td>
+                                                    <td> <Button style={{ backgroundColor: "#03386a" }} onClick={() => { setModalid(get.id); handleRowClick(get.id); setName(get.name); setUsername(get.username); setEmail(get.email); setIdCompany(get.id_company);}}>Agregar Rol</Button></td>
                                                     <td><a onClick={() => { handleShow1(); mostrar(get.id); setUser([]); setMessage([]); setModalid(get.id); setName(get.name); setUsername(get.username); setEmail(get.email); setIdCompany(get.id_company); setPassword('') }}> <LockIcon /> </a></td>
                                                 </tr>
                                             ))}
@@ -319,7 +331,8 @@ const Usuarios = () => {
                                     {rol.map((item, index) => (
                                         <div key={index} className="mb-3">
                                             <Form.Check  type='checkbox' >
-                                                <Form.Check.Input tabIndex={-1} defaultChecked={role_id.indexOf(index) !== -1} onClick={() => handleChecked(item.id)} type='checkbox' />
+                                            <Form.Check.Input tabIndex={-1} defaultChecked={role_id.indexOf(item.id) !== -1} onClick={() => handleChecked(item.id)} type='checkbox' />
+                                                {/* <Form.Check.Input tabIndex={-1} defaultChecked={role_id.indexOf(index) !== -1} onClick={() => handleChecked(item.id)} type='checkbox' /> */}
                                                 <Form.Check.Label>{item.name}</Form.Check.Label>
                                             </Form.Check>
                                         </div>

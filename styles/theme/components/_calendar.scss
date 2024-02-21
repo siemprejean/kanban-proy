@@ -21,7 +21,6 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-start;
-                gap: 2%;
                 flex-wrap: nowrap;
                 width: 100%;
                 margin: 0 auto;
@@ -54,7 +53,22 @@
                     }
                 }
             }
+            .calendar-col-6 {
+                width: 100% !important;
+                display: flex;
+                padding: 10px 20px;
+            
+                h5 {
+                    text-align: left;
+                }
 
+                div {
+                    width: 75%;
+                    height: 35px;
+                    position: absolute;
+                    right: 5px;
+                }
+            }
             .cal-calendar-content {
                 margin: 40px auto;
                 padding: 0 10%;

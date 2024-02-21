@@ -53,7 +53,7 @@ export default function Brand() {
     const filteredData = data.filter((item) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal() };
+    const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal(); closeModalCreate() };
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const openModal = () => setModalOpen(true);
@@ -169,7 +169,6 @@ export default function Brand() {
             console.log('Marca creada exitosamente:', responseData);
             setMessage("Marca creada exitosamente!!");
             setSuccessModalOpen(true);
-            closeModalCreate();
             fetchData();
         } catch (error) {
             // Manejar errores en caso de que la creación falleç

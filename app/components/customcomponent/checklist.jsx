@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import Comment from '@mui/icons-material/Comment';
 
-const MuiCheckList = ({ className, title, items, preselectedItems }) => {
+const MuiCheckList = ({ className, title, items, preselectedItems, onNewSelectedItems }) => {
   const [checked, setChecked] = React.useState(preselectedItems || []);
   console.log("Esto tiene Checked ", preselectedItems)
   React.useEffect(() => {
@@ -21,7 +21,6 @@ const MuiCheckList = ({ className, title, items, preselectedItems }) => {
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
-
     if (currentIndex === -1) {
       newChecked.push(value);
     } else {
@@ -29,6 +28,7 @@ const MuiCheckList = ({ className, title, items, preselectedItems }) => {
     }
 
     setChecked(newChecked);
+    onNewSelectedItems(newChecked);
     console.log("Esto tiene newChecked ", newChecked)
   };
   console.log("Esto tiene items: ", items)

@@ -4,11 +4,12 @@ import { useEffect } from "react";
 import axios from "axios";
 import { Row, Col, Card, Form, Button, Image } from 'react-bootstrap';
 import 'styles/theme/components/_login.scss';
+import { postLogin } from "@/app/data/api";
+import { useRouter } from "next/router";
 
 
 
 const Formulario = () => {
-
     const { register, formState: { errors, isSubmitting }, handleSubmit } = useForm();
     const enviar = async (data) => {
         const body = {
@@ -17,21 +18,15 @@ const Formulario = () => {
         }
         console.log(data)
 
-        const resp = await fetch("http://10.2.1.174:35789/admin/users/login", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify(body)
-        })
-        console.log(resp)
-        if (resp.ok) {
-            const data = await resp.json();
-            console.log("Esto tiene data:", data)
-        }
-        
+        const resp = await postLogin(body);
+        console.log("Esto tiene resp ", resp.data.token)
+        if (resp.data.token !== null) {
+            // Almacena el token en localStorage
+            localStorage.setItem('token', resp.data.token);
 
+            // Redirige al usuario a la página principal
+            window.location.href = '/';
+        }
     }
 
     return <div style={{ backgroundImage: `url(${"../images/Screenshot_2.jpg"})`, backgroundSize: "cover", height: "100vh" }}>
@@ -63,13 +58,6 @@ const Formulario = () => {
             </Card>
         </div>
     </div>
-
-
-
-
-
-
-
 }
 
 export default Formulario;

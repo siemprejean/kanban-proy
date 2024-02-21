@@ -4,7 +4,7 @@ import { FormControl, Input, TextField } from '@mui/material';
 import { useCallback } from 'react';
 
 const MuiTextField = ({ title, value, onChange, inputKey, defaultValue, className }) => {
-    console.log("Esto tiene onChange", onChange)
+    console.log("Esto tiene onChange textfield", onChange)
     return (
         <FormControl variant="outlined" className={className} >
             <h5>{title}</h5>

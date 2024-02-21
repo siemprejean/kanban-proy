@@ -11,6 +11,7 @@ import CardHeader from '@mui/material/CardHeader';
 
 import 'styles/theme/components/_card.scss';
 import ActiveProjects from "@/app/components/sub-components/ActiveProjects";
+import { useRouter } from "next/navigation";
 
 // import required data files
 // import ProjectsStatsData from "data/dashboard/ProjectsStatsData";
@@ -18,18 +19,44 @@ import ActiveProjects from "@/app/components/sub-components/ActiveProjects";
 const Home = () => {
     const [valor, setValor] = React.useState(0);
     const dir = useRef('');
-
+    const router = useRouter();
+    const token = localStorage.getItem('token');
+   
     useEffect(() => {
-        getEmployee();
+
+            // Decodificar el token JWT para obtener su contenido
+            const tokenData = JSON.parse(atob(token.split('.')[1]));
+        
+            // Obtener la fecha de expiración del token del campo "exp"
+            const expirationTime = tokenData.exp;
+        
+            // Convertir la fecha de expiración a milisegundos
+            const expirationTimeMillis = expirationTime * 1000;
+        
+            // Obtener la fecha actual en milisegundos
+            const currentTimeMillis = new Date().getTime();
+        
+            // Verificar si el token ha expirado
+            if (currentTimeMillis > expirationTimeMillis && router.pathname !== '/login') {
+                console.log('El token ha expirado');
+                router.push('/components/login');
+            } else {
+                getEmployee();
+                console.log('El token está activo');
+            }
+            
+        
 
     })
+    
 
     const getEmployee = async () => {
         try {
+            console.log("Esto tiene token", token)
             const res = await fetch(`http://10.2.1.174:35789/general/employees`, {
                 method: 'GET',
                 headers: new Headers({
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzA1OTk2NDA1fQ.S4eTlMACfm_3wGbZEhww8EYQR8FNCpkqF91PP1l1vuw'
+                    'Authorization': `Bearer ${token}`
                 })
             });
             const data = await res.json();
@@ -41,11 +68,11 @@ const Home = () => {
             throw new Error('Failed to fetch employee');
         }
     };
-    
+
     return (
         <>
             <Fragment>
-                <Container style={{maxWidth:'revert-layer'}}>
+                <Container style={{ maxWidth: 'revert-layer' }}>
                     <Row>
                         <Col sm={8}>
                             <Row>

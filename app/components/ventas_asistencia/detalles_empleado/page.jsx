@@ -16,15 +16,18 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction';
 import Card from 'react-bootstrap/Card';
-import Select from 'react-select'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+//import DatePicker from 'react-datepicker';
 import 'styles/theme/components/_calendar.scss';
 import ModalVentasAsistencia from "../../customcomponent/ModalVentasAsistencia";
-
-import { getEmployee } from "@/app/data/api";
+import { getEmployee, getEmployees, getStores } from "@/app/data/api";
+import MuiSelect from "../../customcomponent/Select";
+import MuiTextField from "../../customcomponent/formcontrol";
+import TokenValidation from "../../customcomponent/tokenvalidation";
+import { useRouter } from "next/navigation";
+import ReactDatePicker from "react-datepicker";
 
 
 const events = [
@@ -35,12 +38,7 @@ const events = [
     },
 ]
 
-const colourOptions = [
-    { value: 'VS Albrook', label: 'VS Albrook' },
-    { value: 'BBW Albrook', label: 'BBW Albrook' },
-    { value: 'VS Multiplaza', label: 'VS Multiplaza' },
-    { value: 'BBW Multiplaza', label: 'BBW Multiplaza' }
-]
+
 
 function getDate(dayString) {
     const today = new Date();
@@ -53,55 +51,106 @@ function getDate(dayString) {
     return dayString.replace("YEAR", year).replace("MONTH", month);
 }
 
+function renderEventContent(eventInfo) {
+    return (
+        <>
+            <b>{eventInfo.timeText}</b>
+            <i>{eventInfo.event.title}</i>
+        </>
+    )
+}
 
 
 
-
-const DetallesEmpleados = () => {
+export default function DetallesEmpleados() {
     const [show, setShow] = useState(false);
-    const [startDate, setStartDate] = useState(new Date());
+    //const [startDate, setStartDate] = useState(new Date());
+    const [detail, setDetail] = useState([]);
+    const [empleado, setEmpleados] = useState([0]);
+    const [tienda, setTiendas] = useState([]);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [employees, setEmployees] = useState([]);
+    const [employeestore, setEmployeestore] = useState([0]);
+    const [stores, setStores] = useState([]);
+    const colourOptions = stores.map((item) => ({ value: item.id, label: item.name }));
+    const router = useRouter();
+    const token = localStorage.getItem('token');
+    const [dateRange, setDateRange] = useState([null, null]);
+    const [startDate, endDate] = dateRange;
 
-
-    const [open, setOpen, page, setPage] = React.useState(0);
-    const [checked, setChecked] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [isModalOpen, setModalOpen] = useState(false);
-    const [isModalCreateOpen, setModalCreateOpen] = useState(false);
-    const [detail, setDetail] = React.useState([]);
-    const [storeName, setStoreName] = useState('');
-    const [storeComision, setStoreComision] = useState('');
-    const [storeRetention, setStoreRetention] = useState('');
-    const [storeExcedent, setStoreExcedent] = useState('');
-    const [storeIncentive, setStoreIncentive] = useState('');
-    const openModal = () => setModalOpen(true);
-    const closeModal = () => setModalOpen(false);
-    const openModalCreate = () => setModalCreateOpen(true);
-    const closeModalCreate = () => setModalCreateOpen(false);
-    const handleOpen = () => setOpen(true);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const stores = await getEmployee();
-                setData(stores);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-        fetchData();
+        // Decodificar el token JWT para obtener su contenido
+        const tokenData = JSON.parse(atob(token.split('.')[1]));
+
+        // Obtener la fecha de expiración del token del campo "exp"
+        const expirationTime = tokenData.exp;
+
+        // Convertir la fecha de expiración a milisegundos
+        const expirationTimeMillis = expirationTime * 1000;
+
+        // Obtener la fecha actual en milisegundos
+        const currentTimeMillis = new Date().getTime();
+
+        // Verificar si el token ha expirado
+        if (currentTimeMillis > expirationTimeMillis) {
+            console.log('El token ha expirado');
+            router.push('/components/login');
+        } else {
+            fetchData();
+            console.log('El token está activo');
+        }
+
     }, []);
 
+    const fetchData = async () => {
+        try {
+            const employee = await getEmployees();
+            const store = await getStores();
+            const storeemployee = store.map((items) => ({
+                ...items,
+                employeesd: employee.filter((employe) => employe.id_store === items.id)
+            }));
+            console.log("Esto tiene storeemployee", employee)
+
+            setEmployees(employee);
+            setStores(store);
+            console.log("Esto tiene employeestore", employeestore)
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
     const fetchDetail = async (id) => {
         try {
-            const store = await getStore(id);
-
-            setDetail(store);
+            console.log("Esto tiene id", id)
+            const employee = await getEmployee(id);
+            const store = await getStores();
+            const employeesstore = {
+                ...employee,
+                store: store.filter((store) => store.id === employee.id_store)
+            };
+            console.log("Esto tiene employeesstore", employeesstore)
+            setDetail(employee);
+            //setStores(store);
+            //console.log("Esto tiene employeestore", employeestore)
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     }
+    const handleChangeEmployee = async (event) => {
+        const selectedEmployee = parseInt(event);
+        setEmpleados(selectedEmployee);
+        fetchDetail(selectedEmployee);
+        console.log("esto tiene selectedEmployee", selectedEmployee)
+    };
+    const handleChangeStores = async (event) => {
+        const selectedStore = parseInt(event);
+        setTiendas(selectedStore);
+        const employeeStore = employees.filter((employe) => employe.id_store === selectedStore);
+        setEmployeestore(employeeStore);
+        console.log("esto tiene selectedStore", selectedStore)
+    };
 
 
     return (
@@ -113,50 +162,73 @@ const DetallesEmpleados = () => {
                             <h4 className="calendar-title">Detalle de Empleado</h4>
                             <Row className="calendar-filters">
                                 <Col xs={3} className="calendar-filter">
-                                    <Select
-                                        isMulti
-                                        name="colors"
-                                        options={colourOptions}
-                                        className="basic-multi-select"
-                                        classNamePrefix="select"
+                                    <MuiSelect title="Tiendas:" items={stores} value={tienda} onChange={handleChangeStores} className="modal-col-12" />
+                                </Col>
+                                <Col xs={3} className="calendar-filter">
+                                    <MuiSelect title="Empleados:" items={employeestore} value={empleado} onChange={handleChangeEmployee} className="modal-col-12" />
+                                </Col>
+                                <Col xs={3} className="calendar-filter">
+                                    <ReactDatePicker
+                                        selectsRange={true}
+                                        startDate={startDate}
+                                        endDate={endDate}
+                                        onChange={(update) => {
+                                            setDateRange(update);
+                                        }}
+                                        isClearable={true}
                                     />
-                                </Col>
-                                <Col xs={3} className="calendar-filter">
-                                    <Select
-                                        isMulti
-                                        name="colors"
-                                        options={colourOptions}
-                                        className="basic-multi-select"
-                                        classNamePrefix="select"
-                                    />
-                                </Col>
-                                <Col xs={3} className="calendar-filter">
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DemoContainer components={['DatePicker']}>
-                                            <DatePickerg
-                                                label={'Año'}
-                                                openTo="year"
-                                                views={['year']}
-                                            />
-                                        </DemoContainer>
-                                    </LocalizationProvider>
-                                </Col>
-
-                                <Col xs={3} className="calendar-filter">
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DemoContainer components={['DatePicker']}>
-                                            <DatePicker
-                                                label={'Mes'}
-                                                openTo="month"
-                                                views={['month']}
-                                            />
-                                        </DemoContainer>
-                                    </LocalizationProvider>
                                 </Col>
                             </Row>
-
                             <br></br>
-
+                            <Row>
+                                <Col xs={5} className="calendar-filter">
+                                    <Row>
+                                        <MuiTextField title="Nombre Completo:" value={detail.name + ' ' + detail.last_name} className="calendar-col-6" />
+                                    </Row>
+                                    <Row>
+                                        <MuiTextField title="Cargo:" value={' '} className="calendar-col-6" />
+                                    </Row>
+                                    <Row>
+                                        <MuiTextField title="Tienda:" value={detail.store} className="calendar-col-6" />
+                                    </Row>
+                                    <Row>
+                                        <MuiTextField title="Localidad:" value={' '} className="calendar-col-6" />
+                                    </Row>
+                                    <Row>
+                                        <MuiTextField title="Empresa:" value={' '} className="calendar-col-6" />
+                                    </Row>
+                                </Col>
+                                <Col xs={5} className="calendar-filter">
+                                    <Row>
+                                        <MuiTextField title="Nº Empleados:" value={detail.identification} className="calendar-col-6" />
+                                    </Row>
+                                    <Row>
+                                        <MuiTextField title="Nº Tarjeta:" value={detail.card_number} className="calendar-col-6" />
+                                    </Row>
+                                    <Row>
+                                        <MuiTextField title="Fecha de Inicio:" value={' '} className="calendar-col-6" />
+                                    </Row>
+                                    <Row>
+                                        <MuiTextField title="Turnos:" value={' '} className="calendar-col-6" />
+                                    </Row>
+                                    <Row>
+                                        <MuiTextField title="Días Libres:" value={' '} className="calendar-col-6" />
+                                    </Row>
+                                </Col>
+                                <Col xs={3} className="calendar-filter">
+                                    <Row>
+                                        <Button style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "75%", color: "HighlightText", flex: "auto" }} onClick={() => { fetchCountries(), openModalCreate() }}>
+                                            CREAR
+                                        </Button>
+                                    </Row>
+                                    <Row>
+                                        <Button style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "75%", color: "HighlightText", flex: "auto" }} onClick={() => { fetchCountries(), openModalCreate() }}>
+                                            CREAR
+                                        </Button>
+                                    </Row>
+                                </Col>
+                            </Row>
+                            <br></br>
                             <Row className="cal-calendar-content">
                                 <Col md={12} >
                                     <FullCalendar
@@ -183,17 +255,4 @@ const DetallesEmpleados = () => {
             </Modal>
         </DashboardLayout>
     );
-};
-
-function renderEventContent(eventInfo) {
-    return (
-        <>
-            <b>{eventInfo.timeText}</b>
-            <i>{eventInfo.event.title}</i>
-        </>
-    )
 }
-
-
-
-export default DetallesEmpleados;

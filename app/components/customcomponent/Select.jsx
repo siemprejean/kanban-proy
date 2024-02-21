@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useCallback } from "react";
 const MuiSelect = ({ title, items, values, onChange, selectKey, className }) => {
     console.log("Esto tiene values: ", values)
-    console.log("Esto tiene onChange: ", onChange)
+    console.log("Esto tiene onChange select: ", onChange)
     console.log("Esto tiene items: ", items)
     const handleChange = useCallback(
         (event) => {
@@ -27,6 +27,7 @@ const MuiSelect = ({ title, items, values, onChange, selectKey, className }) => 
                     id: 'uncontrolled-native',
                 }}
             >
+                <option value=''>Seleccione un item</option>
                 {
                     items.map((value) => (
                         <option key={value.id} value={value.id}>{value.name}</option>
