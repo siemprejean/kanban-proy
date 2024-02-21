@@ -133,7 +133,7 @@ const DetallesEmpleados = () => {
                                 <Col xs={3} className="calendar-filter">
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DemoContainer components={['DatePicker']}>
-                                            <DatePickerg
+                                            <DatePicker
                                                 label={'Año'}
                                                 openTo="year"
                                                 views={['year']}

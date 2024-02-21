@@ -114,7 +114,7 @@ const ModalVentasAsistencia = ((data) => {
                                         <td>PA-855431</td>
                                         <td>Pedro López</td>
                                         <td>$65</td>
-                                        <td>$812</td>
+                                        <td>$812</td> 
                                         <td>38%</td>
                                         <td>$16.12</td>
                                     </tr>
