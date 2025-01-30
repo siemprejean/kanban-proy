@@ -80,23 +80,28 @@ export default function Store() {
                         <thead>
                             <tr>
                            
-                            <th><h5 style={{ fontWeight: "900" }}>Creado en</h5></th>
-                                <th><h5 style={{ fontWeight: "900" }}>Procentaje de retención</h5></th>
+                            <th><h5 style={{ fontWeight: "900" }}>Fecha</h5></th>
+                            <th><h5 style={{ fontWeight: "900" }}>Tienda</h5></th>
+                                <th><h5 style={{ fontWeight: "900" }}>Porcentaje de retención</h5></th>
                                 <th><h5 style={{ fontWeight: "900" }}>Meta de ventas</h5></th>
                                 <th> <h5 style={{ fontWeight: "900" }}>Diferencia entre la meta y lo que se logró</h5></th>
                                 <th><h5 style={{ fontWeight: "900" }}>Porcentaje de la meta</h5></th>
                                 <th><h5 style={{ fontWeight: "900" }}>Total de empleados</h5></th>
                                 <th> <h5 style={{ fontWeight: "900" }}>Excedente de venta</h5></th>
-                                <th><h5 style={{ fontWeight: "900" }}>total de venta</h5></th>
-                                <th><h5 style={{ fontWeight: "900" }}>total de vendedores</h5></th>
-                              
+                                <th><h5 style={{ fontWeight: "900" }}>Total de venta</h5></th>
+                                <th><h5 style={{ fontWeight: "900" }}>Total de vendedores</h5></th>
+                                <th><h5 style={{ fontWeight: "900" }}>Total de venta domingos</h5></th>
+                                <th><h5 style={{ fontWeight: "900" }}>Porcentaje de incencitvo domingos</h5></th>
+                                <th><h5 style={{ fontWeight: "900" }}>Incentivo domingos</h5></th>
+                                <th><h5 style={{ fontWeight: "900" }}>Vendedores domingos</h5></th>
                             </tr>
                         </thead>
                         {stores_sales.length != null && (
                             <tbody>
                                 {stores_sales?.map(get => (
                                      <tr key={get.id}>
-                                        <td  >{get.created_at }</td>
+                                        <td  >{get.start_date }</td>
+                                        <td >{get.store_name} </td>
                                         <td >{get.retention_percentage}% </td>
                                         <td>{get.sales_goal}</td>
                                         <td  >{get.sales_goal_difference}</td>
@@ -105,7 +110,10 @@ export default function Store() {
                                         <td >{get.sales_surplus} </td>
                                         <td>{get.total_sales}</td>
                                         <td  >{get.total_sellers}</td>
-                                      
+                                        <td  >{get.total_sunday_sales}</td>
+                                        <td  >{get.sunday_incentive_percentage}</td>
+                                        <td  >{get.sunday_incentive}</td>
+                                        <td  >{get.sunday_sellers}</td>
                                     </tr>
                                 ))}
                             </tbody>
