@@ -32,9 +32,10 @@ export default function Store() {
   const [searchTerm, setSearchTerm] = useState('');
 
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
+    const filteredData = stores_sales.filter(item => 
+    //  item.start_date.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.store_name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
 
   useEffect(() => {
@@ -66,11 +67,16 @@ export default function Store() {
     <Card >
         <Card.Body>
             <h3>Resumen de tiendas </h3>
-
-            <Row >
-                <Col xs={5} md={3}>
-                   
-                </Col></Row>
+<br></br>
+           
+                <input 
+                type="text" 
+                placeholder="Buscar Tienda"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="mb-4 p-2 border border-gray-300 rounded"
+            />
+               
             <br></br>
             <Row className="App">
             
@@ -96,9 +102,9 @@ export default function Store() {
                                 <th><h5 style={{ fontWeight: "900" }}>Vendedores domingos</h5></th>
                             </tr>
                         </thead>
-                        {stores_sales.length != null && (
+                        {filteredData.length != null && (
                             <tbody>
-                                {stores_sales?.map(get => (
+                                {filteredData?.map(get => (
                                      <tr key={get.id}>
                                         <td  >{get.start_date }</td>
                                         <td >{get.store_name} </td>
