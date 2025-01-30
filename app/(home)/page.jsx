@@ -20,40 +20,40 @@ const Home = () => {
     const [valor, setValor] = React.useState(0);
     const dir = useRef('');
     const router = useRouter();
-    const token = localStorage.getItem('token');
+ //   const token = localStorage.getItem('token');
    
     useEffect(() => {
 
             // Decodificar el token JWT para obtener su contenido
-            const tokenData = JSON.parse(atob(token.split('.')[1]));
+            //console.log(token);
+          //  const tokenData = JSON.parse(token);
         
             // Obtener la fecha de expiración del token del campo "exp"
-            const expirationTime = tokenData.exp;
+          //  const expirationTime = tokenData.exp;
         
             // Convertir la fecha de expiración a milisegundos
-            const expirationTimeMillis = expirationTime * 1000;
+        //    const expirationTimeMillis = expirationTime * 1000;
         
             // Obtener la fecha actual en milisegundos
-            const currentTimeMillis = new Date().getTime();
+        //    const currentTimeMillis = new Date().getTime();
         
             // Verificar si el token ha expirado
-            if (currentTimeMillis > expirationTimeMillis && router.pathname !== '/login') {
+         /*  if (currentTimeMillis > expirationTimeMillis && router.pathname !== '/login') {
                 console.log('El token ha expirado');
                 router.push('/components/login');
             } else {
                 getEmployee();
                 console.log('El token está activo');
-            }
+            }*/
             
         
-
     })
     
 
     const getEmployee = async () => {
         try {
             console.log("Esto tiene token", token)
-            const res = await fetch(`http://10.2.1.174:35789/general/employees`, {
+            const res = await fetch(`http://10.2.1.84:6500/general/employees`, {
                 method: 'GET',
                 headers: new Headers({
                     'Authorization': `Bearer ${token}`

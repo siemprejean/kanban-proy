@@ -50,7 +50,7 @@ export const DashboardMenu = [
 		id: uuid(),
 		title: 'Tiendas',
 		icon: 'shopping_basket',
-		link: '/layout-vertical'
+		link: '/components/store'
 	},
 	{
 		id: uuid(),

@@ -20,15 +20,30 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { getEmployees, getStores, getSales } from "@/app/data/api";
+import { getEmployees, getStores, getSales, getStore_Sales } from "@/app/data/api";
+import './style.css';
 import 'styles/theme/components/_calendar.scss';
 import ModalVentasAsistencia from "../../customcomponent/ModalVentasAsistencia";
 
-
-const events = [
+const options = [
+    { value: '01', label: 'Enero' },
+    { value: '02', label: 'Febrero' },
+    { value: '03', label: 'Marzo' },
+    { value: '04', label: 'Abril' },
+    { value: '05', label: 'Mayo' },
+    { value: '06', label: 'Junio' },
+    { value: '07', label: 'Julio' },
+    { value: '08', label: 'Agosto' },
+    { value: '09', label: 'Septiembre' },
+    { value: '10', label: 'Octubre' },
+    { value: '11', label: 'Noviembre' },
+    { value: '12', label: 'Diciembre' }
+  ]
+/* const events = [
     {
         title: "$2,500",
         start: getDate("YEAR-MONTH-01"),
+        color: "#FFC0C0",
         backgroundColor: "#FEFFC0",
     },
     {
@@ -61,7 +76,7 @@ const events = [
         start: getDate("YEAR-MONTH-07"),
         backgroundColor: "#64EA8F",
     },
-]
+] */
 
 // const colourOptions = [
 //     { value: 'VS Albrook', label: 'VS Albrook' },
@@ -74,6 +89,7 @@ function getDate(dayString) {
     const today = new Date();
     const year = today.getFullYear().toString();
     let month = (today.getMonth() + 1).toString();
+
 
     if (month.length === 1) {
         month = "0" + month;
@@ -88,6 +104,7 @@ function Ventas() {
     const [startDate, setStartDate] = useState(new Date());
     const [storesOption, setStoresOption] = useState([]);
     const [sales, setSales] = useState([]);
+    const [store_sale, setStore_sales] = useState([]);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const cont = useRef(0);
@@ -106,29 +123,50 @@ function Ventas() {
         calendarFilters();
     }, []);
 
+
+    
     const fetchData = async () => {
         try {
             const sales = await getSales();
             const stores = await getStores();
-            console.log(sales);
-            console.log(stores);
+            const store_sale = await getStore_Sales();
+            //console.log(sales);
+            //console.log(stores);
+    
+            setStore_sales(store_sale);
             setSales(sales);
             storeOptions(stores);
+
+            console.log(store_sale);
             console.log(storesOption);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
 
+    /* opciones de Tiendas  */
     const storeOptions = (data) => {
         data.map((data) => {
+        
             const option = {
-                value: data.id,
-                label: data.name
+                value: data.brand_id,
+                label: data.store_name
             }
             setStoresOption(storesOption => [...storesOption, option])
         })
+    } 
+
+    /* Traer la data de tiendas para reflejarlo en el calendario */
+    const obtenerEventos = () => {
+        return store_sale.map((evento) => ({
+          id: evento.id,
+          title: evento.total_sales,
+          start: evento.created_at, 
+          backgroundColor: "#64EA8F",// Agregar cualquier otro dato que necesites
+        }));
+    
     }
+
 
     const calendarFilters = () => {
         console.log(storeVal.current)
@@ -145,11 +183,11 @@ function Ventas() {
         }
     }
 
-    const dataHandleShow = (e, envents) => {
+    const dataHandleShow = (e, obtenerEventos) => {
         console.log("Aqui entró")
         fechaModal.current = e.dateStr
         console.log(fechaModal.current)
-        events.map((ev)=>{
+       store_sale.map((ev)=>{
             if(ev.start == fechaModal.current){
                 console.log("encontro la fecha")
                 amountModal.current = ev.title
@@ -169,10 +207,7 @@ function Ventas() {
                             <Row className="calendar-filters">
                                 <Col xs={6} className="calendar-filter">
                                     <Select
-                                        isMulti
-                                        name="colors"
                                         options={storesOption}
-                                        className="basic-multi-select"
                                         classNamePrefix="select"
                                         onChange={(newValue) => calendarFilters(storeVal.current = newValue)}
                                     />
@@ -192,7 +227,9 @@ function Ventas() {
                                 </Col>
 
                                 <Col xs={3} className="calendar-filter">
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              
+                                <Select style="with:30px" classNamePrefix="select" options={options}   />
+                                  {/*   <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DemoContainer components={['DatePicker']}>
                                             <DatePicker
                                                 label={'Mes'}
@@ -201,7 +238,7 @@ function Ventas() {
                                                 onChange={(newValue) => calendarFilters(monthVal.current = newValue)}
                                             />
                                         </DemoContainer>
-                                    </LocalizationProvider>
+                                    </LocalizationProvider> */}
                                 </Col>
                             </Row>
 
@@ -218,9 +255,11 @@ function Ventas() {
                                         }}
                                         views={["month", "week", "day"]}
                                         plugins={[dayGridPlugin, interactionPlugin]}
-                                        dateClick={(e) => { handleShow(e), dataHandleShow(e, {events}) }}
+                                     /*   dateClick={(e) => { handleShow(e), dataHandleShow(e, {events}) }}*/
+                                    /*  dateClick={(info) => alert('Fecha seleccionada: ' + info.dateStr)}*/
+                                       dateClick={(e) => { handleShow(e), dataHandleShow(e, obtenerEventos())}}
                                         weekends={true}
-                                        events={events}
+                                        events={obtenerEventos()}
                                         eventContent={renderEventContent}
                                     />
                                 </Col>

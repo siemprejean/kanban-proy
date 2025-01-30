@@ -82,25 +82,25 @@ export default function DetallesEmpleados() {
 
     useEffect(() => {
         // Decodificar el token JWT para obtener su contenido
-        const tokenData = JSON.parse(atob(token.split('.')[1]));
+      //  const tokenData = JSON.parse(atob(token.split('.')[1]));
 
         // Obtener la fecha de expiración del token del campo "exp"
-        const expirationTime = tokenData.exp;
+    //    const expirationTime = tokenData.exp;
 
         // Convertir la fecha de expiración a milisegundos
-        const expirationTimeMillis = expirationTime * 1000;
+     //   const expirationTimeMillis = expirationTime * 1000;
 
         // Obtener la fecha actual en milisegundos
-        const currentTimeMillis = new Date().getTime();
+     //   const currentTimeMillis = new Date().getTime();
 
         // Verificar si el token ha expirado
-        if (currentTimeMillis > expirationTimeMillis) {
+      /*  if (currentTimeMillis > expirationTimeMillis) {
             console.log('El token ha expirado');
             router.push('/components/login');
         } else {
             fetchData();
             console.log('El token está activo');
-        }
+        }*/
 
     }, []);
 
