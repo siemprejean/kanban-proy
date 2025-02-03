@@ -53,7 +53,7 @@ const Home = () => {
     const getEmployee = async () => {
         try {
             console.log("Esto tiene token", token)
-            const res = await fetch(`http://10.2.1.174:35789/general/employees`, {
+            const res = await fetch(`http://10.2.1.84:6500/general/employees`, {
                 method: 'GET',
                 headers: new Headers({
                     'Authorization': `Bearer ${token}`

@@ -1,4 +1,5 @@
 let token;
+let token_temis = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM4MzQ2NjA4fQ.NBK2iJy6GM3Um8buOLxB8UIvqcEbANMjx00BcIm97qQ"
 if (typeof window !== 'undefined') {
     token = localStorage.getItem('token');
 }
@@ -398,7 +399,7 @@ export const getStores = async () => {
         const result = await fetch('http://10.2.1.84:6500/general/stores/active', {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();
@@ -525,7 +526,25 @@ export const getSales = async () => {
         const result = await fetch(`http://10.2.1.84:6500/payments/sales`, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
+            })
+        });
+        const data = await result.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching ventas:', error);
+        throw new Error('Failed to fetch ventas');
+    }
+};
+
+
+// Endpoints Ventas por Tienda
+export const getStore_Sales = async () => {
+    try {
+        const result = await fetch('http://10.2.1.84:6500/payments/store_summaries?payroll_id=1', {
+            method: 'GET',
+            headers: new Headers({
+              'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();

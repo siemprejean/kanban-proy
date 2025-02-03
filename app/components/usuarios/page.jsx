@@ -46,7 +46,7 @@ const Usuarios = () => {
     /*MOSTRAR USUARIOS*/
     async function getUser() {
         try {
-            const response = await fetch('http://10.2.1.174:35789/admin/users', {
+            const response = await fetch('http://10.2.1.84:6500/admin/users', {
                 method: "GET",
                 headers: new Headers({
 
@@ -69,7 +69,7 @@ const Usuarios = () => {
     /*MOSTRAR ROLES*/
     async function getRol() {
         try {
-            const response = await fetch('http://10.2.1.174:35789/admin/roles', {
+            const response = await fetch('http://10.2.1.84:6500/admin/roles', {
                 method: "GET",
                 headers: new Headers({
 
@@ -101,7 +101,7 @@ const Usuarios = () => {
     let mostrar = async (id) => {
         setUser([])
         try {
-            const response = await fetch(`http://10.2.1.174:35789/admin/users/${id}`, {
+            const response = await fetch(`http://10.2.1.84:6500/admin/users/${id}`, {
                 method: "GET",
                 headers: new Headers({
 
@@ -139,7 +139,7 @@ const Usuarios = () => {
         console.log(`Form submitted, ${user_password}`);
 
         try {
-            const res = await fetch(`http://10.2.1.174:35789/admin/users/password-change/${idModal}`, {
+            const res = await fetch(`http://10.2.1.84:6500/admin/users/password-change/${idModal}`, {
                 method: 'PUT',
                 headers: new Headers({
 
@@ -195,7 +195,7 @@ const Usuarios = () => {
         e.preventDefault();
         console.log(role_id)
 
-        let res = await fetch(`http://10.2.1.174:35789/admin/users/update/${idModal}`, {
+        let res = await fetch(`http://10.2.1.84:6500/admin/users/update/${idModal}`, {
             method: 'PUT',
             headers: new Headers({
 
