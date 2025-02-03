@@ -1,57 +1,36 @@
 'use client'
 // import node module libraries
 import React from "react";
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import { useState, useEffect } from 'react';
+
+import { useState, useRef, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+
 import Col from 'react-bootstrap/Col';
+
 import DashboardLayout from "@/app/(home)/layout";
 import { Fragment } from "react";
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from '@fullcalendar/interaction';
+
 import Card from 'react-bootstrap/Card';
 
 //import DatePicker from 'react-datepicker';
 import 'styles/theme/components/_calendar.scss';
-import ModalVentasEmpleado from "../../customcomponent/ModalVentasEmpleado";
-import { getCompanies, getEmployees, getPositions, getStores } from "@/app/data/api";
+import { getCompanies, getEmployee, getEmployees, getPayrolls, getPositions, getSellerSummaries, getStores } from "@/app/data/api";
+
 import MuiTextField from "../../customcomponent/formcontrol";
+
 import { useRouter } from "next/navigation";
-import BasicDateRangePicker from  "../../customcomponent/BasicDateRangePicker";
+
 import DropdownSelect_v2 from "../../customcomponent/DropdownSelect_v2";
 import 'styles/theme/components/_dateRangePicker.scss'
 import 'styles/theme/components/_DropdownSelect_v2.scss'
+import 'styles/theme/components/_tablaResumenEmpl.scss'
 
 
-const dataTabla = {
-    fecha: "Lunes, 2 de octubre de 2023",
-    fullname: "Julio Ernesto Pérez González",
-    cargo: "Asesor de Ventas",
-    turno: "Turno B (8am - 4pm)",
-    ordinarias: "08:01",
-    certificadoMedico: "00:00",
-    ausenciaJustificada: "00:00",
-    tardanzaJustificada: "00:00",
-    comentarios: "",
-    detallesTurno: [
-      {
-        tienda: "ADIDAS - ALBROOK",
-        entrada: "8:00 am",
-        entradaDescanso: "12:02 pm",
-        salidaDescanso: "1:01 pm",
-        salida: "4:00 pm",
-        turno: "Turno B (8am - 4pm)"
-      }
-    ],
-    ventasHoy: "78.85",
-    ventasMensuales: "496.85",
-    porcentajeVentaMeta: "15.50% / 20%",
-    porcentajeVentasTiendaHoy: "34.00%",
-    incentivo: "18.50"
-  };
+
+
+
+
 
 
 
@@ -96,19 +75,22 @@ export default function DetallesEmpleados() {
     const [detail, setDetail] = useState({fullname: "", cargo:"", tienda:"", local: "", empresa: "", num_empl: "", num_card: "", fecha_in: "", turnos: "", dias_libres: ""});
     const [dataReport, setDataReport] = useState(null);
     const handleClose = () => setShow(false);
-   
+
+    const [payrolls, setPayrolls] = useState([0]);
     const [stores, setStores] = useState([0]);
     const [employees, setEmployees] = useState([]);
     const [companies, setCompanies] = useState([0]);
     const [positions, setPositions] = useState([0]);
+
+    const [payrollstores, setPayrollstores] = useState([0]);
     const [employeestore, setEmployeestore] = useState([0]);
 
     //const colourOptions = stores.map((item) => ({ value: item.id, label: item.name }));
     const router = useRouter();
     //const token = localStorage.getItem('token');
     const [dateRange, setDateRange] = useState([null, null]);
-    const [startDate, endDate] = dateRange;
-    
+    const [sellerSumaries, setSellerSumaries] = useState([])
+    const [dataTabla, setdataTabla ] = useState([])
 
 
     useEffect(() => {
@@ -116,6 +98,7 @@ export default function DetallesEmpleados() {
 
         const CargarData = async () => {
             try {
+                const data_payrolls = await getPayrolls();
                 const data_employees = await getEmployees();
                 const data_store = await getStores();
                 const data_companies = await getCompanies();
@@ -124,10 +107,7 @@ export default function DetallesEmpleados() {
                 //     ...items,
                 //     employeesd: employee.filter((employe) => employe.id_store === items.id)
                 // }));
-                const updatedStores = data_store.map(store => ({
-                    ...store,
-                    label: store.store_name,
-                  }));
+               
 
                   const updatedemployees = data_employees.map(emp => ({
                     ...emp,
@@ -135,12 +115,28 @@ export default function DetallesEmpleados() {
                     fullname: (emp.first_name+ ' ' + emp.last_name),
                   }));
 
-                setStores(updatedStores);
+                  const months = [
+                    "enero", "febrero", "marzo", "abril", "mayo", "junio", 
+                    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+                  ];
+                  
+                  
+                  const updatedPayrolls = data_payrolls.map(x => ({
+                    ...x,
+                    label: months[new Date(x.start_date).getMonth()] + ' (' + new Date(x.start_date).getFullYear() + ')',
+                  }));
+
+                  const updatedStores = data_store.map(store => ({
+                    ...store,
+                    label: store.store_name,
+                  }));
+
                 setEmployees(updatedemployees);
                 setCompanies(data_companies);
                 setPositions(data_positions);
-                //setEmployees(employee);
-                
+
+                setPayrolls(updatedPayrolls)
+                setStores(updatedStores)
                 //console.log("Esto tiene employeestore", employeestore)
             } catch (error) {
                 console.error('Error cargando data inicial:', error);
@@ -192,13 +188,52 @@ export default function DetallesEmpleados() {
     //     }
     // }
  
+    const handleChangePayrolls = async (event) => {
+        const selected = parseInt(event);
+        const dataSeller = await getSellerSummaries(selected);
 
+        const updatedDataTest = dataSeller.map(x => {
+            const matchedEmployee = employees.find(e => e.id === x.employee_id);
+            return {
+            ...x,
+            cedula: matchedEmployee?.identification || "Sin Cédula",
+            };
+            });
+
+        setSellerSumaries(updatedDataTest)
+        setdataTabla(updatedDataTest)
+        
+    
+        const updatedStores = stores.filter((item) => item.payroll_id === selected).map(store => ({
+            ...store,
+            label: store.store_name,
+          }));
+
+        setPayrollstores(updatedStores)
+        setEmployeestore([])
+        setDetail(
+            {
+              fullname: "",
+              cargo: "",
+              tienda: "",
+              local: "",
+              empresa: "",
+              num_empl: "",
+              num_card: "",
+              fecha_in: "",
+              turnos: "",
+              dias_libres: "",
+            },
+          );
+    };
 
     const handleChangeStores = async (event) => {
         const selectedStore = parseInt(event);
         //setTiendas(selectedStore);
-     
+
+        const updatedataTabla = sellerSumaries.filter((item) => item.store_id === selectedStore)
         
+        setdataTabla(updatedataTabla)
 
         const filtro_empl = employees.filter((item) => item.store_id === selectedStore)
         .map((item) => ({
@@ -224,6 +259,10 @@ export default function DetallesEmpleados() {
 
     const handleChangeEmployee = async (event) => {
         const selectedEmployee = parseInt(event);
+
+        const updatedDataTest = sellerSumaries.filter((item) => item.employee_id === selectedEmployee)
+     
+        setdataTabla(updatedDataTest)
 
         const data_emple = employees.filter((item) => item.id === selectedEmployee)
         .map((item) => ({
@@ -333,7 +372,6 @@ export default function DetallesEmpleados() {
         {
 
         }
-        console.log(dataReport)
         settypex(typex);
         setShow(true);
 
@@ -347,8 +385,13 @@ export default function DetallesEmpleados() {
                 <Container fluid className="calendar-container">
                     <Card>
                         <Card.Body>
-                            <h4 className="calendar-title">Ventas por Empleado</h4>
+                            <h4 className="calendar-title">Resumen de Empleados</h4>
                             <Row className="calendar-filters">
+                                <Col xs={3} className="calendar-filter">   
+
+                                <DropdownSelect_v2 label={"Seleccione Planilla"} options={payrolls} className = "custom-dropdown" onChange= {handleChangePayrolls}/>             
+                                    {/* <MuiSelect_v2 text={"Seleccione Tienda"} items={stores} value={tienda} onChange={handleChangeStores} className="modal-col-12" /> */}
+                                </Col>
                                 <Col xs={3} className="calendar-filter">   
 
                                 <DropdownSelect_v2 label={"Seleccione Tienda"} options={stores} className = "custom-dropdown" onChange= {handleChangeStores}/>             
@@ -359,54 +402,37 @@ export default function DetallesEmpleados() {
                                 <DropdownSelect_v2 label={"Seleccione empleado"} options={employeestore} className = "custom-dropdown" onChange={handleChangeEmployee} />
                                     {/* <MuiSelect_v2 text={"Seleccione Empleado"} items={employeestore} value={empleado} onChange={handleChangeEmployee} className="modal-col-12" /> */}
                                 </Col>
+                                <Col xs={3} className="calendar-filter">
 
-                                <Col xs={4} className="calendar-filter">
-                                <BasicDateRangePicker></BasicDateRangePicker>
+                                    {/* <MuiSelect_v2 text={"Seleccione Empleado"} items={employeestore} value={empleado} onChange={handleChangeEmployee} className="modal-col-12" /> */}
                                 </Col>
 
+            
                                 
 
                                
                             </Row>
                             <br></br>
                             <Row>
-                                <Col xs={4} className="calendar-filter">
+                                <Col xs={5} className="calendar-filter">
                                     <Row>
                                        
                                         <MuiTextField title="Nombre Completo:" value={detail.fullname} className="calendar-col-6" />
                                     </Row>
                                     <Row>
                                         <MuiTextField title="Cargo:" value={detail.cargo} className="calendar-col-6" />
-                                    </Row>
+                                    </Row>                                   
+                                    
+                                </Col>
+                                <Col xs={5} className="calendar-filter">
                                     <Row>
-                                        <MuiTextField title="Tienda:" value={detail.tienda} className="calendar-col-6" />
-                                    </Row>
-                                    <Row>
-                                        <MuiTextField title="Localidad:" value={detail.local} className="calendar-col-6" />
+                                        <MuiTextField title="Nº Empleado:" value={detail.num_empl} className="calendar-col-6" />
                                     </Row>
                                     <Row>
                                         <MuiTextField title="Empresa:" value={detail.empresa} className="calendar-col-6" />
                                     </Row>
                                 </Col>
-                                <Col xs={4} className="calendar-filter">
-                                    <Row>
-                                        <MuiTextField title="Nº Empleado:" value={detail.num_empl} className="calendar-col-6" />
-                                    </Row>
-                                    <Row>
-                                        <MuiTextField title="Nº Tarjeta:" value={detail.num_card} className="calendar-col-6" />
-                                    </Row>
-                                    <Row>
-                                        <MuiTextField title="Fecha de Inicio:" value={detail.fecha_in} className="calendar-col-6" />
-                                    </Row>
-                                    <Row>
-                                        <MuiTextField title="Turnos:" value={detail.turnos} className="calendar-col-6" />
-                                    </Row>
-                                    <Row>
-                                        <MuiTextField title="Días Libres:" value={detail.dias_libres} className="calendar-col-6" />
-                                    </Row>
-                                    
-                                </Col>
-                                <Col xs={3} className="calendar-filter">
+                                {/* <Col xs={3} className="calendar-filter">
                                     <Row>
                                         <Button style={{ height:"70px", borderRadius: "10px", backgroundColor: "#03386a", color: "HighlightText", flex: "auto", marginTop: "10px",  marginBottom: "20px",  marginLeft:"30px", marginRight:"30px" }} onClick={() => { handleShow(2) }}>
                                             Historico de Ventas
@@ -417,33 +443,67 @@ export default function DetallesEmpleados() {
                                         Historico de Comisiones
                                         </Button>
                                     </Row>
-                                </Col>
+                                </Col> */}
                             </Row>
                             <br></br>
-                            <Row className="cal-calendar-content">
-                                <Col md={12} >
-                                    <FullCalendar
-                                        headerToolbar={{
-                                            start: "prev next today",
-                                            center: "title",
-                                            end: "dayGridMonth dayGridWeek dayGridDay",
-                                        }}
-                                        views={["month", "week", "day"]}
-                                        plugins={[dayGridPlugin, interactionPlugin]}
-                                        dateClick={(e) => { handleShow(e.dateStr, 1)}}
-                                        weekends={true}
-                                        events={events}
-                                        eventContent={renderEventContent}
-                                    />
-                                </Col>
-                            </Row>
+                            <div className="table-container">
+                            <table className="custom-table">
+                                <thead>
+                                <tr>
+                                    <th>Cédula</th>
+                                    <th>Nombre</th>
+                                    <th>Venta <br />Individual</th>
+                                    <th>Venta Total</th>
+                                    <th>Descuento</th>
+                                    <th>% Inicial</th>
+                                    <th>% Ajuste</th>
+                                    <th>% Nuevo</th>
+                                    <th>Incentivo Inicial</th>
+                                    <th>% Retención</th>
+                                    <th>Incentivo <br /> con Retención</th>
+                                    <th>Incentivo <br />por Excedente</th>
+                                    <th>Incentivo <br /> Domingo</th>
+                                    <th>Total Incentivo</th>
+                                    <th>Total Vale</th>
+                                    <th>Total Salario</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {dataTabla.length > 0 ? (
+                                    dataTabla.map((x, index) => (
+                                    <tr key={index}>
+                                        <td>{x.cedula}</td>
+                                        <td>{x.first_name + ' ' + x.last_name}</td>
+                                        <td>{x.individual_sale}</td>
+                                        <td>{x.total_sale}</td>
+                                        <td>{x.total_sale_discount}</td>
+                                        <td>{x.initial_percentage}</td>
+                                        <td>{x.adjustment_percentage}</td>
+                                        <td>{x.new_percentage}</td>
+                                        <td>{x.initial_incentive}</td>
+                                        <td>{x.percentage_to_retain}</td>
+                                        <td>{x.incentive_with_retention}</td>
+                                        <td>{x.surplus_incentive}</td>
+                                        <td>{x.sunday_incentive}</td>
+                                        <td>{x.total_incentive}</td>
+                                        <td>{x.total_voucher}</td>
+                                        <td>{x.total_salary}</td>
+                                    </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                    <td colSpan="15" className="no-data">No hay datos disponibles</td>
+                                    </tr>
+                                )}
+                                </tbody>
+                            </table>
+                            </div>
+
                         </Card.Body>
                     </Card>
                 </Container>
             </Fragment>
-            <Modal size="xl" show={show} onHide={handleClose}>
-                <ModalVentasEmpleado data={dataReport} typex={typex}/>
-            </Modal>
+            
         </DashboardLayout>
     );
 }

@@ -28,6 +28,8 @@ const MuiModal = React.memo(({ open, onClose, title, content, customStyles }) =>
   );
 });
 
+MuiModal.displayName = 'MuiModal';
+
 /*MuiModal.props = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,

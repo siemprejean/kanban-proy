@@ -347,7 +347,7 @@ export default function Company() {
           <TableCell align="center">{row.employees.length}</TableCell>
           <TableCell align="center">
             <Stack direction="row" spacing={1} alignItems="center" style={{ flexWrap: 'wrap' }} >
-              {row.brands.map((brand) => (<Chip label={brand.name} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />))}
+              {row.brands.map((brand,index) => (<Chip key = {index} label={brand.name} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />))}
             </Stack>
           </TableCell>
           <TableCell align="center">Panama</TableCell>

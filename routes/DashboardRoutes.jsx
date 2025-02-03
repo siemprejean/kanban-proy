@@ -37,6 +37,7 @@ export const DashboardMenu = [
 		children: [
 			{ id: uuid(), link: '/components/ventas_asistencia/ventas', name: 'Ventas' },
 			{ id: uuid(), link: '/components/ventas_asistencia/asistencia', name: 'Asistencia' },
+			{ id: uuid(), link: '/components/ventas_asistencia/resumen_empleados', name: 'Resumen de Empleados' },
 			{ id: uuid(), link: '/components/ventas_asistencia/detalles_empleado', name: 'Detalle de Empleado' }
 		]
 	},

@@ -36,9 +36,10 @@ const CardCustom = (props) => {
     const [expanded, setExpanded] = useState(false);
     const [typeCard, setTypeCard] = useState(true)
 
-    useEffect(() => {
-        if (props.data.type === 'simple' ? setTypeCard(true) : setTypeCard(false));
-    })
+  useEffect(() => {
+  setTypeCard(props.data.type === 'simple');
+}, [props.data.type]);
+
 
     const handleExpandClick = () => {
         setExpanded(!expanded);

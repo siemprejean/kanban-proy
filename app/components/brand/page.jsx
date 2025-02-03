@@ -301,7 +301,7 @@ export default function Brand() {
                     <TableCell align="center">{row.id_country}</TableCell>
                     <TableCell align="center">
                         <Stack direction="row" spacing={1} alignItems="center" style={{ flexWrap: 'wrap' }} >
-                            {row.stores.map((store) => (<Chip label={store.name} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />))}
+                            {row.stores.map((store, index) => (<Chip  key = {index} label={store.name} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />))}
                         </Stack>
                     </TableCell>
                     <TableCell align="center">Panama</TableCell>

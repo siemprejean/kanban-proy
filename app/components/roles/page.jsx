@@ -349,7 +349,7 @@ export default function RolesPermision() {
           <TableCell align="center">{row.slug}</TableCell>
           <TableCell align="center">
             <Stack direction="row" spacing={1} alignItems="center" style={{ flexWrap: 'wrap' }} >
-              {row.permissions.map((permission) => (<Chip label={permission.name} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />))}
+              {row.permissions.map((permission, index) => (<Chip key={index} label={permission.name} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />))}
             </Stack>
           </TableCell>
           <TableCell align="center">{row.created_at}</TableCell>
