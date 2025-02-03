@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { MenuItem, Select, FormControl, InputLabel } from "@mui/material";
+import 'styles/theme/components/_DropdownSelect_v2.scss'
 
 
 const DropdownSelect_v2 = ({ label, options, className, onChange, type }) => {

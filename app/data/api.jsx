@@ -1,11 +1,7 @@
 
 
 let token;
-<<<<<<< HEAD
 let token_temis = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM4Njc1NzYxfQ.6sPtXNjOeLL4ZNPIyCVQDa2zstUt_nkoJwTpQkps3TA"
-=======
-let token_temis = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM4NDQyMzc4fQ.sTjEEDhAWNPzIma81vXLqpuuCRdq5D5fdaY7WhBxXR0"
->>>>>>> f4a3efbaeb0b7ffe96f6d75fc424a5cee9908f67
 if (typeof window !== 'undefined') {
     token_temis = localStorage.getItem('token');
 }
@@ -546,9 +542,9 @@ export const getSales = async () => {
 
 
 // Endpoints Ventas por Tienda
-export const getStore_Sales = async () => {
+export const getStore_Sales = async (id) => {
     try {
-        const result = await fetch('http://10.2.1.84:6500/payments/store_summaries?payroll_id=1', {
+        const result = await fetch(`http://10.2.1.84:6500/payments/store_summaries?payroll_id=${id}`, {
             method: 'GET',
             headers: new Headers({
               'Authorization': `Bearer ${token_temis}`
