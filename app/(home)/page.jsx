@@ -20,34 +20,34 @@ const Home = () => {
     const [valor, setValor] = React.useState(0);
     const dir = useRef('');
     const router = useRouter();
- //   const token = localStorage.getItem('token');
+    //const token = localStorage.getItem('token');
    
-    useEffect(() => {
+    // useEffect(() => {
 
-            // Decodificar el token JWT para obtener su contenido
-            //console.log(token);
-          //  const tokenData = JSON.parse(token);
+    //         // Decodificar el token JWT para obtener su contenido
+    //         const tokenData = JSON.parse(atob(token.split('.')[1]));
         
-            // Obtener la fecha de expiración del token del campo "exp"
-          //  const expirationTime = tokenData.exp;
+    //         // Obtener la fecha de expiración del token del campo "exp"
+    //         const expirationTime = tokenData.exp;
         
-            // Convertir la fecha de expiración a milisegundos
-        //    const expirationTimeMillis = expirationTime * 1000;
+    //         // Convertir la fecha de expiración a milisegundos
+    //         const expirationTimeMillis = expirationTime * 1000;
         
-            // Obtener la fecha actual en milisegundos
-        //    const currentTimeMillis = new Date().getTime();
+    //         // Obtener la fecha actual en milisegundos
+    //         const currentTimeMillis = new Date().getTime();
         
-            // Verificar si el token ha expirado
-         /*  if (currentTimeMillis > expirationTimeMillis && router.pathname !== '/login') {
-                console.log('El token ha expirado');
-                router.push('/components/login');
-            } else {
-                getEmployee();
-                console.log('El token está activo');
-            }*/
+    //         // Verificar si el token ha expirado
+    //         if (currentTimeMillis > expirationTimeMillis && router.pathname !== '/login') {
+    //             console.log('El token ha expirado');
+    //             router.push('/components/login');
+    //         } else {
+    //             getEmployee();
+    //             console.log('El token está activo');
+    //         }
             
         
-    })
+
+    // })
     
 
     const getEmployee = async () => {

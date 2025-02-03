@@ -33,7 +33,7 @@ const Formulario = () => {
         <div style={{ paddingTop: "100px" }}>
             <Card style={{ width: '25rem', height: '25rem', margin: 'auto', borderRadius: "20px" }} className="smooth-shadow-md">
                 <Card.Body >
-                    <Image src="/images/logos/TEMIS - ATENEA LOGO_Temis solo.png" style={{ width: "250px" }} className="rounded mx-auto d-block mb-6"></Image>
+                    <Image src="/images/logos/TEMIS - ATENEA LOGO_Temis solo.png" alt="Temis Atenea Logo"  style={{ width: "250px" }} className="rounded mx-auto d-block mb-6"></Image>
                     <Card.Title style={{ fontSize: "x-large", color: "black", fontWeight: "800", textAlign: "center", font: "inter", fontWeight: "800" }} >Inicio de Sesión</Card.Title>
                     <form onSubmit={handleSubmit(enviar)}
                     >

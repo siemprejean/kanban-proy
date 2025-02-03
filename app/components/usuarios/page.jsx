@@ -37,8 +37,10 @@ const Usuarios = () => {
     const [email, setEmail] = useState('')
     const [id_company, setIdCompany] = useState(null)
     const [role_id, setRole_id] = useState([]);
-    const token = localStorage.getItem('token');
+    //const token = localStorage.getItem('token');
+    const token = 1234
     const [filterValue, setFilterValue] = useState('');
+
  
 
     /*MOSTRAR USUARIOS*/

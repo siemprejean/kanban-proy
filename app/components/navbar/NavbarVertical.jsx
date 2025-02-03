@@ -250,7 +250,7 @@ const NavbarVertical = (props) => {
 												<Dropdown.Menu className='dropdown-sidebar-menu dropdown-menu-end'>
 													{menu.children.map((item, index) => {
 														return (
-															<Dropdown.Item href="#" eventKey={index}>{item.name}</Dropdown.Item>
+															<Dropdown.Item href="#" eventKey={index} key = {index} >{item.name}</Dropdown.Item>
 														)
 													})}
 												</Dropdown.Menu>

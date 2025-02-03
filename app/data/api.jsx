@@ -19,9 +19,8 @@ export const postLogin = async (loginData) => {
         })
         console.log(response)
         if (response.ok) {
-            const data = await response.json();
-            console.log("Esto tiene login:", data);
-            setToken(data.token);
+            const data = await response.json();            
+            //setToken(data.token);
             return data; // Puedes devolver datos adicionales si es necesario
         } else {
             throw new Error('Error al crear el Role');
@@ -32,10 +31,11 @@ export const postLogin = async (loginData) => {
 
 };
 
+const token2 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM4NjMxMjY2fQ.gZuNy7fxG1ZCKCuHS7hfdQmLchqP39Tn8L451FHF3cE'
 //EndPoints de Empresas
 export const getCompanies = async () => {
     try {
-        console.log("Esto tiene token", token)
+        
         const res = await fetch('http://10.2.1.84:6500/general/companies', {
             method: 'GET',
             headers: new Headers({
@@ -50,6 +50,7 @@ export const getCompanies = async () => {
         throw new Error('Failed to fetch companies');
     }
 };
+
 export const getCompany = async (id) => {
     try {
         const res = await fetch(`http://10.2.1.84:6500/general/companies/${id}`, {
@@ -80,11 +81,11 @@ export const postCompany = async (companyData) => {
                 "id_country": companyData.id_country
             }),
         });
-        console.log("Esto tiene response", response);
+        
         const data = await response.json();
         if (response.ok) {
 
-            console.log("Esto tiene data:", data)
+            
             return data; // Puedes devolver datos adicionales si es necesario
         } else {
             throw new Error('Error al crear la empresa');
@@ -109,11 +110,10 @@ export const putCompany = async (companyData, id) => {
                 "id_country": companyData.id_country
             }),
         });
-        console.log("Esto tiene response", response);
+       
         const data = await response.json();
         if (response.ok) {
 
-            console.log("Esto tiene data:", data)
             return data; // Puedes devolver datos adicionales si es necesario
         } else {
             throw new Error('Error al crear la empresa');
@@ -133,7 +133,6 @@ export const getBrands = async () => {
             })
         });
         const data = await result.json();
-        console.log('Esto tiene marca:', data);
         return data;
     } catch (error) {
         console.error('Error fetching brands:', error);
@@ -158,7 +157,6 @@ export const postBrand = async (brandData) => {
         });
         if (response.ok) {
             const data = await response.json();
-            console.log("Esto tiene data:", data)
             return data; // Puedes devolver datos adicionales si es necesario
         } else {
             throw new Error('Error al crear la marcas');
@@ -186,7 +184,6 @@ export const putBrand = async (brandData, id) => {
         });
         if (response.ok) {
             const data = await response.json();
-            console.log("Esto tiene data:", data)
             return data; // Puedes devolver datos adicionales si es necesario
         } else {
             throw new Error('Error al crear la marcas');
@@ -205,7 +202,6 @@ export const getBrand = async (id) => {
             })
         });
         const data = await result.json();
-        console.log('Esto tiene marca:', data);
         return data;
     } catch (error) {
         console.error('Error fetching brand:', error);
@@ -402,7 +398,8 @@ export const putPermission = async (permissionData, id) => {
 //Endpoints de Store
 export const getStores = async () => {
     try {
-        const result = await fetch('http://10.2.1.84:6500/general/stores', {
+        console.log(`Esto tiene token: ${token} `)
+        const result = await fetch('http://10.2.1.84:6500/general/stores/active', {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -588,10 +585,58 @@ export const getEmployees = async () => {
             })
         });
         const data = await result.json();
-        console.log('Esto tiene employees:', data);
         return data;
     } catch (error) {
         console.error('Error fetching employees:', error);
         throw new Error('Failed to fetch employees');
+    }
+};
+
+export const getPositions = async () => {
+    try {
+        const result = await fetch(`http://10.2.1.84:6500/general/positions`, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        });
+        const data = await result.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching positions:', error);
+        throw new Error('Failed to fetch positions');
+    }
+};
+
+export const getPayrolls = async () => {
+    try {
+        const result = await fetch(`http://10.2.1.84:6500/general/payrolls`, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        });
+        const data = await result.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching positions:', error);
+        throw new Error('Failed to fetch positions');
+    }
+};
+
+export const getSellerSummaries = async (payroll_id) => {
+    try {
+        // const result = await fetch(`http://10.2.1.84:6500/general/payments/seller_summaries?payroll_id=${payroll_id}`, {
+        const result = await fetch(`http://10.2.1.84:6500/payments/seller_summaries?payroll_id=${payroll_id}`, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        });
+        const data = await result.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching positions:', error);
+        throw new Error('Failed to fetch positions');
     }
 };
