@@ -1,7 +1,7 @@
 let token;
-let token_temis = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM4MzQ2NjA4fQ.NBK2iJy6GM3Um8buOLxB8UIvqcEbANMjx00BcIm97qQ"
+let token_temis = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM4Njc1NzYxfQ.6sPtXNjOeLL4ZNPIyCVQDa2zstUt_nkoJwTpQkps3TA"
 if (typeof window !== 'undefined') {
-    token = localStorage.getItem('token');
+    token_temis = localStorage.getItem('token');
 }
 export const postLogin = async (loginData) => {
     try {
@@ -17,7 +17,7 @@ export const postLogin = async (loginData) => {
         console.log(response)
         if (response.ok) {
             const data = await response.json();            
-            //setToken(data.token);
+            //settoken_temis(data.token_temis);
             return data; // Puedes devolver datos adicionales si es necesario
         } else {
             throw new Error('Error al crear el Role');
@@ -28,7 +28,7 @@ export const postLogin = async (loginData) => {
 
 };
 
-const token2 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM4NjMxMjY2fQ.gZuNy7fxG1ZCKCuHS7hfdQmLchqP39Tn8L451FHF3cE'
+const token_temis2 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM4NjMxMjY2fQ.gZuNy7fxG1ZCKCuHS7hfdQmLchqP39Tn8L451FHF3cE'
 //EndPoints de Empresas
 export const getCompanies = async () => {
     try {
@@ -36,7 +36,7 @@ export const getCompanies = async () => {
         const res = await fetch('http://10.2.1.84:6500/general/companies', {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await res.json();
@@ -53,7 +53,7 @@ export const getCompany = async (id) => {
         const res = await fetch(`http://10.2.1.84:6500/general/companies/${id}`, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await res.json();
@@ -71,7 +71,7 @@ export const postCompany = async (companyData) => {
             method: 'POST',
             headers: new Headers({
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             }),
             body: JSON.stringify({
                 "name": companyData.name,
@@ -100,7 +100,7 @@ export const putCompany = async (companyData, id) => {
             headers: new Headers({
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             }),
             body: JSON.stringify({
                 "name": companyData.name,
@@ -126,7 +126,7 @@ export const getBrands = async () => {
         const result = await fetch('http://10.2.1.84:6500/general/brands', {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();
@@ -143,7 +143,7 @@ export const postBrand = async (brandData) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             },
             body: JSON.stringify({
                 name: brandData.name,
@@ -170,7 +170,7 @@ export const putBrand = async (brandData, id) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             },
             body: JSON.stringify({
                 name: brandData.name,
@@ -195,7 +195,7 @@ export const getBrand = async (id) => {
         const result = await fetch(`http://10.2.1.84:6500/general/brands/${id}`, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();
@@ -212,7 +212,7 @@ export const getRoles = async () => {
         const result = await fetch('http://10.2.1.84:6500/admin/roles', {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();
@@ -229,7 +229,7 @@ export const getRole = async (id) => {
         const result = await fetch(`http://10.2.1.84:6500/admin/roles/${id}`, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();
@@ -248,7 +248,7 @@ export const postRole = async (roleData) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             },
             body: JSON.stringify({
                 name: roleData.name,
@@ -277,7 +277,7 @@ export const putRole = async (roleData, id) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             },
             body: JSON.stringify({
                 name: roleData.name,
@@ -305,7 +305,7 @@ export const getPermissions = async () => {
         const result = await fetch('http://10.2.1.84:6500/admin/permissions', {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();
@@ -322,7 +322,7 @@ export const getPermission = async (id) => {
         const result = await fetch(`http://10.2.1.84:6500/admin/permissions/${id}`, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();
@@ -341,7 +341,7 @@ export const postPermission = async (permissionData) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             },
             body: JSON.stringify({
                 name: permissionData.name,
@@ -370,7 +370,7 @@ export const putPermission = async (permissionData, id) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             },
             body: JSON.stringify({
                 name: permissionData.name,
@@ -395,7 +395,7 @@ export const putPermission = async (permissionData, id) => {
 //Endpoints de Store
 export const getStores = async () => {
     try {
-        console.log(`Esto tiene token: ${token} `)
+        console.log(`Esto tiene token_temis: ${token_temis} `)
         const result = await fetch('http://10.2.1.84:6500/general/stores/active', {
             method: 'GET',
             headers: new Headers({
@@ -415,7 +415,7 @@ export const getStore = async (id) => {
         const result = await fetch(`http://10.2.1.84:6500/general/stores/${id}`, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();
@@ -434,7 +434,7 @@ export const postStore = async (storeData) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             },
             body: JSON.stringify({
                 name: storeData.name,
@@ -476,7 +476,7 @@ export const putStore = async (storeData, id) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             },
             body: JSON.stringify({
                 name: storeData.name,
@@ -508,7 +508,7 @@ export const getCountries = async () => {
         const result = await fetch(`http://10.2.1.84:6500/general/countries`, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();
@@ -562,7 +562,7 @@ export const getEmployee = async (id) => {
         const result = await fetch(`http://10.2.1.84:6500/general/employees/${id}`, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();
@@ -578,7 +578,7 @@ export const getEmployees = async () => {
         const result = await fetch(`http://10.2.1.84:6500/general/employees`, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();
@@ -594,7 +594,7 @@ export const getPositions = async () => {
         const result = await fetch(`http://10.2.1.84:6500/general/positions`, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();
@@ -610,7 +610,7 @@ export const getPayrolls = async () => {
         const result = await fetch(`http://10.2.1.84:6500/general/payrolls`, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();
@@ -627,7 +627,7 @@ export const getSellerSummaries = async (payroll_id) => {
         const result = await fetch(`http://10.2.1.84:6500/payments/seller_summaries?payroll_id=${payroll_id}`, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token_temis}`
             })
         });
         const data = await result.json();
