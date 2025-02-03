@@ -9,18 +9,26 @@
 }
 
 table {
-    font-family: Arial, sans-serif;
+    font-family: Vegur, 'PT Sans', Verdana, sans-serif;
     border-collapse: collapse;
     width: 100%;
     border: 1px solid #ddd;
+    
   }
   tr {
     border-bottom: 1px solid #ccc;
+    
   }
-  th,
+  th{   background-color: rgb(17, 50, 82); 
+    border: 1px solid #ddd;
+    font-weight: 900;
+}
+
   td {
     text-align: center;
     padding: 8px;
+    border: 1px solid #ccc;
+ 
   }
   tr:nth-child(even) {
     background-color: #f2f2f2;

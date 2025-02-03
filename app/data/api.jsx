@@ -1,9 +1,16 @@
+
+
 let token;
+<<<<<<< HEAD
 let token_temis = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM4Njc1NzYxfQ.6sPtXNjOeLL4ZNPIyCVQDa2zstUt_nkoJwTpQkps3TA"
+=======
+let token_temis = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM4NDQyMzc4fQ.sTjEEDhAWNPzIma81vXLqpuuCRdq5D5fdaY7WhBxXR0"
+>>>>>>> f4a3efbaeb0b7ffe96f6d75fc424a5cee9908f67
 if (typeof window !== 'undefined') {
     token_temis = localStorage.getItem('token');
 }
 export const postLogin = async (loginData) => {
+
     try {
         console.log("loginData", loginData);
         const response = await fetch("http://10.2.1.84:6500/admin/users/login", {
