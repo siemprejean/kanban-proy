@@ -46,7 +46,7 @@ export const DashboardMenu = [
 		id: uuid(),
 		title: 'Histórico de Pagos',
 		icon: 'history',
-		link: '/layout-vertical'
+		link: '/components/vacio'
 	},
 	{
 		id: uuid(),
@@ -58,13 +58,13 @@ export const DashboardMenu = [
 		id: uuid(),
 		title: 'Metas',
 		icon: 'finance',
-		link: '/layout-vertical'
+		link: '/components/vacio'
 	},
 	{
 		id: uuid(),
 		title: 'Gestión de Incentivos',
 		icon: 'credit_card',
-		link: '/layout-vertical'
+		link: '/components/vacio'
 	},
 	{
 		id: uuid(),
@@ -75,7 +75,7 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/components/roles', name: 'Roles y Permisos' },
 			{ id: uuid(), link: '/components/company', name: 'Empresas' },	
 			{ id: uuid(), link: '/components/brand', name: 'Marcas' },
-			{ id: uuid(), link: '/components/store', name: 'Tiendas' },
+			{ id: uuid(), link: '/components/vacio', name: 'Tiendas' },
 			
 		]
 	},

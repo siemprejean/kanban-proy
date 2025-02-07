@@ -347,7 +347,7 @@ export default function DetallesEmpleados() {
                 <Container fluid className="calendar-container">
                     <Card>
                         <Card.Body>
-                            <h4 className="calendar-title">Ventas por Empleado</h4>
+                            <h4 className="calendar-title">Detalles de Empleado </h4>
                             <Row className="calendar-filters">
                                 <Col xs={3} className="calendar-filter">   
 
