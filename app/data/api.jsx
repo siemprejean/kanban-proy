@@ -1,7 +1,7 @@
 
 
 let token;
-let token_temis = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM4NDQyMzc4fQ.sTjEEDhAWNPzIma81vXLqpuuCRdq5D5fdaY7WhBxXR0"
+let token_temis = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM5MDIzMTUzfQ.9AkDu4laR7Asd_LbysLUWc8aI3vJbVR2QoIXozK7dqQ"
 if (typeof window !== 'undefined') {
     token = localStorage.getItem('token');
 }
