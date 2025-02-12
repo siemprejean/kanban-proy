@@ -1,6 +1,5 @@
 'use client'
-
-import DashboardLayout from "@/app/(home)/layout";
+import DashboardLayout from "../home/layout";
 import Link from "next/link";
 import TextField from '@mui/material/TextField';
 import EditIcon from '@mui/icons-material/Edit';

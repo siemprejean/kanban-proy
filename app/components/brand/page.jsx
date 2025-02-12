@@ -1,5 +1,5 @@
 'use client'
-import DashboardLayout from "@/app/(home)/layout";
+import DashboardLayout from "../home/layout";
 import Link from "next/link";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';

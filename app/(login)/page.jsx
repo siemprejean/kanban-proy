@@ -23,9 +23,10 @@ const Formulario = () => {
         if (resp.data.token !== null) {
             // Almacena el token en localStorage
             localStorage.setItem('token', resp.data.token);
+            localStorage.setItem('token_expiration_date', resp.data.expiration_date)
 
             // Redirige al usuario a la página principal
-            window.location.href = '/';
+            window.location.href = '/components/home';
         }
     }
 

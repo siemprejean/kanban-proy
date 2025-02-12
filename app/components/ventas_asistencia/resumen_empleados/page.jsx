@@ -99,6 +99,7 @@ export default function DetallesEmpleados() {
         const CargarData = async () => {
             try {
                 const data_payrolls = await getPayrolls();
+
                 const data_employees = await getEmployees();
                 const data_store = await getStores();
                 const data_companies = await getCompanies();
@@ -116,15 +117,26 @@ export default function DetallesEmpleados() {
                   }));
 
                   const months = [
-                    "enero", "febrero", "marzo", "abril", "mayo", "junio", 
+                    "enero", "febrero", "marzo", "abril", "mayo", "junio",
                     "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
                   ];
                   
+                  const updatedPayrolls = data_payrolls.map(x => {
+                    const startDate = new Date(x.start_date);
+                    const monthIndex = startDate.getMonth(); // Retorna 0 para enero
                   
-                  const updatedPayrolls = data_payrolls.map(x => ({
-                    ...x,
-                    label: months[new Date(x.start_date).getMonth()] + ' (' + new Date(x.start_date).getFullYear() + ')',
-                  }));
+                    return {
+                      ...x,
+                      label: `${months[monthIndex]} (${startDate.getFullYear()})`
+                    };
+                  });
+                  
+                  console.log(updatedPayrolls);
+                  
+
+                  console.log("Estas son las Planillas")
+                  console.log(updatedPayrolls)
+
 
                   const updatedStores = data_store.map(store => ({
                     ...store,

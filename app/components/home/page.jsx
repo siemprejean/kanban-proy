@@ -3,71 +3,29 @@ import { Fragment, useRef } from "react";
 import React, { useEffect, useState } from "react";
 import Link from 'next/link';
 import { Container, Col, Row } from 'react-bootstrap';
-import CardCustom from '../components/cards/CardCustom';
-import { getApi } from "../data/api";
-import DoughnutChart from '../components/sub-components/DoughnutChart'
+import CardCustom from '../cards/CardCustom';
+import DoughnutChart from '../sub-components/DoughnutChart'
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 
 import 'styles/theme/components/_card.scss';
 import ActiveProjects from "@/app/components/sub-components/ActiveProjects";
 import { useRouter } from "next/navigation";
+import { validarToken } from "@/app/data/api";
 
 // import required data files
 // import ProjectsStatsData from "data/dashboard/ProjectsStatsData";
 
 const Home = () => {
     const [valor, setValor] = React.useState(0);
-    const dir = useRef('');
     const router = useRouter();
-    //const token = localStorage.getItem('token');
-   
-    // useEffect(() => {
 
-    //         // Decodificar el token JWT para obtener su contenido
-    //         const tokenData = JSON.parse(atob(token.split('.')[1]));
-        
-    //         // Obtener la fecha de expiración del token del campo "exp"
-    //         const expirationTime = tokenData.exp;
-        
-    //         // Convertir la fecha de expiración a milisegundos
-    //         const expirationTimeMillis = expirationTime * 1000;
-        
-    //         // Obtener la fecha actual en milisegundos
-    //         const currentTimeMillis = new Date().getTime();
-        
-    //         // Verificar si el token ha expirado
-    //         if (currentTimeMillis > expirationTimeMillis && router.pathname !== '/login') {
-    //             console.log('El token ha expirado');
-    //             router.push('/components/login');
-    //         } else {
-    //             getEmployee();
-    //             console.log('El token está activo');
-    //         }
-            
-        
-
-    // })
+    useEffect(() => {
+        if(validarToken() == 1 || validarToken() == 2){
+            router.push('/')
+        }
+     })
     
-
-    const getEmployee = async () => {
-        try {
-            console.log("Esto tiene token", token)
-            const res = await fetch(`http://10.2.1.84:6500/general/employees`, {
-                method: 'GET',
-                headers: new Headers({
-                    'Authorization': `Bearer ${token}`
-                })
-            });
-            const data = await res.json();
-            setValor(data.length)
-            return data;
-        }
-        catch (error) {
-            console.error('Error fetching employee:', error);
-            throw new Error('Failed to fetch employee');
-        }
-    };
 
     return (
         <>

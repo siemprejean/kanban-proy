@@ -1,10 +1,13 @@
 
 
-let token;
-let token_temis = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM4Njc1NzYxfQ.6sPtXNjOeLL4ZNPIyCVQDa2zstUt_nkoJwTpQkps3TA"
+
+let token_temis;
+let token_expiration_date;
 if (typeof window !== 'undefined') {
     token_temis = localStorage.getItem('token');
+    token_expiration_date = localStorage.getItem('token_expiration_date');
 }
+
 export const postLogin = async (loginData) => {
 
     try {
@@ -17,7 +20,6 @@ export const postLogin = async (loginData) => {
             },
             body: JSON.stringify(loginData)
         })
-        console.log(response)
         if (response.ok) {
             const data = await response.json();            
             //settoken_temis(data.token_temis);
@@ -31,7 +33,44 @@ export const postLogin = async (loginData) => {
 
 };
 
-const token_temis2 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM4NjMxMjY2fQ.gZuNy7fxG1ZCKCuHS7hfdQmLchqP39Tn8L451FHF3cE'
+
+export const getUser = async () => {
+    try {
+        const response = await fetch('http://10.2.1.84:6500/admin/users', {
+            method: "GET",
+            headers: new Headers({
+
+                'Content-Type': 'application/json',
+                'Authorization':  `Bearer ${token_temis}`
+            })
+
+        });
+        const result = await response.json();
+        return result;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export const getRol = async () => {
+    try {
+        const response = await fetch('http://10.2.1.84:6500/admin/roles', {
+            method: "GET",
+            headers: new Headers({
+
+                'Content-Type': 'application/json',
+                'Authorization':  `Bearer ${token_temis}`
+            })
+
+        });
+        const result = await response.json();
+        return result;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
 //EndPoints de Empresas
 export const getCompanies = async () => {
     try {
@@ -640,3 +679,28 @@ export const getSellerSummaries = async (payroll_id) => {
         throw new Error('Failed to fetch positions');
     }
 };
+
+
+const token_vencido = () =>{
+    const hoy = new Date();
+    const fecha_token = new Date (token_expiration_date);
+
+    if (fecha_token < hoy){
+        return true;
+    }else{
+        return false;
+    }
+
+
+   
+}
+
+export const validarToken = () =>{
+    if(token_temis == null){
+        return 1;
+    }else if (token_vencido()){
+        return 2;
+    }else{
+        return 3;
+    }
+}

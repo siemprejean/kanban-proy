@@ -9,14 +9,14 @@ import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import DashboardLayout from "@/app/(home)/layout";
+import DashboardLayout from "../home/layout";
 import Badge from 'react-bootstrap/Badge';
 import { ModalFooter } from "react-bootstrap";
 import LockIcon from '@mui/icons-material/Lock';
 import Card from 'react-bootstrap/Card';
 import dateFormat from 'dateformat';
 import Input from '@mui/material/Input';
-
+import { getUser, getRol } from "@/app/data/api";
 
 
 const Usuarios = () => {
@@ -38,62 +38,34 @@ const Usuarios = () => {
     const [id_company, setIdCompany] = useState(null)
     const [role_id, setRole_id] = useState([]);
     //const token = localStorage.getItem('token');
-    const token = 1234
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiZXhwIjoxNzM5MDI4NDgxfQ.VNQfaY9_56ycMw77MIZ-NPyn7Rd43qM2AAAvmISZKhA'
     const [filterValue, setFilterValue] = useState('');
 
  
 
-    /*MOSTRAR USUARIOS*/
-    async function getUser() {
-        try {
-            const response = await fetch('http://10.2.1.84:6500/admin/users', {
-                method: "GET",
-                headers: new Headers({
-
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                })
-
-            });
-            const result = await response.json();
-            console.log(result)
-            setGets(result)
-
-            return result;
-        } catch (err) {
-            console.log(err);
-        }
-    }
+    
 
 
-    /*MOSTRAR ROLES*/
-    async function getRol() {
-        try {
-            const response = await fetch('http://10.2.1.84:6500/admin/roles', {
-                method: "GET",
-                headers: new Headers({
 
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                })
-
-            });
-            const result = await response.json();
-            console.log(result)
-            setRoles(result)
-            return result;
-        } catch (err) {
-            console.log(err);
-        }
-    }
 
 
 
 
     useEffect(() => {
-        getUser();
-        getRol();
-    }, [])
+        const fetchData = async () => {
+          try {
+            const result = await getUser();
+            const result2 = await getRol();
+    
+            setGets(result);
+            setRoles(result2);
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
+    
+        fetchData();
+      }, []);
 
 
 
@@ -131,7 +103,7 @@ const Usuarios = () => {
         }
       };
 
-    /*CAMBIAR PASSWORD DE USUSARIO*/
+    /*CAMBIAR PASSWORD DE USUARIO*/
     let cambiarPass = async (e) => {
         e.preventDefault();
         console.log(idModal)

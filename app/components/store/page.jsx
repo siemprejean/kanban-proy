@@ -1,14 +1,8 @@
 'use client'
 
-import DashboardLayout from "@/app/(home)/layout";
-import Link from "next/link";
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import SearchIcon from '@mui/icons-material/Search';
-import DownloadIcon from '@mui/icons-material/Download';
+import DashboardLayout from "../home/layout";
 import { Nav, Navbar, Form, Card } from 'react-bootstrap';
 import { CardBody, CardHeader, Col, Row } from "react-bootstrap";
-import { Box, Button, FormControl, IconButton, InputLabel, Input, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, List, ListItem, ListItemButton, Checkbox, ListItemIcon, ListItemText, CardContent, Grid, styled, Divider, Stack, Chip, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Slide } from "@mui/material";
-import Select from 'react-select'
 import { getBrands, getStore, getStores, postStore, putStore, getStore_Sales, getPayrolls } from "@/app/data/api";
 import DropdownSelect_v2 from "../customcomponent/DropdownSelect_v2";
 import 'styles/theme/components/_DropdownSelect_v2.scss'
@@ -96,33 +90,15 @@ export default function Store() {
 
    {/* TABLA DE RESUMEN DE TIENDAS  */}
    <DashboardLayout>
-
-
-    <br></br>
     <Card >
         <Card.Body>
             <h3>Resumen de tiendas </h3>
 <br></br>
    <Col xs={6}  >
-   {/* {tiendas.length != null && (
-   <select  value={filtro} onChange={manejarFiltro}>
-    {tiendas?.map((tienda, index) => (
-        <option value={tienda.store_name} key={index}>
-      {tienda.store_name}
-      </option>
-      ))}
 
-      </select>
-       )} */}
           
       <br></br>
-    {/* <input 
-                type="text" 
-                placeholder="Tiendas"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="mb-4 p-2 border border-gray-300 rounded"
-            />  */}
+   
           <DropdownSelect_v2 label={"Seleccione Planilla"} options={payrolls} className = "custom-dropdown" onChange= {handleChangePayrolls}/>             
 
           <DropdownSelect_v2 label={"Seleccione Tienda"} options={tiendasFiltradas} className = "custom-dropdown" onChange= {handleChangeStores}/>             
@@ -180,7 +156,7 @@ export default function Store() {
                                 )}
                                 </tbody>
                             </table>
-                            </div>
+                  </div>
            
                 </Col>
            
