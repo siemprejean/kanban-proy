@@ -13,17 +13,19 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction';
 import Card from 'react-bootstrap/Card';
-
-//import DatePicker from 'react-datepicker';
 import 'styles/theme/components/_calendar.scss';
 import ModalVentasEmpleado from "../../customcomponent/ModalVentasEmpleado";
-import { getCompanies, getEmployees, getPayrolls, getPositions, getStores, getSellerSummariesDaily } from "@/app/data/api";
+import { getCompanies, getEmployees, getPayrolls, getPositions, getStores, getSellerSummariesDaily,  getStore_Sales} from "@/app/data/api";
 import MuiTextField from "../../customcomponent/formcontrol";
 import { useRouter } from "next/navigation";
 import BasicDateRangePicker from  "../../customcomponent/BasicDateRangePicker";
 import DropdownSelect_v2 from "../../customcomponent/DropdownSelect_v2";
 import 'styles/theme/components/_dateRangePicker.scss'
 import 'styles/theme/components/_DropdownSelect_v2.scss'
+import { Rock_3D } from "next/font/google";
+import { Description } from "@mui/icons-material";
+import esLocale from "@fullcalendar/core/locales/es"; 
+
 
 
 const dataTabla = {
@@ -81,12 +83,9 @@ function renderEventContent(eventInfo) {
 
 export default function DetallesEmpleados() {
 
-    const id_payroll = useRef(null);
-    const id_employee = useRef(null);
-    const id_store = useRef(null)
+   
     const [show, setShow] = useState(false);
     const [typex, settypex] = useState(1);
-    //const [startDate, setStartDate] = useState(new Date());
     const [detail, setDetail] = useState({fullname: "", cargo:"", tienda:"", local: "", empresa: "", num_empl: "", num_card: "", fecha_in: "", turnos: "", dias_libres: ""});
     const [dataReport, setDataReport] = useState(null);
     const handleClose = () => setShow(false);
@@ -95,11 +94,12 @@ export default function DetallesEmpleados() {
     const [employees, setEmployees] = useState([]);
     const [companies, setCompanies] = useState([0]);
     const [positions, setPositions] = useState([0]);
+    const [stores_sales,  setStores_sales] = useState([])
+    const [stores_sales_filtro,  setStores_sales_filtro] = useState([])
     const [employeestore, setEmployeestore] = useState([0]);
     const [tiendasFiltradas, setTiendasFiltradas] = useState([])
     //const colourOptions = stores.map((item) => ({ value: item.id, label: item.name }));
     const router = useRouter();
-    //const token = localStorage.getItem('token');
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
     const [events, setEvents] = useState([]);
@@ -115,13 +115,25 @@ export default function DetallesEmpleados() {
                 const data_store = await getStores();
                 const data_companies = await getCompanies();
                 const data_positions = await getPositions();
-              
-                // const storeemployee = store.map((items) => ({
-                //     ...items,
-                //     employeesd: employee.filter((employe) => employe.id_store === items.id)
-                // }));
+              /*   const data_seller_summaries_daily  = await  getSellerSummariesDaily(3,1,129)
+                const detalle_empleado = data_seller_summaries_daily.map((item) => ({         
+                        title:item.total_daily_sale,
+                        start:item.registration_date, 
+                    
+                })); */
+               // const total_diario = data_seller_summaries_daily[2].total_daily_sale
 
-
+         
+        /* 
+                const formattedEvents = data_seller_summaries_daily.map((evento) => ({
+                  title: evento.total_daily_sale,
+                  start: new Date(evento.registration_date.time).toLocaleDateString(),
+                  description: evento.sale_discount,
+                   backgroundColor:'blue'
+                }));   
+   */
+        //     setEvents(detalle_empleado);  
+              console.log(events) 
                 
                 const updatedStores = data_store.map(store =>  
                 ({
@@ -144,90 +156,49 @@ export default function DetallesEmpleados() {
             
                   const months = [
                     "enero", "febrero", "marzo", "abril", "mayo", "junio", 
-                    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+                    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre", "enero"
                   ];
             
                   const updatedPayrolls = data_payrolls.map(x => 
                   ({
                     ...x,
-                    label: months[new Date(x.start_date).getMonth()] + ' (' + new Date(x.start_date).getFullYear() + ')',
+                    label: months[(new Date(x.start_date).getMonth()+1)] + ' (' + new Date(x.start_date).getFullYear() + ')',
                   }));
 
 
 
-              const data_payrollsDaily = await getSellerSummariesDaily( id_payroll.current,  id_store.current,  id_employee.current);
             
-               const formattedEvents = data_payrollsDaily.map((evento) => ({
+             /*    const formattedEvents = data_payrollsDaily.map((evento) => ({
                   
                     title: evento.total_daily_sale,
                     start: new Date(evento.registration_date.time).toLocaleDateString(),
                     description: evento.sale_discount,
                    // backgroundColor:'blue'
-                  }));  
-              
+                  }));   
+               */
 
-               setEvents(formattedEvents);
+               // setEvents(formattedEvents);
                 setPayrolls(updatedPayrolls)
                 setStores(updatedStores);
                 setEmployees(updatedemployees);
                 setCompanies(data_companies);
                 setPositions(data_positions);
                 setTiendasFiltradas(upd1);
-                //setEmployees(employee);
-                
-                //console.log("Esto tiene employeestore", employeestore)
+               
             } catch (error) {
                 console.error('Error cargando data inicial:', error);
             }
         };
-        CargarData();
+       CargarData();
 
-        // Decodificar el token JWT para obtener su contenido
-        //const tokenData = JSON.parse(atob(token.split('.')[1]));
-
-        // Obtener la fecha de expiración del token del campo "exp"
-        //const expirationTime = tokenData.exp;
-
-        // Convertir la fecha de expiración a milisegundos
-        //const expirationTimeMillis = expirationTime * 1000;
-
-        // Obtener la fecha actual en milisegundos
-        //const currentTimeMillis = new Date().getTime();
-
-        // Verificar si el token ha expirado
-        // if (currentTimeMillis > expirationTimeMillis) {
-        //     console.log('El token ha expirado');
-        //     router.push('/components/login');
-        // } else {
-        //     fetchData();
-        //     console.log('El token está activo');
-        // }
+   
+      
 
     }, []);
 
  
-
-    
-    // const fetchDetail = async (id) => {
-    //     try {
-    //         console.log("Esto tiene id", id)
-    //         const employee = await getEmployee(id);
-    //         const store = await getStores();
-    //         const employeesstore = {
-    //             ...employee,
-    //             store: store.filter((store) => store.id === employee.id_store)
-    //         };
-    //         console.log("Esto tiene employeesstore", employeesstore)
-    //         setDetail(employee);
-    //         //setStores(store);
-    //         //console.log("Esto tiene employeestore", employeestore)
-    //     } catch (error) {
-    //         console.error('Error fetching data:', error);
-    //     }
-    // }
- 
+ /* EVENTO DE PLANILLA*/
       const handleChangePayrolls = async (e) =>{
-    
             const store_summaries= await getStore_Sales(e)
             setStores_sales(store_summaries);
             setStores_sales_filtro(store_summaries)
@@ -235,13 +206,12 @@ export default function DetallesEmpleados() {
           }
       
     
-
+/*EVENTO DE TIENDAS */
     const handleChangeStores = async (event) => {
         const selectedStore = parseInt(event);
         //setTiendas(selectedStore);
      
-        
-
+    
         const filtro_empl = employees.filter((item) => item.store_id === selectedStore)
         .map((item) => ({
           ...item
@@ -264,6 +234,8 @@ export default function DetallesEmpleados() {
           );
     };
 
+
+    /*EVENTO DE EMPLEADOS*/
     const handleChangeEmployee = async (event) => {
         const selectedEmployee = parseInt(event);
 
@@ -288,6 +260,8 @@ export default function DetallesEmpleados() {
               ...item
             }));
            
+           
+        
             const newDetail = {
                 fullname:  data_emple[0].fullname,
                 cargo: data_cargo[0].name,
@@ -299,9 +273,27 @@ export default function DetallesEmpleados() {
                 fecha_in:  data_emple[0].start_date,
              //   turnos: "****",
               //  dias_libres: "****",
+              
               }
 
+              
             setDetail(newDetail);
+
+/* DATOS DEL CALENDARIO */
+            const data_seller_summaries_daily  = await  getSellerSummariesDaily(stores_sales[0].payroll_id,data_emple[0].store_id,data_emple[0].id,)
+           
+            const detalle_empleado = data_seller_summaries_daily.map((item) =>   ({   
+                 
+                    title:item.total_daily_sale,
+                    start:item.registration_date,
+                    description:item.sale_discount,
+                    background:(item.attendance == true ? '#CF9AE8' : '#e8b19a')
+                
+            }));
+
+         setEvents(detalle_empleado);  
+
+
         }else{
             setDetail(
                 {
@@ -319,11 +311,12 @@ export default function DetallesEmpleados() {
               );
         }
 
-       
-
+    
     };
 
 
+
+/* MODAL  */
     const handleShow = ( event,typex) => {
         if(typex == 1)
         {
@@ -481,7 +474,9 @@ export default function DetallesEmpleados() {
                                         plugins={[dayGridPlugin, interactionPlugin]}
                                         dateClick={(e) => { handleShow(e.dateStr, 1)}}
                                         weekends={true}
-                                       // events={events}
+                                        locale="es"
+                                        locales={[esLocale]} 
+                                        events={events}
                                         eventContent={renderEventContent}
                                     />
                                 </Col>
