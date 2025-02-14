@@ -8,7 +8,7 @@ import Row from 'react-bootstrap/Row';
 
 import Col from 'react-bootstrap/Col';
 
-import DashboardLayout from "@/app/(home)/layout";
+import DashboardLayout from "../../home/layout";
 import { Fragment } from "react";
 
 import Card from 'react-bootstrap/Card';
@@ -32,37 +32,6 @@ import 'styles/theme/components/_tablaResumenEmpl.scss'
 
 
 
-
-
-const events = [
-    {
-        title: "$2,500",
-        start: getDate("YEAR-MONTH-06"),
-        backgroundColor: "#64EA8F",
-    },
-]
-
-
-
-function getDate(dayString) {
-    const today = new Date();
-    const year = today.getFullYear().toString();
-    let month = (today.getMonth() + 1).toString();
-
-    if (month.length === 1) {
-        month = "0" + month;
-    }
-    return dayString.replace("YEAR", year).replace("MONTH", month);
-}
-
-function renderEventContent(eventInfo) {
-    return (
-        <>
-            <b>{eventInfo.timeText}</b>
-            <i>{eventInfo.event.title}</i>
-        </>
-    )
-}
 
 
 
@@ -116,18 +85,12 @@ export default function DetallesEmpleados() {
                     fullname: (emp.first_name+ ' ' + emp.last_name),
                   }));
 
-                  const months = [
-                    "enero", "febrero", "marzo", "abril", "mayo", "junio",
-                    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
-                  ];
                   
                   const updatedPayrolls = data_payrolls.map(x => {
-                    const startDate = new Date(x.start_date);
-                    const monthIndex = startDate.getMonth(); // Retorna 0 para enero
-                  
+                 
                     return {
                       ...x,
-                      label: `${months[monthIndex]} (${startDate.getFullYear()})`
+                      label: x.description.replace("Payroll for", "Planilla ")
                     };
                   });
                   

@@ -45,14 +45,10 @@ export default function Store() {
         label: item.store_name
       }));
 
-      const months = [
-        "enero", "febrero", "marzo", "abril", "mayo", "junio", 
-        "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
-      ];
 
       const updatedPayrolls = data_payrolls.map(x => ({
         ...x,
-        label: months[new Date(x.start_date).getMonth()] + ' (' + new Date(x.start_date).getFullYear() + ')',
+        label: x.description.replace("Payroll for", "Planilla ")
       }));
 
       setPayrolls(updatedPayrolls)

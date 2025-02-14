@@ -8,7 +8,7 @@ import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import DashboardLayout from "@/app/(home)/layout";
+import DashboardLayout from "../../home/layout";
 import { Fragment } from "react";
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
