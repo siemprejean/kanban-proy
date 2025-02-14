@@ -71,6 +71,7 @@ export const getRol = async () => {
 }
 
 
+
 //EndPoints de Empresas
 export const getCompanies = async () => {
     try {
@@ -679,6 +680,24 @@ export const getSellerSummaries = async (payroll_id) => {
         throw new Error('Failed to fetch positions');
     }
 };
+
+export const getSellerSummariesDaily = async (payroll_id, store_id, employee_id) => {
+    try {
+        const result = await fetch(`http://10.2.1.84:6500/payments/seller_summaries_daily?payroll_id=${payroll_id}&store_id=${store_id}&employee_id=${employee_id}`, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token_temis}`
+            })
+        });
+        const data = await result.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching positions:', error);
+        throw new Error('Failed to fetch positions');
+    }
+};
+
+
 
 
 const token_vencido = () =>{
