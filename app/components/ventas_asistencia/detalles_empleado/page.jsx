@@ -154,16 +154,13 @@ export default function DetallesEmpleados() {
                     label: item.store_name
                   }));
             
-                  const months = [
-                    "enero", "febrero", "marzo", "abril", "mayo", "junio", 
-                    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre", "enero"
-                  ];
-            
-                  const updatedPayrolls = data_payrolls.map(x => 
-                  ({
-                    ...x,
-                    label: months[(new Date(x.start_date).getMonth()+1)] + ' (' + new Date(x.start_date).getFullYear() + ')',
-                  }));
+                  const updatedPayrolls = data_payrolls.map(x => {
+                 
+                    return {
+                      ...x,
+                      label: x.description.replace("Payroll for", "Planilla ")
+                    };
+                  });
 
 
 
