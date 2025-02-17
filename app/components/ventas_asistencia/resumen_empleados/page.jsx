@@ -15,7 +15,7 @@ import Card from 'react-bootstrap/Card';
 
 //import DatePicker from 'react-datepicker';
 import 'styles/theme/components/_calendar.scss';
-import { getCompanies, getEmployee, getEmployees, getPayrolls, getPositions, getSellerSummaries, getStores } from "@/app/data/api";
+import { getCompanies, getEmployees, getPayrolls, getPositions, getSellerSummaries, getStores } from "@/app/data/api";
 
 import MuiTextField from "../../customcomponent/formcontrol";
 
@@ -37,9 +37,6 @@ import 'styles/theme/components/_tablaResumenEmpl.scss'
 
 export default function DetallesEmpleados() {
 
-
-    const [show, setShow] = useState(false);
-    const [typex, settypex] = useState(1);
     //const [startDate, setStartDate] = useState(new Date());
     const [detail, setDetail] = useState({fullname: "", cargo:"", tienda:"", local: "", empresa: "", num_empl: "", num_card: "", fecha_in: "", turnos: "", dias_libres: ""});
     const [dataReport, setDataReport] = useState(null);
@@ -51,12 +48,10 @@ export default function DetallesEmpleados() {
     const [companies, setCompanies] = useState([0]);
     const [positions, setPositions] = useState([0]);
 
-    const [payrollstores, setPayrollstores] = useState([0]);
     const [employeestore, setEmployeestore] = useState([0]);
 
-    //const colourOptions = stores.map((item) => ({ value: item.id, label: item.name }));
     const router = useRouter();
-    //const token = localStorage.getItem('token');
+
     const [dateRange, setDateRange] = useState([null, null]);
     const [sellerSumaries, setSellerSumaries] = useState([])
     const [dataTabla, setdataTabla ] = useState([])
@@ -73,11 +68,7 @@ export default function DetallesEmpleados() {
                 const data_store = await getStores();
                 const data_companies = await getCompanies();
                 const data_positions = await getPositions();
-                // const storeemployee = store.map((items) => ({
-                //     ...items,
-                //     employeesd: employee.filter((employe) => employe.id_store === items.id)
-                // }));
-               
+
 
                   const updatedemployees = data_employees.map(emp => ({
                     ...emp,
@@ -118,50 +109,8 @@ export default function DetallesEmpleados() {
             }
         };
         CargarData();
-
-        // Decodificar el token JWT para obtener su contenido
-        //const tokenData = JSON.parse(atob(token.split('.')[1]));
-
-        // Obtener la fecha de expiración del token del campo "exp"
-        //const expirationTime = tokenData.exp;
-
-        // Convertir la fecha de expiración a milisegundos
-        //const expirationTimeMillis = expirationTime * 1000;
-
-        // Obtener la fecha actual en milisegundos
-        //const currentTimeMillis = new Date().getTime();
-
-        // Verificar si el token ha expirado
-        // if (currentTimeMillis > expirationTimeMillis) {
-        //     console.log('El token ha expirado');
-        //     router.push('/components/login');
-        // } else {
-        //     fetchData();
-        //     console.log('El token está activo');
-        // }
-
     }, []);
 
- 
-
-    
-    // const fetchDetail = async (id) => {
-    //     try {
-    //         console.log("Esto tiene id", id)
-    //         const employee = await getEmployee(id);
-    //         const store = await getStores();
-    //         const employeesstore = {
-    //             ...employee,
-    //             store: store.filter((store) => store.id === employee.id_store)
-    //         };
-    //         console.log("Esto tiene employeesstore", employeesstore)
-    //         setDetail(employee);
-    //         //setStores(store);
-    //         //console.log("Esto tiene employeestore", employeestore)
-    //     } catch (error) {
-    //         console.error('Error fetching data:', error);
-    //     }
-    // }
  
     const handleChangePayrolls = async (event) => {
         const selected = parseInt(event);

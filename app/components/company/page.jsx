@@ -386,11 +386,11 @@ export default function Company() {
                 <div className="card-config-header-left">
                   <Form className="card-config-search">
                     <Form.Control type="search" placeholder="Search" onChange={handleSearch} />
-                    <span class="material-symbols-outlined"> search </span>
+                    <span className= "material-symbols-outlined"> search </span>
                   </Form>
                   {/* <FormControl className="card-config-search">
                                         <Input type="search" placeholder="Search" />
-                                        <span class="material-symbols-outlined"> search </span>
+                                        <span className= "material-symbols-outlined"> search </span>
                                     </FormControl> */}
                 </div>
                 <div className="card-header-buttons">

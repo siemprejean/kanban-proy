@@ -604,7 +604,7 @@ export default function RolesPermision() {
                   <div className="card-config-header-left">
                     <Form className="card-config-search">
                       <Form.Control type="search" placeholder="Search" onChange={handleSearch} />
-                      <span class="material-symbols-outlined"> search </span>
+                      <span className= "material-symbols-outlined"> search </span>
                     </Form>
                   </div>
                   <div className="card-header-buttons">
@@ -632,7 +632,7 @@ export default function RolesPermision() {
                   <div className="card-config-header-left">
                     <Form className="card-config-search">
                       <Form.Control type="search" placeholder="Search" onChange={handleSearchp} />
-                      <span class="material-symbols-outlined"> search </span>
+                      <span className= "material-symbols-outlined"> search </span>
                     </Form>
                   </div>
                   <div className="card-header-buttons">

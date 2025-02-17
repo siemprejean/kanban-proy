@@ -12,7 +12,7 @@ export const postLogin = async (loginData) => {
 
     try {
         console.log("loginData", loginData);
-        const response = await fetch("http://10.2.1.84:6500/admin/users/login", {
+        const response = await fetch("http://10.2.1.174:35789/admin/users/login", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -25,10 +25,10 @@ export const postLogin = async (loginData) => {
             //settoken_temis(data.token_temis);
             return data; // Puedes devolver datos adicionales si es necesario
         } else {
-            throw new Error('Error al crear el Role');
+            return response;
         }
     } catch (error) {
-        throw new Error('Error en la solicitud:', error);
+        return error;
     }
 
 };
@@ -36,7 +36,7 @@ export const postLogin = async (loginData) => {
 
 export const getUser = async () => {
     try {
-        const response = await fetch('http://10.2.1.84:6500/admin/users', {
+        const response = await fetch('http://10.2.1.174:35789/admin/users', {
             method: "GET",
             headers: new Headers({
 
@@ -54,7 +54,7 @@ export const getUser = async () => {
 
 export const getRol = async () => {
     try {
-        const response = await fetch('http://10.2.1.84:6500/admin/roles', {
+        const response = await fetch('http://10.2.1.174:35789/admin/roles', {
             method: "GET",
             headers: new Headers({
 
@@ -76,7 +76,7 @@ export const getRol = async () => {
 export const getCompanies = async () => {
     try {
         
-        const res = await fetch('http://10.2.1.84:6500/general/companies', {
+        const res = await fetch('http://10.2.1.174:35789/general/companies', {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -93,7 +93,7 @@ export const getCompanies = async () => {
 
 export const getCompany = async (id) => {
     try {
-        const res = await fetch(`http://10.2.1.84:6500/general/companies/${id}`, {
+        const res = await fetch(`http://10.2.1.174:35789/general/companies/${id}`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -110,7 +110,7 @@ export const getCompany = async (id) => {
 export const postCompany = async (companyData) => {
     try {
         console.log("companyData", companyData);
-        const response = await fetch(`http://10.2.1.84:6500/general/companies/create`, {
+        const response = await fetch(`http://10.2.1.174:35789/general/companies/create`, {
             method: 'POST',
             headers: new Headers({
                 'Content-Type': 'application/json',
@@ -138,7 +138,7 @@ export const putCompany = async (companyData, id) => {
     try {
         console.log("companyData", companyData);
         console.log("id", id);
-        const response = await fetch(`http://10.2.1.84:6500/general/companies/update/${id}`, {
+        const response = await fetch(`http://10.2.1.174:35789/general/companies/update/${id}`, {
             method: 'PUT',
             headers: new Headers({
                 'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ export const putCompany = async (companyData, id) => {
 //Endpoints de Marcas
 export const getBrands = async () => {
     try {
-        const result = await fetch('http://10.2.1.84:6500/general/brands', {
+        const result = await fetch('http://10.2.1.174:35789/general/brands', {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -182,7 +182,7 @@ export const getBrands = async () => {
 export const postBrand = async (brandData) => {
     try {
         console.log("brandData", brandData);
-        const response = await fetch('http://10.2.1.84:6500/general/brands/create', {
+        const response = await fetch('http://10.2.1.174:35789/general/brands/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -208,7 +208,7 @@ export const postBrand = async (brandData) => {
 export const putBrand = async (brandData, id) => {
     try {
         console.log("brandData", brandData);
-        const response = await fetch(`http://10.2.1.84:6500/general/brands/update/${id}`, {
+        const response = await fetch(`http://10.2.1.174:35789/general/brands/update/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -235,7 +235,7 @@ export const putBrand = async (brandData, id) => {
 
 export const getBrand = async (id) => {
     try {
-        const result = await fetch(`http://10.2.1.84:6500/general/brands/${id}`, {
+        const result = await fetch(`http://10.2.1.174:35789/general/brands/${id}`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -252,7 +252,7 @@ export const getBrand = async (id) => {
 //ENDPOINTS DE ROLES
 export const getRoles = async () => {
     try {
-        const result = await fetch('http://10.2.1.84:6500/admin/roles', {
+        const result = await fetch('http://10.2.1.174:35789/admin/roles', {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -269,7 +269,7 @@ export const getRoles = async () => {
 
 export const getRole = async (id) => {
     try {
-        const result = await fetch(`http://10.2.1.84:6500/admin/roles/${id}`, {
+        const result = await fetch(`http://10.2.1.174:35789/admin/roles/${id}`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -287,7 +287,7 @@ export const getRole = async (id) => {
 export const postRole = async (roleData) => {
     try {
         console.log("RoleData", roleData);
-        const response = await fetch('http://10.2.1.84:6500/admin/roles/create', {
+        const response = await fetch('http://10.2.1.174:35789/admin/roles/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -315,7 +315,7 @@ export const postRole = async (roleData) => {
 export const putRole = async (roleData, id) => {
     try {
         console.log("RoleData", roleData);
-        const response = await fetch(`http://10.2.1.84:6500/admin/roles/update/${id}`, {
+        const response = await fetch(`http://10.2.1.174:35789/admin/roles/update/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -345,7 +345,7 @@ export const putRole = async (roleData, id) => {
 //ENDPOINTS DE PERMISOS
 export const getPermissions = async () => {
     try {
-        const result = await fetch('http://10.2.1.84:6500/admin/permissions', {
+        const result = await fetch('http://10.2.1.174:35789/admin/permissions', {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -362,7 +362,7 @@ export const getPermissions = async () => {
 
 export const getPermission = async (id) => {
     try {
-        const result = await fetch(`http://10.2.1.84:6500/admin/permissions/${id}`, {
+        const result = await fetch(`http://10.2.1.174:35789/admin/permissions/${id}`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -380,7 +380,7 @@ export const getPermission = async (id) => {
 export const postPermission = async (permissionData) => {
     try {
         console.log("permissionsData", permissionData);
-        const response = await fetch('http://10.2.1.84:6500/admin/permissions/create', {
+        const response = await fetch('http://10.2.1.174:35789/admin/permissions/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -408,7 +408,7 @@ export const postPermission = async (permissionData) => {
 export const putPermission = async (permissionData, id) => {
     try {
         console.log("permissionData", permissionData);
-        const response = await fetch(`http://10.2.1.84:6500/admin/permissions/update/${id}`, {
+        const response = await fetch(`http://10.2.1.174:35789/admin/permissions/update/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -439,7 +439,7 @@ export const putPermission = async (permissionData, id) => {
 export const getStores = async () => {
     try {
         console.log(`Esto tiene token_temis: ${token_temis} `)
-        const result = await fetch('http://10.2.1.84:6500/general/stores/active', {
+        const result = await fetch('http://10.2.1.174:35789/general/stores/active', {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -455,7 +455,7 @@ export const getStores = async () => {
 
 export const getStore = async (id) => {
     try {
-        const result = await fetch(`http://10.2.1.84:6500/general/stores/${id}`, {
+        const result = await fetch(`http://10.2.1.174:35789/general/stores/${id}`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -473,7 +473,7 @@ export const getStore = async (id) => {
 export const postStore = async (storeData) => {
     try {
         console.log("storeData", storeData);
-        const response = await fetch('http://10.2.1.84:6500/general/stores/create', {
+        const response = await fetch('http://10.2.1.174:35789/general/stores/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -514,7 +514,7 @@ export const postStore = async (storeData) => {
 export const putStore = async (storeData, id) => {
     try {
         console.log("storeData", storeData);
-        const response = await fetch(`http://10.2.1.84:6500/general/stores/update/${id}`, {
+        const response = await fetch(`http://10.2.1.174:35789/general/stores/update/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -548,7 +548,7 @@ export const putStore = async (storeData, id) => {
 //Endpoints de Countries
 export const getCountries = async () => {
     try {
-        const result = await fetch(`http://10.2.1.84:6500/general/countries`, {
+        const result = await fetch(`http://10.2.1.174:35789/general/countries`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -566,7 +566,7 @@ export const getCountries = async () => {
 // Endpoints de Sales
 export const getSales = async () => {
     try {
-        const result = await fetch(`http://10.2.1.84:6500/payments/sales`, {
+        const result = await fetch(`http://10.2.1.174:35789/payments/sales`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -584,7 +584,7 @@ export const getSales = async () => {
 // Endpoints Ventas por Tienda
 export const getStore_Sales = async (id) => {
     try {
-        const result = await fetch(`http://10.2.1.84:6500/payments/store_summaries?payroll_id=${id}`, {
+        const result = await fetch(`http://10.2.1.174:35789/payments/store_summaries?payroll_id=${id}`, {
             method: 'GET',
             headers: new Headers({
               'Authorization': `Bearer ${token_temis}`
@@ -602,7 +602,7 @@ export const getStore_Sales = async (id) => {
 //VENTAS Y ASISTENCIA //DETALLE DE EMPLEADO
 export const getEmployee = async (id) => {
     try {
-        const result = await fetch(`http://10.2.1.84:6500/general/employees/${id}`, {
+        const result = await fetch(`http://10.2.1.174:35789/general/employees/${id}`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -618,7 +618,7 @@ export const getEmployee = async (id) => {
 
 export const getEmployees = async () => {
     try {
-        const result = await fetch(`http://10.2.1.84:6500/general/employees`, {
+        const result = await fetch(`http://10.2.1.174:35789/general/employees`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -634,7 +634,7 @@ export const getEmployees = async () => {
 
 export const getPositions = async () => {
     try {
-        const result = await fetch(`http://10.2.1.84:6500/general/positions`, {
+        const result = await fetch(`http://10.2.1.174:35789/general/positions`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -650,7 +650,7 @@ export const getPositions = async () => {
 
 export const getPayrolls = async () => {
     try {
-        const result = await fetch(`http://10.2.1.84:6500/general/payrolls`, {
+        const result = await fetch(`http://10.2.1.174:35789/general/payrolls`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -666,8 +666,8 @@ export const getPayrolls = async () => {
 
 export const getSellerSummaries = async (payroll_id) => {
     try {
-        // const result = await fetch(`http://10.2.1.84:6500/general/payments/seller_summaries?payroll_id=${payroll_id}`, {
-        const result = await fetch(`http://10.2.1.84:6500/payments/seller_summaries?payroll_id=${payroll_id}`, {
+        // const result = await fetch(`http://10.2.1.174:35789/general/payments/seller_summaries?payroll_id=${payroll_id}`, {
+        const result = await fetch(`http://10.2.1.174:35789/payments/seller_summaries?payroll_id=${payroll_id}`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -683,7 +683,7 @@ export const getSellerSummaries = async (payroll_id) => {
 
 export const getSellerSummariesDaily = async (payroll_id, store_id, employee_id) => {
     try {
-        const result = await fetch(`http://10.2.1.84:6500/payments/seller_summaries_daily?payroll_id=${payroll_id}&store_id=${store_id}&employee_id=${employee_id}`, {
+        const result = await fetch(`http://10.2.1.174:35789/payments/seller_summaries_daily?payroll_id=${payroll_id}&store_id=${store_id}&employee_id=${employee_id}`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`

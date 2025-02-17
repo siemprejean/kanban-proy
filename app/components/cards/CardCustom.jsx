@@ -52,7 +52,7 @@ const CardCustom = (props) => {
                     <Card sx={{ maxWidth: 345 }}>
                         <CardHeader className='dashboard-card'
                             avatar={
-                                <span class="nav-icon material-symbols-outlined">
+                                <span className= "nav-icon material-symbols-outlined">
                                     {props.data.icon}
                                 </span>
                             }
@@ -70,7 +70,7 @@ const CardCustom = (props) => {
                     <Card sx={{ maxWidth: 345 }}>
                         <CardHeader className='dashboard-card'
                             avatar={
-                                <span class="nav-icon material-symbols-outlined">
+                                <span className= "nav-icon material-symbols-outlined">
                                     {props.data.icon}
                                 </span>
                             }

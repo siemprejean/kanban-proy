@@ -28,6 +28,11 @@ input::placeholder {
     font-style: bold;
     text-align: left;
   }
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 
 //<Image src="/images/logos/TEMIS - ATENEA LOGO_Temis solo.png" style={{ width: "300px" }}

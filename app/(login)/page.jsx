@@ -1,17 +1,20 @@
 'use client'
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import {Loading_1} from "../components/ui/loading_1"
 import { Row, Col, Card, Form, Button, Image } from 'react-bootstrap';
 import 'styles/theme/components/_login.scss';
 import { postLogin } from "@/app/data/api";
-import { useRouter } from "next/router";
+import  ErrorMessagex from "../components/ui/ErrorMessage";
 
 
 
 const Formulario = () => {
+    const [isError, setisError] = useState(false)
+    const [mensaje, setMensa] = useState("")
     const { register, formState: { errors, isSubmitting }, handleSubmit } = useForm();
     const enviar = async (data) => {
+        setisError(false)
         const body = {
             email: data.usuario,
             user_password: data.contraseña
@@ -19,14 +22,19 @@ const Formulario = () => {
         console.log(data)
 
         const resp = await postLogin(body);
-        console.log("Esto tiene resp ", resp.data.token)
-        if (resp.data.token !== null) {
+        console.log("Esto tiene resp")
+
+        if (resp.data?.token) {
             // Almacena el token en localStorage
             localStorage.setItem('token', resp.data.token);
             localStorage.setItem('token_expiration_date', resp.data.expiration_date)
 
             // Redirige al usuario a la página principal
             window.location.href = '/components/home';
+        }else{
+            setMensa(resp.message)
+            setisError(true)
+           
         }
     }
 
@@ -39,19 +47,30 @@ const Formulario = () => {
                     <form onSubmit={handleSubmit(enviar)}
                     >
 
-                        <div>
+                        <div className="container">
 
-                            <input className="mb-4" style={{ borderRadius: "8px", borderColor: "#4791db", borderWidth: "2px", marginLeft: "2rem", padding: "10px 50px" }} type="email"  {...register('usuario', { required: true, maxLength: 20, })} placeholder="Usuario" />
+                            <input className="mb-4" style={{ borderRadius: "8px", borderColor: "#4791db", borderWidth: "2px", padding: "10px 50px" }} type="email"  {...register('usuario', { required: true, maxLength: 40, })} placeholder="Usuario" />
                             {errors.usuario?.type === 'required' && <p>Ingrese su usuario</p>}
                             {errors.usuario?.type === 'maxLenght' && <p>Recuerde que son solo 8 caracteres</p>}
                         </div>
-                        <div>
+                        <div className="container">
 
-                            <input className="mb-4" style={{ borderRadius: "8px", borderColor: "#4791db", borderWidth: "2px", marginLeft: "2rem", padding: "10px 50px" }} type="password"  {...register('contraseña', { required: true, maxLenght: 20, })} placeholder="Contraseña" />
+                            <input className="mb-4" style={{ borderRadius: "8px", borderColor: "#4791db", borderWidth: "2px", padding: "10px 50px" }} type="password"  {...register('contraseña', { required: true, maxLenght: 20, })} placeholder="Contraseña" />
                             {errors.contraseña?.type === 'required' && <p>Ingrese su password</p>}
                             {errors.contr?.type === 'maxLength' && <p>Recuerde que son solo 8 caracteres</p>}
                         </div>
-                        <button className="loginbutton" disabled={isSubmitting} style={{ borderRadius: "10px", backgroundColor: "#03386a", color: "white", marginLeft: "2rem", padding: "10px 85px", }} type="submit">{isSubmitting ? "Cargando..." : "INICIAR SESIÓN"}</button>
+                       
+
+                        <div className="container">
+                        {isError &&  <ErrorMessagex mensaje= {mensaje} />}
+                        {isSubmitting? <Loading_1  ></Loading_1> : 
+                        <button className="loginbutton" disabled={isSubmitting} style={{ borderRadius: "10px", backgroundColor: "#03386a", color: "white", padding: "10px 85px" }} type="submit">INICIAR SESIÓN</button>
+                        }
+
+                        </div>
+
+                        
+                    
 
                     </form>
 
