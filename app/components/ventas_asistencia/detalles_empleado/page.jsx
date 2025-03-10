@@ -15,7 +15,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import Card from 'react-bootstrap/Card';
 import 'styles/theme/components/_calendar.scss';
 import ModalVentasEmpleado from "../../customcomponent/ModalVentasEmpleado";
-import { getCompanies, getEmployees, getPayrolls, getPositions, getStores, getSellerSummariesDaily,  getStore_Sales} from "@/app/data/api";
+import { getCompanies, getEmployees, getPayrolls, getPositions, getStores, getSellerSummariesDaily,  getStore_Sales, getEmployeeActives} from "@/app/data/api";
 import MuiTextField from "../../customcomponent/formcontrol";
 import { useRouter } from "next/navigation";
 import BasicDateRangePicker from  "../../customcomponent/BasicDateRangePicker";
@@ -92,6 +92,7 @@ export default function DetallesEmpleados() {
     const [payrolls, setPayrolls] = useState([])
     const [stores, setStores] = useState([0]);
     const [employees, setEmployees] = useState([]);
+    const [employeesactive, setEmployeesActive] = useState([]);
     const [companies, setCompanies] = useState([0]);
     const [positions, setPositions] = useState([0]);
     const [stores_sales,  setStores_sales] = useState([])
@@ -103,6 +104,8 @@ export default function DetallesEmpleados() {
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
     const [events, setEvents] = useState([]);
+    const [inicio, setInicio] = useState([]);
+  
 
 
     useEffect(() => {
@@ -112,6 +115,7 @@ export default function DetallesEmpleados() {
             try {
                 const data_payrolls = await getPayrolls();
                 const data_employees = await getEmployees();
+                const data_employees_active = await getEmployeeActives(); 
                 const data_store = await getStores();
                 const data_companies = await getCompanies();
                 const data_positions = await getPositions();
@@ -134,6 +138,8 @@ export default function DetallesEmpleados() {
    */
         //     setEvents(detalle_empleado);  
               console.log(events) 
+
+          
                 
                 const updatedStores = data_store.map(store =>  
                 ({
@@ -142,7 +148,7 @@ export default function DetallesEmpleados() {
                   
                   }));
 
-                  const updatedemployees = data_employees.map(emp =>  
+                  const updatedemployees = data_employees.map(emp => 
                   ({
                     ...emp,
                     label: ('(' + emp.identification + ')' + ' ' + emp.first_name+ ' ' + emp.last_name),
@@ -163,7 +169,6 @@ export default function DetallesEmpleados() {
                   });
 
 
-
             
              /*    const formattedEvents = data_payrollsDaily.map((evento) => ({
                   
@@ -178,18 +183,18 @@ export default function DetallesEmpleados() {
                 setPayrolls(updatedPayrolls)
                 setStores(updatedStores);
                 setEmployees(updatedemployees);
+                setEmployeesActive(data_employees_active);
                 setCompanies(data_companies);
                 setPositions(data_positions);
                 setTiendasFiltradas(upd1);
+                
                
             } catch (error) {
                 console.error('Error cargando data inicial:', error);
             }
         };
        CargarData();
-
-   
-      
+     
 
     }, []);
 
@@ -202,19 +207,26 @@ export default function DetallesEmpleados() {
             setTiendasFiltradas(tiendasFiltradas)
           }
       
-    
+
+
 /*EVENTO DE TIENDAS */
     const handleChangeStores = async (event) => {
         const selectedStore = parseInt(event);
         //setTiendas(selectedStore);
-     
-    
-        const filtro_empl = employees.filter((item) => item.store_id === selectedStore)
-        .map((item) => ({
-          ...item
-        }));
-        setEmployeestore(filtro_empl); 
 
+        const activos = employeesactive.map(act => act.employee_id);
+
+if(activos.length > 0  && employees.length >0){ 
+   
+ const filtro_empl = employees.filter((item) => item.store_id === selectedStore && activos.includes(item.id) )
+           .map((item) => ({
+          ...item
+        })); 
+   
+     console.log(filtro_empl)
+     console.log(activos)
+    setEmployeestore(filtro_empl); 
+    
         setDetail(
             {
               fullname: "",
@@ -229,18 +241,21 @@ export default function DetallesEmpleados() {
         //      dias_libres: "",
             },
           );
+}
     };
+
+
 
 
     /*EVENTO DE EMPLEADOS*/
     const handleChangeEmployee = async (event) => {
         const selectedEmployee = parseInt(event);
 
-        const data_emple = employees.filter((item) => item.id === selectedEmployee)
+    const data_emple = employees.filter((item) => item.id === selectedEmployee )
         .map((item) => ({
           ...item
-        }));
-
+        })); 
+    
         if (data_emple.length > 0) {
             const data_empresa = companies.filter((item) => item.id === data_emple[0].company_id)
             .map((item) => ({
@@ -277,6 +292,8 @@ export default function DetallesEmpleados() {
             setDetail(newDetail);
 
 /* DATOS DEL CALENDARIO */
+
+
             const data_seller_summaries_daily  = await  getSellerSummariesDaily(stores_sales[0].payroll_id,data_emple[0].store_id,data_emple[0].id,)
            
             const detalle_empleado = data_seller_summaries_daily.map((item) =>   ({   
@@ -284,7 +301,7 @@ export default function DetallesEmpleados() {
                     title:item.total_daily_sale,
                     start:item.registration_date,
                     description:item.sale_discount,
-                    background:(item.attendance == true ? '#CF9AE8' : '#e8b19a')
+                    color:(item.attendance === true) ? '#64ea8f' : '#e8b19a'
                 
             }));
 
@@ -307,9 +324,11 @@ export default function DetallesEmpleados() {
                 },
               );
         }
+    }
 
-    
-    };
+  
+
+
 
 
 
