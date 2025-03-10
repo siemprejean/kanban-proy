@@ -25,10 +25,10 @@ export const postLogin = async (loginData) => {
             //settoken_temis(data.token_temis);
             return data; // Puedes devolver datos adicionales si es necesario
         } else {
-            throw new Error('Error al crear el Role');
+            return response;
         }
     } catch (error) {
-        throw new Error('Error en la solicitud:', error);
+        return error;
     }
 
 };
