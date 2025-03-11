@@ -6,7 +6,6 @@ import { Row, Col, Card, Form, Button, Image } from 'react-bootstrap';
 import 'styles/theme/components/_login.scss';
 import { postLogin } from "@/app/data/api";
 import  ErrorMessagex from "../components/ui/ErrorMessage";
-import MetaTags from 'react-meta-tags';
 
 
 const Formulario = () => {
