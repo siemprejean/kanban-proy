@@ -6,7 +6,7 @@ import { Row, Col, Card, Form, Button, Image } from 'react-bootstrap';
 import 'styles/theme/components/_login.scss';
 import { postLogin } from "@/app/data/api";
 import  ErrorMessagex from "../components/ui/ErrorMessage";
-
+import MetaTags from 'react-meta-tags';
 
 
 const Formulario = () => {
@@ -38,8 +38,7 @@ const Formulario = () => {
         }
     }
 
-    return <div style={{ backgroundImage: `url(${"../images/Screenshot_2.jpg"})`, backgroundSize: "cover", height: "100vh" }}>
-        <div style={{ paddingTop: "100px" }}>
+    return <div style={{ backgroundImage: `url(${"../images/Screenshot_2.jpg"})`, backgroundSize: "cover", height: "100vh" }}> <div style={{ paddingTop: "100px" }}>
             <Card style={{ width: '25rem', height: '25rem', margin: 'auto', borderRadius: "20px" }} className="smooth-shadow-md">
                 <Card.Body >
                     <Image src="/images/logos/TEMIS - ATENEA LOGO_Temis solo.png" alt="Temis Atenea Logo"  style={{ width: "250px" }} className="rounded mx-auto d-block mb-6"></Image>
@@ -78,6 +77,7 @@ const Formulario = () => {
             </Card>
         </div>
     </div>
+    
 }
 
 export default Formulario;
