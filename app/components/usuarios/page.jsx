@@ -17,7 +17,7 @@ import Card from 'react-bootstrap/Card';
 import dateFormat from 'dateformat';
 import Input from '@mui/material/Input';
 import { getUser, getRol } from "@/app/data/api";
-
+import { Helmet } from 'react-helmet';
 
 const Usuarios = () => {
     const [show, setShow] = useState(false);
@@ -207,6 +207,10 @@ const Usuarios = () => {
 
         <DashboardLayout>
 
+          <Helmet>
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> </meta>
+      </Helmet>
+      
             <Container fluid >
                 <br></br>
                 <Card >

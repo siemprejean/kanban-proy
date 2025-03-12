@@ -7,7 +7,7 @@ import CardCustom from '../cards/CardCustom';
 import DoughnutChart from '../sub-components/DoughnutChart'
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
-
+import { Helmet } from 'react-helmet';
 import 'styles/theme/components/_card.scss';
 import ActiveProjects from "@/app/components/sub-components/ActiveProjects";
 import { useRouter } from "next/navigation";
@@ -28,7 +28,11 @@ const Home = () => {
     
 
     return (
+        
         <>
+          <Helmet>
+      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta>
+    </Helmet>
             <Fragment>
                 <Container style={{ maxWidth: 'revert-layer' }}>
 

@@ -7,7 +7,7 @@ import 'styles/theme/components/_tablaResumenEmpl.scss'
 
 //import 'styles/theme/components/_button.scss';
 import 'styles/theme/components/_modal.scss';
-
+import { Helmet } from 'react-helmet';
 
 import DashboardLayout from "../home/layout";
 import Container from 'react-bootstrap/Container';
@@ -81,6 +81,9 @@ export default function Store() {
 
   return (
    <DashboardLayout>
+              <Helmet>
+            <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> </meta>
+          </Helmet>
      <Fragment>
       <Container fluid className="calendar-container">
         <Card >

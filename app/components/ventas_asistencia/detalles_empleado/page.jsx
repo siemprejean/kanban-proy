@@ -25,7 +25,7 @@ import 'styles/theme/components/_DropdownSelect_v2.scss'
 import { Rock_3D } from "next/font/google";
 import { Description } from "@mui/icons-material";
 import esLocale from "@fullcalendar/core/locales/es"; 
-
+import { Helmet } from 'react-helmet';
 
 
 const dataTabla = {
@@ -393,7 +393,12 @@ if(activos.length > 0  && employees.length >0){
 
 
     return (
+    
+
         <DashboardLayout>
+        <Helmet>
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> </meta>
+      </Helmet>
             <Fragment>
                 <Container fluid className="calendar-container">
                     <Card>

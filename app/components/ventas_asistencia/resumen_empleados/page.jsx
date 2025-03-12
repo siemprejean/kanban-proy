@@ -1,7 +1,7 @@
 'use client'
 // import node module libraries
 import React from "react";
-
+import { Helmet } from 'react-helmet';
 import { useState, useRef, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -305,6 +305,9 @@ export default function DetallesEmpleados() {
 
     return (
         <DashboardLayout>
+              <Helmet>
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> </meta>
+      </Helmet>
             <Fragment>
                 <Container fluid className="calendar-container">
                     <Card>
