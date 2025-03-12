@@ -53,7 +53,7 @@ const QuickMenu = () => {
     const QuickMenuDesktop = () => {
         return (
             <ListGroup as="ul" bsPrefix='navbar-nav' className="navbar-right-wrap ms-auto d-flex nav-top-wrap">
-                <Dropdown as="li" className="stopevent">
+             {/*    <Dropdown as="li" className="stopevent">
                     <Dropdown.Toggle as="a"
                         bsPrefix=' '
                         id="dropdownNotification"
@@ -75,7 +75,7 @@ const QuickMenu = () => {
                                     </span>
                                 </Link>
                             </div>
-                            {/* <Notifications /> */}
+                        
                             <div className="border-top px-3 pt-3 pb-3">
                                 <Link href="/dashboard/notification-history" className="text-link fw-semi-bold">
                                     See all Notifications
@@ -125,8 +125,8 @@ const QuickMenu = () => {
                         <Dropdown.Item>
                         <Link href="/components/login" className="fe fe-power " >Sign Out</Link>
                         </Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+                    </Dropdown.Menu> 
+                </Dropdown>*/}
             </ListGroup>
         )
     }
@@ -134,7 +134,7 @@ const QuickMenu = () => {
     const QuickMenuMobile = () => {
         return (
             <ListGroup as="ul" bsPrefix='navbar-nav' className="navbar-right-wrap ms-auto d-flex nav-top-wrap">
-                <Dropdown as="li" className="stopevent">
+              {/*   <Dropdown as="li" className="stopevent">
                     <Dropdown.Toggle as="a"
                         bsPrefix=' '
                         id="dropdownNotification"
@@ -155,7 +155,7 @@ const QuickMenu = () => {
                                     </span>
                                 </Link>
                             </div>
-                            {/* <Notifications /> */}
+                      
                             <div className="border-top px-3 pt-3 pb-3">
                                 <Link href="/dashboard/notification-history" className="text-link fw-semi-bold">
                                     See all Notifications
@@ -206,7 +206,7 @@ const QuickMenu = () => {
                             <Link href="/components/login" className="fe fe-power " >Sign Out</Link>
                         </Dropdown.Item>
                     </Dropdown.Menu>
-                </Dropdown>
+                </Dropdown> */}
             </ListGroup>
         )
     }

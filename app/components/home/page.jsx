@@ -31,7 +31,9 @@ const Home = () => {
         <>
             <Fragment>
                 <Container style={{ maxWidth: 'revert-layer' }}>
-                    <Row>
+
+                    
+                 {/*    <Row>
                         <Col sm={8}>
                             <Row>
                                 <Col sm={6}>
@@ -115,7 +117,7 @@ const Home = () => {
                                 <DoughnutChart />
                             </Card>
                         </Col>
-                    </Row>
+                    </Row> */}
                 </Container>
             </Fragment>
         </>

@@ -29,32 +29,32 @@ export const DashboardMenu = [
 		id: uuid(),
 		title: 'Inicio',
 		icon: 'home',
-		link: '/'
+		link: '/components/home'
 	},
 	{
 		id: uuid(),
 		title: 'Ventas y Asistencia',
 		icon: 'account_balance_wallet',
 		children: [
-			{ id: uuid(), link: '/components/ventas_asistencia/ventas', name: 'Ventas' },
-			{ id: uuid(), link: '/components/ventas_asistencia/asistencia', name: 'Asistencia' },
+			/* { id: uuid(), link: '/components/ventas_asistencia/ventas', name: 'Ventas' }, */
+	/* 		{ id: uuid(), link: '/components/ventas_asistencia/asistencia', name: 'Asistencia' }, */
 			{ id: uuid(), link: '/components/ventas_asistencia/resumen_empleados', name: 'Resumen de Empleados' },
 			{ id: uuid(), link: '/components/ventas_asistencia/detalles_empleado', name: 'Detalle de Empleado' }
 		]
 	},
-	{
+/* 	{
 		id: uuid(),
 		title: 'Histórico de Pagos',
 		icon: 'history',
 		link: '/components/vacio'
-	},
+	}, */
 	{
 		id: uuid(),
 		title: 'Tiendas',
 		icon: 'shopping_basket',
 		link: '/components/store'
 	},
-	{
+	/*{
 		id: uuid(),
 		title: 'Metas',
 		icon: 'finance',
@@ -65,7 +65,7 @@ export const DashboardMenu = [
 		title: 'Gestión de Incentivos',
 		icon: 'credit_card',
 		link: '/components/vacio'
-	},
+	},*/
 	{
 		id: uuid(),
 		title: 'Configuraciones',
@@ -74,8 +74,8 @@ export const DashboardMenu = [
 			{ id: uuid(), link: '/components/usuarios', name: 'Usuarios' },
 			{ id: uuid(), link: '/components/roles', name: 'Roles y Permisos' },
 			{ id: uuid(), link: '/components/company', name: 'Empresas' },	
-			{ id: uuid(), link: '/components/brand', name: 'Marcas' },
-			{ id: uuid(), link: '/components/vacio', name: 'Tiendas' },
+	/* 		{ id: uuid(), link: '/components/brand', name: 'Marcas' },
+			{ id: uuid(), link: '/components/vacio', name: 'Tiendas' }, */
 			
 		]
 	},
