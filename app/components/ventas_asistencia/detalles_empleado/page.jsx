@@ -137,7 +137,7 @@ export default function DetallesEmpleados() {
                 }));   
    */
         //     setEvents(detalle_empleado);  
-              console.log(events) 
+             // console.log(events) 
 
           
                 

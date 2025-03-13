@@ -120,7 +120,7 @@ function Ventas() {
     useEffect(() => {
         fetchData();
         calendarFilters();
-    }, []);
+    }, [fetchData]);
 
 
     

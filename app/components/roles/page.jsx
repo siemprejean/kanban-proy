@@ -149,7 +149,7 @@ export default function RolesPermision() {
   useEffect(() => {
     fetchData();
     fetchDatap();
-  }, []);
+  }, [fetchData, fetchDatap]);
 
   const fetchData = async () => {
     try {
@@ -159,6 +159,7 @@ export default function RolesPermision() {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
+
   };
   const fetchDetail = async (id) => {
     try {

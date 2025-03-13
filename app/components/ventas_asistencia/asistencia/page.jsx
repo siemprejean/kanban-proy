@@ -61,7 +61,7 @@ const Asistencia = () => {
 
 	useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     const fetchData = async () => {
         try {
