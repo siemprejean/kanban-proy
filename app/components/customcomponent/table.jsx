@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import 'styles/theme/components/_card.scss';
 import 'styles/theme/components/_button.scss';
 import 'styles/theme/components/_table.scss';
+
 const MuiTable = ({ columns, body, rowsPerPage, page, handleChangePage, handleChangeRowsPerPage, count }) => {
     return (
         <Paper className="table-custom-container">

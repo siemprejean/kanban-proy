@@ -125,37 +125,54 @@
     }
 }
 
-.modal-dialog-container-delete {
-    .modal-dialog-title {
-        h4 {
-            font-weight: bold;
-            margin-top: 15px;
+/* Style the entire pagination bar */
+.MuiTablePagination-toolbar {
+    display: flex;
+    justify-content: center; /* Center align pagination */
+    background-color: white;
+    padding: 8px 16px;
+  }
+  
+  .MuiTablePagination-actions button {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    color: #e7fafe;
+    font-weight: 500;
+    width: 36px;
+    height: 36px;
+    margin: 0 4px;
+  }
+  
 
-            svg {
-                background-color: white;
-                color: #FF3D57
-            }
-        }
-    }
-    .modal-dialog-btn {
-        margin: 0 auto;
-        width: 100%;
-        display: flex;
-        padding: 20px;
-        justify-content: center;
-        align-items: left;
+  .MuiTablePagination-actions button.Mui-selected {
+    background-color: #002F6C; /* Dark blue */
+    color: #002F6C;
+    border-color: #002F6C;
+  }
+  
+  .MuiTablePagination-actions button.Mui-disabled {
+    color: #002F6C;
+    border: none;
+  }
+  
+  .MuiTablePagination-ellipsis {
+    color: #666;
+    font-weight: bold;
+  }
 
-        button {
-            background: #FF3D57;
-            color: #fff;
-            font-weight: 600;
-            border-radius: 20px;
-            width: 50%;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  .MuiIconButton-root{
+    background-color: #002F6C; /* Dark blue */
+  }
 
-            &:hover {
-                background: #FF3D57;
-            }
-        }
-    }
+  .badge{
+    margin-right: 5px;
+    border-radius: 10px;
+    color: #139a74;
+    width:75px;
+    height:30px;
+    display: inline-flex;
+  }
+
+  .bg-success {
+    background-color: #d2ffd5 !important;
 }

@@ -26,6 +26,7 @@ const Formulario = () => {
         if (resp.data?.token) {
             // Almacena el token en localStorage
             localStorage.setItem('token', resp.data.token);
+            console.log('Token guardado:', localStorage.getItem('token'));
             localStorage.setItem('token_expiration_date', resp.data.expiration_date)
 
             // Redirige al usuario a la página principal

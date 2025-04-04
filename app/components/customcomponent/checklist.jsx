@@ -43,11 +43,6 @@ const MuiCheckList = ({ className, title, items, preselectedItems, onNewSelected
             return (
               <ListItem
                 key={value.id}
-                secondaryAction={
-                  <IconButton edge="end" aria-label="comments">
-                    <Comment />
-                  </IconButton>
-                }
                 disablePadding
               >
                 <ListItemButton onClick={handleToggle(value.id)}>

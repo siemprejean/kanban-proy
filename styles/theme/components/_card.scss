@@ -1,3 +1,9 @@
+.highlight-column {
+    text-align: left;
+  }
+  
+  
+
 .col-sm-6 {
     margin-top: 15px;
 
@@ -158,13 +164,25 @@
     width: 35%;
 }
 
-.card-header-buttons {
+.card-header-buttons-roles {
     width: 35%;
     display: flex;
     gap: 2%;
 
     button {
-        width: 48%;
+        width: 35%;
+        padding: 15px;
+        left: -115%
+    }
+}
+
+.card-header-buttons-company {
+    width: 35%;
+    display: flex;
+    gap: 2%;
+
+    button {
+        width: 35%;
         padding: 15px;
     }
 }

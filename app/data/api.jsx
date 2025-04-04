@@ -1,6 +1,3 @@
-
-
-
 let token_temis;
 let token_expiration_date;
 if (typeof window !== 'undefined') {
@@ -33,10 +30,84 @@ export const postLogin = async (loginData) => {
 
 };
 
+export const mostrarUser = async (id) => {
+    try {
+      const response = await fetch(`http://10.2.1.174:35789/admin/users/${id}`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token_temis}`
+        }
+      });
+  
+      const result = await response.json();
+      return result;
+  
+    } catch (err) {
+      console.error("Error fetching user:", err);
+      return null;
+    }
+  };  
+
+export const switchPass = async () =>{
+    console.log(idModal)
+    console.log("password nuevo" + user_password)
+    console.log(`Form submitted, ${user_password}`);
+    try {
+        const res = await fetch(`http://10.2.1.174:35789/admin/users/password-change/${idModal}`, {
+            method: 'PUT',
+            headers: new Headers({
+
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer  ${token_temis}`
+            }),
+            body: JSON.stringify({
+                user_id: idModal,
+                user_password: user_password,
+                remember_password: user_password
+            })
+        })
+        let resJson = await res.json();
+        console.log(resJson)
+        if (res.status === 200) {
+            console.log("logro put ");
+        
+            setPassword(res.user_password);
+        
+            setMessage("bien");
+        } else {
+
+            setMessage("Ocurrio un error");
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+export const updateUserPermissions = async ({ id, roles }) => {
+    try {
+      const response = await fetch(`http://10.2.1.174:35789/admin/users/update/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token_temis}`
+        },
+        body: JSON.stringify({ roles }),
+      });
+  
+      const result = await response.json();
+      console.log("Roles updated:", result);
+      return result;
+    } catch (err) {
+      console.error("Error updating roles:", err);
+      throw err; // optional: rethrow if you want to catch it in calling code
+    }
+  };
 
 export const getUser = async () => {
     try {
-        const response = await fetch('http://10.2.1.174:35789/admin/users', {
+        const response = await fetch(`http://10.2.1.174:35789/admin/users`, {
             method: "GET",
             headers: new Headers({
 
@@ -47,6 +118,7 @@ export const getUser = async () => {
         });
         const result = await response.json();
         return result;
+    
     } catch (err) {
         console.log(err);
     }
@@ -54,7 +126,7 @@ export const getUser = async () => {
 
 export const getRol = async () => {
     try {
-        const response = await fetch('http://10.2.1.174:35789/admin/roles', {
+        const response = await fetch(`http://10.2.1.174:35789/admin/roles`, {
             method: "GET",
             headers: new Headers({
 
@@ -179,6 +251,7 @@ export const getBrands = async () => {
         throw new Error('Failed to fetch brands');
     }
 };
+
 export const postBrand = async (brandData) => {
     try {
         console.log("brandData", brandData);
@@ -327,7 +400,7 @@ export const putRole = async (roleData, id) => {
                 slug: roleData.slug,
                 status_role: roleData.status_role,
                 permissions: roleData.permissions
-            }, console.log("roleData", roleData.name)),
+            }),
 
         });
         if (response.ok) {

@@ -1,18 +1,17 @@
 'use client'
 import DashboardLayout from "../home/layout";
-import Link from "next/link";
-import TextField from '@mui/material/TextField';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
-import DownloadIcon from '@mui/icons-material/Download';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 //import { CardBody, CardHeader, Col, Row } from "react-bootstrap";
-import { Box, Button, Card, FormControl, IconButton, InputLabel, Input, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography, List, ListItem, ListItemButton, Checkbox, ListItemIcon, ListItemText, CardContent, CardHeader, Grid, styled, Divider, Stack, Chip, DialogContentText, FormGroup, FormControlLabel, Switch } from "@mui/material";
+import {Button, Card, FormControl, IconButton, InputLabel, TableCell, TableRow, CardContent, CardHeader, Divider, Stack, Chip, DialogContentText, FormGroup, FormControlLabel, Switch } from "@mui/material";
 import React, { useEffect } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { useState } from "react";
+import { styled } from "@mui/material/styles";
+import CloseIcon from '@mui/icons-material/Close';
+import { useRef} from "react";
+
+
 
 //import { DetailModal } from "./detailmodal";
 //import DetailModal from "./detailmodal";
@@ -29,6 +28,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import SaveIcon from '@mui/icons-material/Save';
 import MuiModal from "../customcomponent/modal";
 import MuiTable from "../customcomponent/table";
+import dateFormat from 'dateformat';
 
 import 'styles/theme/components/_card.scss';
 import 'styles/theme/components/_button.scss';
@@ -62,15 +62,15 @@ export default function RolesPermision() {
   const closeModalCreate = () => setModalCreateOpen(false);
   const [openp, setOpenp] = React.useState(0);
   const [successModalOpenp, setSuccessModalOpenp] = useState(false);
-  const handleCloseSuccessModalp = () => { setSuccessModalOpenp(false); closeModalp(); closeModalCreatep() };
+  const handleCloseSuccessModalp = () => {console.log("Closing modal..."); setSuccessModalOpenp(false); closeModalp(); closeModalCreatep() };
   const handleClosep = () => setOpenp(false);
   const handleOpenp = () => setOpenp(true);
   const [isModalOpenp, setModalOpenp] = useState(false);
   const [isModalCreateOpenp, setModalCreateOpenp] = useState(false);
   const openModalp = () => setModalOpenp(true);
-  const closeModalp = () => setModalOpenp(false);
+  const closeModalp = () => {console.log("closeModalCreatep called!"); setModalOpenp(false)};
   const openModalCreatep = () => setModalCreateOpenp(true);
-  const closeModalCreatep = () => setModalCreateOpenp(false);
+  const closeModalCreatep = () => {console.log("closeModalCreatep called!"); setModalCreateOpenp(false)};
   const [permissionName, setPermissionName] = useState('');
   const [permissionSlug, setPermissionSlug] = useState('');
   const [permissionHttpMethod, setPermissionHttpMethod] = useState('');
@@ -81,6 +81,7 @@ export default function RolesPermision() {
   const [updatePermissionHttpPath, setUpdatePermissionHttpPath] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [searchTerm1, setSearchTerm1] = useState('');
+  const modalRef = useRef(null);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -92,7 +93,7 @@ export default function RolesPermision() {
   };
 
   const [value, setValue] = React.useState("one");
-  const columnsTable = [{ label: 'Id', field: 'id' },
+  const columnsTable = [{ label: 'ID', field: 'id' },
   { label: 'Nombre', field: 'name' },
   { label: 'Descripcion', field: 'slug' },
   { label: 'Permisos', field: 'permissions', render: (row) => row.permissions.join(', ') },
@@ -102,7 +103,7 @@ export default function RolesPermision() {
   { label: 'Nombre Corto', field: 'name' },
   { label: 'Descripcion', field: 'slug' },
   { label: 'Creado En', field: 'permissions', render: (row) => row.permissions.join(', ') },
-  { label: 'Actualizado En', field: 'created_at' }, { label: '', field: '' }, { label: '', field: '' }];
+  { label: 'Actualizado En', field: 'created_at', className: 'updated-at' }, { label: '', field: '' }, { label: '', field: '' }];
 
   //Estilos
   const listStyles = {
@@ -116,6 +117,54 @@ export default function RolesPermision() {
     boxShadow: 24,
     p: 4
   };
+
+  const StyledButton = styled(Button)`
+    background-color: #03386a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    right: 100%;
+    bottom: 5px;
+    &:hover {
+    background-color: #0457a0;
+    transform: scale(1.05);
+    }
+  `;
+
+  const Styledbuttons = styled(Button)`
+    background-color: #03386a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;  
+    &:hover {
+    background-color: #0457a0;
+    transform: scale(1.05);
+    }
+  `;
+
+  const StyledmethodButton = styled(Button)`
+  background-color: ${(props) => (props.active ? "#03386a" : "#e0e0e0")};  // Updated to #03386a for active state
+  color: ${(props) => (props.active ? "white" : "black")};
+  margin-right: 10px;
+  width: 120px;
+  height: 40px;
+  padding: 0;
+  text-transform: none;
+  font-size: 14px;
+  top: 30px;
+
+  &:hover {
+    background-color: ${(props) => (props.active ? "#03386a" : "#e0e0e0")} !important;
+    color: ${(props) => (props.active ? "white" : "black")} !important;
+          }
+  }
+`;
 
   const modalStyles = {
     position: 'absolute',
@@ -146,21 +195,69 @@ export default function RolesPermision() {
   }
   const [data, setData] = useState([]);
   const [data1, setData1] = useState([]);
-  useEffect(() => {
-    fetchData();
-    fetchDatap();
-  }, [fetchData, fetchDatap]);
+
+  const timeoutModalp = () => { 
+    setSuccessModalOpenp(true);
+    setTimeout(() => setSuccessModalOpenp(false), 2000);
+    setTimeout(() => handleCloseeditModalp(), 2000);
+  }
+
+  const timeoutModal = () => { 
+    setSuccessModalOpenp(true);
+    setTimeout(() => setSuccessModalOpen(false), 2000);
+    setTimeout(() => handleCloseeditModal(), 2000);
+  }
+
+  const handleCloseModal = () => {
+    setRoleName('');
+    setRoleSlug('');
+    setPreselectedItems([]);
+    setSuccessModalOpen(false); // Ensure success modal is also closed
+    setModalCreateOpen(false);
+  };
+  
+  const handleCloseeditModal = () => {
+    setModalOpen(false);  // Open modal
+  };
+
+  const handleCloseModalp = () => {
+    setPermissionName('');
+    setPermissionSlug('');
+    setPermissionHttpMethod('');
+    setPermissionHttpPath('');
+    setModalCreateOpenp(false);
+  };
+
+  const handleCloseeditModalp = () => {
+    setModalOpenp(false);
+  };
+
+    //VARIABLES DE PERMISOS
+  const fetchDatap = async () => {
+    try {
+      const permissions = await getPermissions();
+      console.log("esto tiene data", data1)
+      setData1(permissions);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const fetchData = async () => {
     try {
       const roles = await getRoles();
-      console.log("estyo tiene data", data)
+      console.log("esto tiene data", data)
       setData(roles);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-
   };
+
+  useEffect(() => {
+  fetchData();
+  fetchDatap();
+  }, []);
+
   const fetchDetail = async (id) => {
     try {
       const role = await getRole(id);
@@ -177,34 +274,44 @@ export default function RolesPermision() {
     }
   }
   async function handleCreateRole() {
-    //event.preventDefault();
-    console.log("Esto tiene preselectedItems", preselectedItems)
+    // Validate inputs
+    if (!roleName.trim() || preselectedItems.length === 0) {
+      alert("Debe completar el campo 'Nombre del Rol' y seleccionar al menos un permiso.");
+      return;
+    }
+  
     try {
       console.log("Esto tiene responseData ", {
         name: roleName,
         slug: roleSlug,
         status_role: roleStatus,
-        permissions: preselectedItems
-      })
-      // Llamar a la función en api/empresas.js para crear una nueva empresa
+        permissions: preselectedItems,
+      });
+  
+      // Crea nuevo rol
       let responseData = await postRole({
         name: roleName,
         slug: roleSlug,
         status_role: roleStatus,
-        permissions: preselectedItems
+        permissions: preselectedItems,
       });
-      console.log("Esto tiene responseData ", responseData)
-      // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-      console.log('Role creado exitosamente:', responseData);
-      setMessage("Role creado exitosamente!!");
-      setSuccessModalOpen(true);
+  
+      console.log("Esto tiene responseData ", responseData);
+  
+      // Informa si se creó bien el rol
+      console.log("Role creado exitosamente:", responseData);
+      setRoleName("");
+      setRoleSlug("");
+      setPreselectedItems([]);
+      setSuccessModalOpen(true); // Open success modal
       closeModalCreate();
       fetchData();
     } catch (error) {
-      // Manejar errores en caso de que la creación falleç
-      console.error('Error al crear el role:', error.message);
+      // Manejar errores en caso de que la creación falle
+      console.error("Error al crear el role:", error.message);
     }
   }
+  
   async function updateRole(id) {
     //event.preventDefault();
     try {
@@ -247,15 +354,7 @@ export default function RolesPermision() {
       console.error('Error fetching role details:', error);
     }
   };
-  const handleRow1Click = async (roleId) => {
-    try {
-      console.log('roleId:', roleId);
-      //await fetchDetail(companyId); // Obtener detalles de la empresa
-      handleOpen(); // Abrir el modal después de obtener los detalles
-    } catch (error) {
-      console.error('Error fetching role details:', error);
-    }
-  };
+
   //DIALOG DE ELIMINACION
   const titledialog = (
     <>
@@ -279,44 +378,146 @@ export default function RolesPermision() {
     </>
   );
   const actionsSucces = (<>
-    <Button onClick={handleCloseSuccessModal}>ACEPTAR</Button>
   </>);
   const contentDialogSucces = (
     <DialogContentText style={{ color: "black" }}>
       {message}
     </DialogContentText>);
 
-  const handleChangers = (event) => {
-    setRoleStatus(event.target.checked);
-
-  };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        // Prevent the default action & stop propagation
+        event.preventDefault();
+        event.stopPropagation();
+        return false;
+      }
+    };
+  
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  }, []);
+  
   //CONTENT MODAL DE CREACION ROLES
   const modalCreate = (
-    <div className="modal-content">
-      <MuiTextField title="Nombre del Rol:" value={roleName} onChange={(e) => setRoleName(e.target.value)} type="text" className="modal-col-12" />
-      <MuiTextField title="Slug:" value={roleSlug} onChange={(e) => setRoleSlug(e.target.value)} type="text" className="modal-col-12" />
-      <FormGroup>
-        <FormControlLabel control={<Switch checked={roleStatus} onChange={handleChangers} />} label="Activo" />
-      </FormGroup>
-      <MuiCheckList title="Permisos" items={data1} customStyles={listStyles} preselectedItems={preselectedItems} onNewSelectedItems={(selectedItems) => {
-        setPreselectedItems(selectedItems)
-      }} className="modal-checklist" />
-      <Row style={{ width: "100%" }}>
-        <Col className="modal-col-btn">
-          <Button onClick={() => { handleCreateRole() }}>
-            <SaveAltOutlined /> GUARDAR
-          </Button>
-          <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
-        </Col>
-      </Row>
+    <div className="modal-overlay">
+      <div ref={modalRef} className="modal-content" style={{ position: "relative" }}>
+        <IconButton 
+          onClick={handleCloseModal} 
+          style={{ position: "absolute", top: -80, right: -25, backgroundColor: "white", transition: "background-color 0.3s ease"}}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f0f0f0"}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
+        >
+          <CloseIcon />
+        </IconButton>
+  
+        <FormControl fullWidth className="modal-col-6" sx={{ marginBottom: 2 }}>
+          <InputLabel shrink htmlFor="nombre-rol" sx={{ fontSize: "20px", fontWeight: "bold" }}>
+            Nombre del Rol:
+          </InputLabel>
+          <MuiTextField
+            id="nombre-rol"
+            value={roleName}
+            onChange={(e) => setRoleName(e.target.value)}
+            type="text"
+            InputProps={{ style: { fontSize: "18px" } }}
+            InputLabelProps={{ shrink: true }}
+          />
+        </FormControl>
+  
+        <FormControl fullWidth className="modal-col-12">
+          <InputLabel shrink htmlFor="descripcion" sx={{ fontSize: "20px", fontWeight: "bold" }}>
+            Descripción:
+          </InputLabel>
+          <MuiTextField
+            id="descripcion"
+            value={roleSlug}
+            onChange={(e) => setRoleSlug(e.target.value)}
+            multiline
+            rows={4}
+            InputProps={{ style: { fontSize: "18px", minHeight: 100 } }}
+            InputLabelProps={{ shrink: true }}
+          />
+        </FormControl>
+  
+        <MuiCheckList 
+          title="Permisos" 
+          items={data1} 
+          customStyles={listStyles} 
+          preselectedItems={preselectedItems} 
+          onNewSelectedItems={(selectedItems) => setPreselectedItems(selectedItems)} 
+          className="modal-checklist" 
+        />
+  
+        <Row style={{ width: "95%" }}>
+          <Col className="modal-col-btn">
+            <Button onClick={() => 
+            { handleCreateRole();
+              timeoutModal();
+             }}
+            style={{ left: "30%", position: "relative" }}>
+              <SaveAltOutlined /> GUARDAR
+            </Button>
+            <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
+          </Col>
+        </Row>
+      </div>
     </div>
   );
 
+  
   //CONTENT MODAL DE EDICION ROLES
-  const modalContent = (
-    <div className="modal-content">
-      <MuiTextField title="Nombre del Rol:" value={updateRoleName} onChange={(e) => setUpdateRoleName(e.target.value)} type="text" className="modal-col-6" />
-      <MuiTextField title="Descripción:" value={updateRoleSlug} onChange={(e) => setUpdateRoleSlug(e.target.value)} className="modal-col-6" />
+      const modalContent = (
+      <div ref={modalRef} className="modal-content" style={{ position: "relative" }}>
+      
+      <IconButton 
+      onClick={handleCloseeditModal} 
+      style={{ position: 'absolute', top: -80, right: -25, backgroundColor: "white",transition: "background-color 0.3s ease"}}
+      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f0f0f0"}
+      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
+      >
+      <CloseIcon />
+      </IconButton>
+
+      <FormControl fullWidth className="modal-col-6" sx={{ marginBottom: 2 }}>
+        <InputLabel 
+          shrink 
+          htmlFor="nombre-rol"
+          sx={{ fontSize: '20px', fontWeight: 'bold' }}
+        >
+          Nombre del Rol:
+        </InputLabel>
+        <MuiTextField
+          id="nombre-rol"
+          value={updateRoleName}
+          onChange={(e) => setUpdateRoleName(e.target.value)}
+          type="text"
+          InputProps={{ style: { fontSize: '18px' } }}
+          InputLabelProps={{ shrink: true }}
+        />
+      </FormControl>
+
+      <FormControl fullWidth className="modal-col-12">
+        <InputLabel 
+          shrink 
+          htmlFor="descripcion"
+          sx={{ fontSize: '20px', fontWeight: 'bold' }}
+        >
+          Descripción:
+        </InputLabel>
+        <MuiTextField
+          id="descripcion"
+          value={updateRoleSlug}
+          onChange={(e) => setUpdateRoleSlug(e.target.value)}
+          multiline
+          rows={4}
+          InputProps={{ style: { fontSize: '18px', minHeight: 100 } }}
+          InputLabelProps={{ shrink: true }}
+        />
+      </FormControl>
+
       <FormGroup>
         <FormControlLabel control={<Switch checked={updateRoleStatus} onChange={(event) => {
           setUpdateRoleStatus(event.target.checked);
@@ -325,9 +526,14 @@ export default function RolesPermision() {
       <MuiCheckList title="Permisos" items={data1} customStyles={listStyles} preselectedItems={preselectedItems} onNewSelectedItems={(selectedItems) => {
         setPreselectedItems(selectedItems)
       }} className="modal-checklist" />
-      <Row style={{ width: "100%" }}>
+      <Row style={{ width: "45%" }}>
         <Col className="modal-col-btn">
-          <Button style={{ borderRadius: "10px", backgroundColor: "#FFAF38", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => updateRole(detail.id)}>
+          <Button 
+          style={{ borderRadius: "10px", backgroundColor: "#FFAF38", width: "100%", color: "HighlightText", flex: "auto", left: "120%", position: "relative" }} 
+          onClick={() => 
+          {updateRole(detail.id)
+          timeoutModal();
+          }}>
             <SaveIcon /> GUARDAR
           </Button>
           <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
@@ -335,6 +541,8 @@ export default function RolesPermision() {
       </Row>
     </div>
   );
+
+  //TABLA ROLES
   const body = (
     <>
       {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
@@ -345,23 +553,18 @@ export default function RolesPermision() {
           <TableCell component="th" scope="row">
             {row.id}
           </TableCell>
-          <TableCell align="center">{row.name}</TableCell>
-          <TableCell align="center">{row.slug}</TableCell>
-          <TableCell align="center">
+          <TableCell align="left">{row.name}</TableCell>
+          <TableCell align="left">{row.slug}</TableCell>
+          <TableCell align="left">
             <Stack direction="row" spacing={1} alignItems="center" style={{ flexWrap: 'wrap' }} >
-              {row.permissions.map((permission, index) => (<Chip key={index} label={permission.name} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} size="small" variant="outlined" />))}
+              {row.permissions.map((permission, index) => (<Chip key={index} label={permission.name} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green', borderRadius: '5px' }} size="small" variant="outlined" />))}
             </Stack>
           </TableCell>
-          <TableCell align="center">{row.created_at}</TableCell>
+          <TableCell align="left">{row.created_at}</TableCell>
           <TableCell align="center">
-            <Button style={{ backgroundColor: "#03386a", color: "HighlightText" }} onClick={() => { handleRowClick(row.id) }}><EditIcon /> </Button>
+            <Styledbuttons onClick={() => { handleRowClick(row.id) }}><EditIcon /> </Styledbuttons>
           </TableCell>
           <TableCell align="center">
-            <React.Fragment>
-              <Button style={{ backgroundColor: "#FF3D57", color: "HighlightText" }} onClick={() => { handleRow1Click(row.id) }}>
-                <DeleteOutlineIcon />
-              </Button>
-            </React.Fragment>
           </TableCell>
         </TableRow>
       ))}
@@ -376,16 +579,6 @@ export default function RolesPermision() {
     </>
   );
 
-  //VARIABLES DE PERMISOS
-  const fetchDatap = async () => {
-    try {
-      const permissions = await getPermissions();
-      console.log("estyo tiene data", data1)
-      setData1(permissions);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
   const fetchDetailp = async (id) => {
     try {
       const permission = await getPermission(id);
@@ -456,12 +649,11 @@ export default function RolesPermision() {
       console.error('Error al actualizar el rol:', error.message);
     }
   }
-  const handleSearchp = (e) => {
-    setSearchTerm1(e.target.value);
-  };
+
   const filteredDatap = data1.filter((item) =>
     item.name.toLowerCase().includes(searchTerm1.toLowerCase())
   );
+
   const handleRowClickp = async (permissionId) => {
     try {
       await fetchDetailp(permissionId); // Obtener detalles de la empresa
@@ -470,15 +662,7 @@ export default function RolesPermision() {
       console.error('Error fetching role details:', error);
     }
   };
-  const handleRow1Clickp = async (permissionId) => {
-    try {
-      console.log('roleId:', permissionId);
-      //await fetchDetail(companyId); // Obtener detalles de la empresa
-      handleOpenp(); // Abrir el modal después de obtener los detalles
-    } catch (error) {
-      console.error('Error fetching role details:', error);
-    }
-  };
+
   //DIALOG DE ELIMINACION
   const titledialogp = (
     <>
@@ -502,23 +686,56 @@ export default function RolesPermision() {
     </>
   );
   const actionsSuccesp = (<>
-    <Button onClick={handleCloseSuccessModalp}>ACEPTAR</Button>
+
   </>);
+  
   const contentDialogSuccesp = (
     <DialogContentText style={{ color: "black" }}>
       {message}
     </DialogContentText>);
 
-  //CONTENT MODAL DE CREACION ROLES
+  //CONTENT MODAL DE CREACION PERMISOS
   const modalCreatep = (
-    <div className="modal-content">
-      <MuiTextField title="Nombre del Permiso:" value={permissionName} onChange={(e) => setPermissionName(e.target.value)} type="text" className="modal-col-6" />
-      <MuiTextField title="Descripcion:" value={permissionSlug} onChange={(e) => setPermissionSlug(e.target.value)} type="text" className="modal-col-6" />
-      <MuiTextField title="Metodo Http:" value={permissionHttpMethod} onChange={(e) => setPermissionHttpMethod(e.target.value)} type="text" className="modal-col-6" />
+    <div ref={modalRef} className="modal-content">
+            <IconButton 
+      onClick={handleCloseModalp} 
+      style={{ position: 'absolute', top: -80, right: -25, backgroundColor: "white", transition: "background-color 0.3s ease"}}
+      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f0f0f0"}
+      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
+        >
+      <CloseIcon />
+      </IconButton>
+      <MuiTextField title="Nombre del Permiso:" value={permissionName} onChange={(e) => setPermissionName(e.target.value)} type="text" className="modal-col-6 input-disabled" disabled />
+      <MuiTextField title="Descripcion:" value={permissionSlug} onChange={(e) => setPermissionSlug(e.target.value)} type="text" className="modal-col-6 textarea-disabled" multiline rows={3}/>
+      <div className="modal-col-6">
+        <StyledmethodButton
+          active={permissionHttpMethod === "GET"}
+          onClick={() => setPermissionHttpMethod("GET")}
+        >
+          GET
+        </StyledmethodButton>
+        <StyledmethodButton
+          active={permissionHttpMethod === "POST"}
+          onClick={() => setPermissionHttpMethod("POST")}
+        >
+          POST
+        </StyledmethodButton>
+        <StyledmethodButton
+          active={permissionHttpMethod === "PUT"}
+          onClick={() => setPermissionHttpMethod("PUT")}
+        >
+          PUT
+        </StyledmethodButton>
+      </div>
       <MuiTextField title="Path Http:" value={permissionHttpPath} onChange={(e) => setPermissionHttpPath(e.target.value)} type="text" className="modal-col-6" />
-      <Row style={{ width: "100%" }}>
+      <Row style={{ width: "95%" }}>
         <Col className="modal-col-btn">
-          <Button onClick={() => { handleCreatePermission() }}>
+          <Button onClick={() => 
+          { handleCreatePermission();
+            timeoutModalp();
+          }}
+            style={{ left: "30%", position: "relative" }}
+          >
             <SaveAltOutlined /> GUARDAR
           </Button>
           <MuiDialog open={successModalOpenp} onClose={handleCloseSuccessModalp} title={titledialogSuccesp} content={contentDialogSuccesp} actions={actionsSuccesp} className="modal-dialog-container" />
@@ -527,23 +744,83 @@ export default function RolesPermision() {
     </div>
   );
 
-  //CONTENT MODAL DE EDICION ROLES
+  //CONTENT MODAL DE EDICION PERMISOS
   const modalContentp = (
-    <div className="modal-content">
-      <MuiTextField title="Nombre del Rol:" value={updatePermissionName} onChange={(e) => setUpdatePermissionName(e.target.value)} type="text" className="modal-col-6" />
-      <MuiTextField title="Descripción:" value={updatePermissionSlug} className="modal-col-6" onChange={(e) => setUpdatePermissionSlug(e.target.value)} />
-      <MuiTextField title="Metodo Http:" value={updatePermissionHttpMethod} onChange={(e) => setUpdatePermissionHttpMethod(e.target.value)} type="text" className="modal-col-6" />
-      <MuiTextField title="Path Http:" value={updatePermissionHttpPath} onChange={(e) => setUpdatePermissionHttpPath(e.target.value)} type="text" className="modal-col-6" />
-      <Row style={{ width: "100%" }}>
+    <div ref={modalRef} className="modal-content">
+      <IconButton 
+        onClick={handleCloseeditModalp} 
+        style={{ position: 'absolute', top: -80, right: -25, backgroundColor: "white", transition: "background-color 0.3s ease"}}
+        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f0f0f0"}
+        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
+
+      >
+        <CloseIcon />
+      </IconButton>
+
+      <MuiTextField
+        title="Nombre del Rol:"
+        value={updatePermissionName}
+        onChange={(e) => setUpdatePermissionName(e.target.value)}
+        type="text"
+        className="modal-col-6"
+      />
+      <MuiTextField
+        title="Descripción:"
+        value={updatePermissionSlug}
+        onChange={(e) => setUpdatePermissionSlug(e.target.value)}
+        type="text"
+        className="modal-col-6"
+      />
+      <MuiTextField
+        title="Metodo Http:"
+        value={updatePermissionHttpMethod}
+        onChange={(e) => setUpdatePermissionHttpMethod(e.target.value)}
+        type="text"
+        className="modal-col-6"
+      />
+      <MuiTextField
+        title="Path Http:"
+        value={updatePermissionHttpPath}
+        onChange={(e) => setUpdatePermissionHttpPath(e.target.value)}
+        type="text"
+        className="modal-col-6"
+      />
+
+      <Row style={{ width: "45%" }}>
         <Col className="modal-col-btn">
-          <Button style={{ borderRadius: "10px", backgroundColor: "#FFAF38", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => updatePermission(detail1.id)}>
+          <Button
+            style={{
+              borderRadius: "10px",
+              backgroundColor: "#FFAF38",
+              width: "100%",
+              color: "HighlightText",
+              flex: "auto",
+              left: "120%",
+              position: "relative",
+            }}
+            onClick={() => {
+              updatePermission(detail1.id);
+              timeoutModalp();
+            }}
+          >
             <SaveIcon /> GUARDAR
           </Button>
-          <MuiDialog open={successModalOpenp} onClose={handleCloseSuccessModalp} title={titledialogSuccesp} content={contentDialogSuccesp} actions={actionsSuccesp} className="modal-dialog-container" />
+          <MuiDialog
+            open={successModalOpenp}
+            onClose={() => setSuccessModalOpenp(false)}
+            title={titledialogSuccesp}
+            content={contentDialogSuccesp}
+            actions={actionsSuccesp}
+            className="modal-dialog-container"
+          />
         </Col>
       </Row>
     </div>
   );
+
+  // Wrap your modal content with ThemeProvider
+
+  //TABLA DE PERMISOS
   const bodyp = (
     <>
       {filteredDatap.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
@@ -554,19 +831,14 @@ export default function RolesPermision() {
           <TableCell component="th" scope="row">
             {row.id}
           </TableCell>
-          <TableCell align="center">{row.name}</TableCell>
-          <TableCell align="center">{row.slug}</TableCell>
-          <TableCell align="center">{row.created_at}</TableCell>
-          <TableCell align="center">{row.updated_at}</TableCell>
+          <TableCell align="left">{row.name}</TableCell>
+          <TableCell align="left">{row.slug}</TableCell>
+          <TableCell align="left">{row.created_at}</TableCell>
+          <TableCell align="left">{row.updated_at}</TableCell>
           <TableCell align="center">
-            <Button style={{ backgroundColor: "#03386a", color: "HighlightText" }} onClick={() => { handleRowClickp(row.id) }}><EditIcon /> </Button>
+            <Styledbuttons onClick={() => { handleRowClickp(row.id) }}><EditIcon /> </Styledbuttons>
           </TableCell>
           <TableCell align="center">
-            <React.Fragment>
-              <Button style={{ backgroundColor: "#FF3D57", color: "HighlightText" }} onClick={() => { handleRow1Clickp(row.id) }}>
-                <DeleteOutlineIcon />
-              </Button>
-            </React.Fragment>
           </TableCell>
         </TableRow>
       ))}
@@ -580,6 +852,8 @@ export default function RolesPermision() {
       <MuiDialog open={openp} onClose={handleClosep} title={titledialogp} content={contentDialogp} actions={actionsp} className="modal-dialog-container-delete" />
     </>
   );
+
+  //SEARCH Y BOTON CREAR ROLES Y PERMISOS
   return (
     <>
       <DashboardLayout className="justify-content-center">
@@ -603,15 +877,28 @@ export default function RolesPermision() {
               <div className="card-header">
                 <Row className="card-config-header">
                   <div className="card-config-header-left">
-                    <Form className="card-config-search">
-                      <Form.Control type="search" placeholder="Search" onChange={handleSearch} />
-                      <span className= "material-symbols-outlined"> search </span>
-                    </Form>
+                  <Form className="card-config-search position-relative" style={{ width: "40%", marginLeft: "20px" }}>
+                    {/* Search Icon Positioned Inside Input */}
+                    <span 
+                      style={{ pointerEvents: "none", fontSize: "20px", left: "10px" }} 
+                    >
+                      search
+                    </span>
+                    
+                    {/* Input Field with Proper Padding */}
+                    <Form.Control 
+                      type="search" 
+                      onChange={handleSearch} 
+                      className="ps-5" 
+                      style={{ paddingLeft: "3.5rem", position: "relative" }} 
+                    />
+                  </Form>
+                  
                   </div>
-                  <div className="card-header-buttons">
-                    <Button style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => { openModalCreate() }}>
+                  <div className="card-header-buttons-roles">
+                    <StyledButton onClick={() => { openModalCreate()}} style={{ borderRadius: "10px", height: "50px" }} >
                       <AddIcon /> CREAR
-                    </Button>
+                    </StyledButton>
                     <MuiModal
                       open={isModalCreateOpen}
                       onClose={closeModalCreate}
@@ -631,15 +918,25 @@ export default function RolesPermision() {
               <div className="card-header">
                 <Row className="card-config-header">
                   <div className="card-config-header-left">
-                    <Form className="card-config-search">
-                      <Form.Control type="search" placeholder="Search" onChange={handleSearchp} />
-                      <span className= "material-symbols-outlined"> search </span>
-                    </Form>
+                  <Form className="card-config-search position-relative" style={{ width: "40%", marginLeft: "20px" }}>
+                  <span 
+                      className="material-symbols-outlined position-absolute start-0 top-50 translate-middle-y ps-3 text-muted" 
+                      style={{ pointerEvents: "none", fontSize: "20px", left: "10px" }} 
+                    >
+                      search
+                    </span>
+                  <Form.Control 
+                      type="search" 
+                      onChange={handleSearch} 
+                      className="ps-5" 
+                      style={{ paddingLeft: "3.5rem", position: "relative" }} 
+                    />
+                  </Form>
                   </div>
-                  <div className="card-header-buttons">
-                    <Button style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => { openModalCreatep() }}>
+                  <div className="card-header-buttons-roles">
+                    <StyledButton onClick={() => { openModalCreatep() }} style={{ borderRadius: "10px", height: "50px" }}>
                       <AddIcon /> CREAR
-                    </Button>
+                    </StyledButton>
                     <MuiModal
                       open={isModalCreateOpenp}
                       onClose={closeModalCreatep}
