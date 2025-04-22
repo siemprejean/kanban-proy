@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 //import { CardBody, CardHeader, Col, Row } from "react-bootstrap";
 import { Box, Button, Card, IconButton, Paper, TableCell, TableRow, CardContent, Grid, styled, Divider, Stack, Chip, DialogContentText, DialogActions, Slide, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getBrands, getCompanies, getCompany, getCountries, postCompany, putCompany, getCountry } from "@/app/data/api";
+import { getBrands, getCompanies, getCompany, getCountries, postCountry } from "@/app/data/api";
 import MuiModal from "../customcomponent/modal";
 import MuiTextField from "../customcomponent/formcontrol";
 import { Col, Row, Form } from "react-bootstrap";
@@ -43,13 +43,16 @@ export default function Company() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalCreateOpen, setModalCreateOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [companyName, setcompanyName] = useState('');
+  const [countryName, setcountryName] = useState('');
+  const [isoCode, setisoCode] = useState('');
+  const [coinName, setcoinName] = useState('');
   const [updateCompanyName, setUpdateCompanyName] = useState('');
   const [updateCompanycountry, setUpdateCompanycountry] = useState('');
   const [companyIdCountry, setcompanyIdCountry] = useState(0);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [message, setMessage] = useState('');
   const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal(); closeModalCreate()};
+  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const openModal = () => setModalOpen(true);
   const closeModal = () => {
@@ -65,6 +68,13 @@ export default function Company() {
     (country) => country.id === activeCountryId
   );
   const selectedCountryName = selectedCountry ? selectedCountry.name : '';
+  
+  const groupedByCountry = getscountries.reduce((acc, country) => {
+    const associatedCompanies = data.filter(company => company.country === country.name);
+    acc[country.name] = associatedCompanies.map(c => c.name);
+    return acc;
+  }, {});
+   
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -98,8 +108,9 @@ export default function Company() {
   };  
 
   const handleCancelCreate = () => {
-    setcompanyName('');
-    setcompanyIdCountry('');
+    setcountryName('');
+    setisoCode('');
+    setcoinName('');
     setErrors({});
   };
 
@@ -139,10 +150,8 @@ export default function Company() {
     color: theme.palette.text.secondary,
   }));
 
-  const columnsTable = [{ label: 'ID', field: 'id' },
-  { label: 'Nombre', field: 'name' },
-  { label: 'Marcas', field: 'brands', render: (row) => row.brands.join(', ') },
-  { label: 'Pais', field: 'country' }];
+  const columnsTable = [{ label: 'Pais', field: 'name' },
+  { label: 'Empresas', field: 'company', render: (row) => row.brands.join(', ') }];
 
   //Estilos
   const listStyles = {
@@ -171,36 +180,41 @@ export default function Company() {
   /*   console.log(MuiModal.propTypes); */
 
   const [errors, setErrors] = useState({
-    companyName: '',
-    companyIdCountry: ''
+    countryName: '',
+    isoCode: '',
+    coinName: ''
   });
 
   const validateFields = () => {
     const newErrors = {
-      companyName: '',
-      companyIdCountry: ''
+      countryName: '',
+      isoCode: '',
+      coinName: ''
     };
   
-    if (!companyName.trim()) {
-      newErrors.companyName = 'Este campo es requerido.';
-    } else if (companyName.length > 50) {
-      newErrors.companyName = 'Máximo 50 caracteres.';
+    if (!countryName.trim()) {
+      newErrors.countryName = 'Debe seleccionar un nombre.';
+    } else if (countryName.length > 50) {
+      newErrors.countryName = 'Máximo 50 caracteres.';
     }
   
-    if (!companyIdCountry) {
-      newErrors.companyIdCountry = 'Debe seleccionar un país.';
+    if (!isoCode) {
+      newErrors.isoCode = 'Debe seleccionar un nombre corto.';
+    }
+
+    if (!coinName) {
+        newErrors.coinName = 'Debe seleccionar una divisa.';
     }
   
     setErrors(newErrors);
     
     // Check if there are any errors
-    return !newErrors.companyName && !newErrors.companyIdCountry;
+    return !newErrors.countryName && !newErrors.isoCode && !newErrors.coinName;
   };
 
   const fetchData = async () => {
     try {
       const companies = await getCompanies();
-      const brands = await getBrands();
       const countries = await getCountries();
   
       // Attach country name to each company
@@ -214,19 +228,13 @@ export default function Company() {
         };
       });
   
-      // Attach brands to each company
-      const dataWithBrands = companiesWithCountry.map((company) => ({
-        ...company,
-        brands: brands.filter((brand) => brand.company_id === company.id),
-      }));
-  
       // Store data
-      setData(dataWithBrands);
+      setData(companiesWithCountry);
       setCountries(countries); // In case needed for form dropdown
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-  };   
+  };
 
   const fetchDetail = async (id) => {
     try {
@@ -242,7 +250,6 @@ export default function Company() {
       console.error('Error fetching company detail:', error);
     }
   };
-   
 
   const fetchCountries = async () => {
     try {
@@ -269,61 +276,31 @@ export default function Company() {
     fetchBrands();
   }, []);
   
-
-  const handleCreateCompany = async () => {
+  const handleCreateCountry = async () => {
     try {
 
-      if (companyName !== '' && companyName !== null) {
+      if (countryName !== '' && countryName !== null) {
         console.log("Esto tiene responseData ", {
-          name: companyName,
-          country_id: companyIdCountry,
+          name: countryName,
+          ISOCODE: isoCode,
+          currency: coinName
         })
         // Llamar a la función en api/empresas.js para crear una nueva empresa
-        const responseData = await postCompany({
-          name: companyName,
-          //fiscal_Id: companyFiscalId,
-          country_id: companyIdCountry,
+        const responseData = await postCountry({
+            name: countryName,
+            ISOCODE: isoCode,
+            currency: coinName
         });
         console.log("Esto tiene responseData ", responseData)
         // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-        console.log('Empresa creada exitosamente:', responseData);
-        setMessage("Empresa creada exitosamente!!");
+        console.log('Pais creado exitosamente:', responseData);
+        setMessage("Pais creado exitosamente!!");
         setSuccessModalOpen(true);
         fetchData();
       }
     } catch (error) {
       // Manejar errores en caso de que la creación falle
       console.error('Error al crear la empresa:', error.message);
-    }
-  };
-
-  const handleUpdateCompany = async (id) => {
-    try {
-      console.log("Esto tiene id: ", id)
-      if (updateCompanyName !== '' && updateCompanyName !== null) {
-        console.log("Esto tiene responseData ", {
-          name: updateCompanyName,
-          //fiscal_Id: updateCompanyFiscalId,
-          country_id: companyIdCountry,
-        })
-        // Llamar a la función en api/empresas.js para crear una nueva empresa
-        const responseData = await putCompany({
-          name: updateCompanyName,
-          //fiscal_Id: updateCompanyFiscalId,
-          country_id: companyIdCountry,
-        }, id);
-        console.log("Esto tiene responseData ", responseData)
-        // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-        console.log('Empresa actualizada exitosamente:', responseData);
-        setMessage("Empresa actualizada exitosamente!!");
-        setSuccessModalOpen(true);
-        fetchData();
-        //
-
-      }
-    } catch (error) {
-      // Manejar errores en caso de que la creación falle
-      console.error('Error al actualizar la empresa:', error.message);
     }
   };
 
@@ -375,29 +352,14 @@ export default function Company() {
   //Contenido del modal de creación
   const modalCreate = (
     <div className="modal-content">
-      <MuiTextField title="Nombre de la Empresa:" value={companyName} onChange={(e) => setcompanyName(e.target.value)} type="text" className="modal-col-6" error={!!errors.companyName} helperText={errors.companyName} />
-      <FormControl className="modal-col-6" style={{top: 25}} error={!!errors.companyIdCountry}>
-        <InputLabel id="pais-label" style={{top: 5 ,left: 10 }} >País</InputLabel>
-          <Select
-            labelId="pais-label"
-            value={companyIdCountry ?? ''}
-            onChange={handleChangeCountry}
-          >
-            {getscountries.map((country) => (
-            <MenuItem key={country.id} value={country.id}>
-            {country.name}
-            </MenuItem>
-            ))}
-          </Select>
-        {errors.companyIdCountry && (
-        <FormHelperText>{errors.companyIdCountry}</FormHelperText>
-        )}
-  </FormControl>
+      <MuiTextField title="Nombre del Pais:" value={countryName} onChange={(e) => setcountryName(e.target.value)} type="text" className="modal-col-12" error={!!errors.countryName} helperText={errors.countryName}/>
+      <MuiTextField title="Nombre corto del Pais:" value={isoCode} onChange={(e) => setisoCode(e.target.value)} type="text" className="modal-col-6" error={!!errors.isoCode} helperText={errors.isoCode}/>
+      <MuiTextField title="Divisa:" value={coinName} onChange={(e) => setcoinName(e.target.value)} type="text" className="modal-col-6" error={!!errors.coinName} helperText={errors.coinName}/> 
       <Row style={{ width: "100%" }}>
         <Col className="modal-col-btn">
         <Button onClick={() => {
           if (validateFields()) {
-            handleCreateCompany();
+            handleCreateCountry();
           }
           }}>
           <SaveIcon /> GUARDAR
@@ -408,88 +370,40 @@ export default function Company() {
     </div>
   );
 
-  //Contenido del modal de edicion
-  const modalContent = (
-    <div ref={modalRef} className="modal-content">
-      <MuiTextField title="Nombre de la Empresa:" value={updateCompanyName} onChange={(e) => setUpdateCompanyName(e.target.value)} type="text" className="modal-col-6" />
-      <MuiSelect title="Pais" items={getscountries} values={activeCountryId} onChange={(value) => setcompanyIdCountry(parseInt(value, 10))} className="modal-col-6"/>
-      <Row style={{ width: "100%" }}>
-        <Col className="modal-col-btn">
-          <Button 
-            style={{ borderRadius: "10px", backgroundColor: "#FFAF38", width: "100%", color: "HighlightText", flex: "auto" }} 
-            onClick={() => handleUpdateCompany(detail.id)}
-          >
-            <SaveIcon /> GUARDAR
-          </Button>
-  
-          <MuiDialog 
-            open={successModalOpen} 
-            onClose={handleCloseSuccessModal} 
-            title={titledialogSucces} 
-            content={contentDialogSucces} 
-            actions={actionsSucces} 
-            className="modal-dialog-container" 
-          />
-        </Col>
-      </Row>
-    </div>
-  );
-
   const body = (
     <>
-      {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-        <TableRow
-          key={row.id}
-          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-        >
-          <TableCell component="th" scope="row">
-            {row.id}
+      {Object.entries(groupedByCountry).map(([country, companyNames]) => (
+        <TableRow key={country}>
+          <TableCell align="left" className="highlight-column">
+            {country}
           </TableCell>
-          <TableCell align="left" className="highlight-column">{row.name}</TableCell>
-          <TableCell align="left" className="col-sm-3">
-            <Stack direction="row" spacing={1} alignitems="center" style={{ flexWrap: 'wrap' }}>
-              {row.brands.map((brand, index) => (
-                <Chip 
-                  key={index}
-                  className="badge"
-                  label={brand.name} 
-                  style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green' }} 
-                  size="small" 
-                  variant="outlined" 
-                />
-              ))}
-            </Stack>
-          </TableCell>
-          <TableCell alignitems="center" className="col-sm-3">
-            <Chip
-              label={row.country}
-              className="badge"
-              style={{
-                backgroundColor: 'honeydew',
-                color: 'green',
-                borderColor: 'green',
-              }}
-              size="small"
-              variant="outlined"
-            />
-          </TableCell>
-          <TableCell align="center">
-            <Styledbuttons style={{ backgroundColor: "#03386a", color: "HighlightText" }} onClick={() => { handleRowClick(row.id) }}>
-              <EditIcon />
-            </Styledbuttons>
+  
+          <TableCell align="left" className="col-sm-9">
+            {companyNames.length > 0 ? (
+              <Stack direction="row" spacing={1} flexWrap="wrap">
+                {companyNames.map((name, index) => (
+                  <Chip
+                    key={index}
+                    label={name}
+                    className="badge"
+                    style={{
+                      backgroundColor: 'honeydew',
+                      color: 'green',
+                      borderColor: 'green',
+                    }}
+                    size="small"
+                    variant="outlined"
+                  />
+                ))}
+              </Stack>
+            ) : (
+              <em style={{ color: "#aaa" }}>Sin empresas asociadas</em>
+            )}
           </TableCell>
         </TableRow>
       ))}
-      <MuiModal
-        open={isModalOpen}
-        onClose={closeModal}
-        title="EDITAR EMPRESA"
-        content={modalContent}
-        customStyles={modalStyles}
-      />
-      <MuiDialog open={open} onClose={handleClose} title={titledialog} content={contentDialog} actions={actions} className="modal-dialog-container-delete" />
     </>
-  );  
+  ); 
 
   return (
     <>
@@ -519,8 +433,9 @@ export default function Company() {
                       closeModalCreate();
                       handleCancelCreate();
                       setErrors({
-                        companyName: '',
-                        companyIdCountry: ''
+                        countryName: '',
+                        isoCode: '',
+                        coinName: ''
                       });
                     }}
                     title="CREAR EMPRESA"

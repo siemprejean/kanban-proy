@@ -1,169 +1,607 @@
 'use client'
-
-import 'styles/theme.scss';
-import 'styles/theme/components/_calendar.scss';
-//import 'styles/theme/components/_card.scss';
-import 'styles/theme/components/_tablaResumenEmpl.scss'  
-
-//import 'styles/theme/components/_button.scss';
-import 'styles/theme/components/_modal.scss';
-import { Helmet } from 'react-helmet';
-
 import DashboardLayout from "../home/layout";
-import Container from 'react-bootstrap/Container';
-import { Card } from 'react-bootstrap';
-import { Col, Row } from "react-bootstrap";
-import { getBrands, getStore, getStores, postStore, putStore, getStore_Sales, getPayrolls } from "@/app/data/api";
-import DropdownSelect_v2 from "../customcomponent/DropdownSelect_v2";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
+import SaveIcon from '@mui/icons-material/Save';
+import CardHeader from '@mui/material/CardHeader';
+import { InputAdornment, Box, Button, Card, FormControl, IconButton,MenuItem, InputLabel, Input, Modal, Paper, TableCell, TableRow, CardContent, Grid, styled, Divider, Stack, Chip, DialogContentText, Select } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Col, Form, Row } from "react-bootstrap";
+import MuiModal from "../customcomponent/modal";
+import MuiTable from "../customcomponent/table";
+import MuiCheckList from "../customcomponent/checklist";
+import MuiTextField from "../customcomponent/formcontrol";
+import CloseIcon from '@mui/icons-material/Close';
+import {getStores, postStore, putStore, getStore, getBrands } from "@/app/data/api";
+import MuiDialog from "../customcomponent/dialog";
+import { VerifiedOutlined } from "@mui/icons-material";
+import { useRef} from "react";
+import FormHelperText from '@mui/material/FormHelperText';
 
-import { useState, useEffect, Fragment } from 'react';
+
+import 'styles/theme/components/_card.scss';
+import 'styles/theme/components/_button.scss';
+import 'styles/theme/components/_modal.scss';
 
 export default function Store() {
+    useEffect(() => {
+        fetchData();
+        fetchDatap();
+    },[]);
 
+    const [open, setOpen] = useState(0);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [detail, setDetail] = useState([]);
+    const [storeName, setstoreName] = useState('');
+    const [updatestores, setUpdatestoresname] = useState('');
+    const [updateComission, setUpdateComission] = useState('');
+    const [storeComission, setstoreComission] = useState('');
+    const [updateRetention, setUpdateRetention] = useState('');
+    const [storeRetention, setstoreRetention] = useState('');
+    const [updateExceed, setUpdateExceed] = useState('');
+    const [storeExceed, setstoreExceed] = useState('');
+    const [updateIncentive, setUpdateIncentive] = useState('');
+    const [storeIncentive, setstoreIncentive] = useState('');
+    const [storeicgBrand, seticgBrand] = useState('');
+    const [storeicgSerie, seticgSerie] = useState('');
+    const [updateicgBrand, setUpdateicgBrand] = useState('');
+    const [updateicgSerie, setUpdateicgSerie] = useState('');
+    const [preselectedItems, setPreselectedItems] = useState('');
+    const [isModalCreateOpen, setModalCreateOpen] = useState(false);
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [data, setData] = useState([]);
+    const [datap, setDatap] = useState([]);
+    const [successModalOpen, setSuccessModalOpen] = useState(false);
+    const [message, setMessage] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+    const modalRef = useRef(null);
 
-  //Resumen de tiendas
-  const [stores_sales, setStores_sales] = useState([]);
-  const [stores_sales_filtro, setStores_sales_filtro] = useState([]);
-  const [payrolls, setPayrolls] = useState([])
-  const [tiendas, setTiendas] = useState([]);
-  const [tiendasFiltradas, setTiendasFiltradas] = useState([])
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
+    };
 
-  useEffect(() => {
-    fetchTienda(); 
-  }, []);
+    const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal(); closeModalCreate() };
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => setModalOpen(false);
+    const openModalCreate = () => setModalCreateOpen(true);
+    const closeModalCreate = () => setModalCreateOpen(false);
+    const Item = styled(Paper)(({ theme }) => ({
+        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+        ...theme.typography.body2,
+        padding: theme.spacing(1),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+    }));
+    const columnsTable = [{ label: 'ID', field: 'id' },
+    { label: 'Tiendas', field: 'stores', render: (row) => row.brands.join(', ') },
+    { label: '', field: '' },
+    { label: '', field: '' }];
 
-  //DATA DE RESUMEN DE TIENDA
-  const fetchTienda = async () => {
-    try {
+    //Estilos
+    const listStyles = {
+        display: 'contents',
+        margin: 1,
+        flex: "auto",
+        right: '10%',
+        width: '75%',
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        // p: 4
+    };
+
+    const CustomInputAdornment = styled(InputAdornment)(({ theme }) => ({
+        '& span': {
+          marginRight: 0,  // Removes the margin-right of the internal span
+        },
+      }));
       
-      const stores = await getStores();
-      const data_payrolls  = await getPayrolls();
-      const upd1 = stores.map(item => ({
-        ...item,
-        label: item.store_name
-      }));
 
+    const modalStyles = {
+        position: 'absolute',
+        margin: 1,
+        flex: "auto",
+        right: '10%',
+        width: '75%',
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4
+    };
 
-      const updatedPayrolls = data_payrolls.map(x => ({
-        ...x,
-        label: x.description.replace("Payroll for", "Planilla ")
-      }));
-
-      setPayrolls(updatedPayrolls)
-
+    const StyledButton = styled(Button)`
+        background-color: #03386a;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+        &:hover {
+        background-color: #0457a0;
+        transform: scale(1.05);
+        }
+        `;
     
-      setTiendasFiltradas(upd1);
-      setTiendas(stores);
-      
-    } catch (error) {
-      console.error('Error fetching data:', error);
+    const Styledbuttons = styled(Button)`
+        background-color: #03386a;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;  
+        &:hover {
+        background-color: #0457a0;
+        transform: scale(1.05);
+        }
+        `;
+
+    const handleChangePage = (event, newPage) => {
+        event.preventDefault();
+        setPage(newPage);
+    };
+
+    const timeoutModal = () => { 
+        setSuccessModalOpen(true);
+        setTimeout(() => setSuccessModalOpen(false), 2000);
+        setTimeout(() => handleCloseSuccessModal(), 2000);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        event.preventDefault();
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
+
+    const handleCancelCreate = () => {
+        setstoreName('');
+        setstoreComission('');
+        setstoreExceed('');
+        setstoreIncentive('');
+        setstoreRetention('');
+        seticgBrand('');
+        seticgSerie('');
+        closeModalCreate();
+        closeModal();
+    };
+
+    const handleRowClick = async (storeId) => {
+        try {
+            console.log('storeId:', storeId);
+            await fetchDetail(storeId); // Obtener detalles de la empresa
+            openModal(); // Abrir el modal después de obtener los detalles
+        } catch (error) {
+            console.error('Error fetching brand details:', error);
+        }
+    };
+
+    const [errors, setErrors] = useState({
+        storeName: '',
+        storeComission: '',
+        storeRetention: '',
+        storeExceed: '',
+        storeIncentive: ''
+      });      
+
+    async function onSubmit() {
+        //event.preventDefault();
+        try {
+            const storeComissionValue = storeComission === "local" ? "1" : storeComission === "global" ? "2" : null;
+            // Llamar a la función en api/empresas.js para crear una nueva empresa
+            let responseData = await postStore({
+                store_name: storeName.toUpperCase(),
+                slug: storeName.toUpperCase(),
+                retention: Number(storeRetention),
+                surplus: Number(storeExceed),
+                incentive_sunday: Number(storeIncentive),
+                icg_brand: storeicgBrand,
+                icg_serie: storeicgSerie,
+                brand_id: Number(preselectedItems),
+                incentive_type: Number(storeComissionValue),
+                store_status: 1
+            });
+            console.log("Esto tiene responseData ", responseData)
+            // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
+            console.log('Marca creada exitosamente:', responseData);
+            setMessage("Marca creada exitosamente!!");
+            setSuccessModalOpen(true);
+            fetchData();
+        } catch (error) {
+            // Manejar errores en caso de que la creación falleç
+            console.error('Error al crear la tienda:', error.message);
+        }
     }
-  };
 
+    const validateFields = () => {
+        const newErrors = {
+          storeName: '',
+          storeComission: '',
+          storeRetention: '',
+          storeExceed: '',
+          storeIncentive: ''
+        };
+      
+        if (!storeName.trim()) {
+          newErrors.storeName = 'Este campo es requerido.';
+        } else if (storeName.length > 50) {
+          newErrors.storeName = 'Máximo 50 caracteres.';
+        }
+      
+        if (!storeComission) {
+          newErrors.storeComission = 'Seleccione una opción.';
+        }
+      
+        const isNumber = (val) => /^-?\d*\.?\d+$/.test(val); // At least one digit
+      
+        if (!storeRetention.trim()) {
+          newErrors.storeRetention = 'Este campo es requerido.';
+        } else if (!isNumber(storeRetention)) {
+          newErrors.storeRetention = 'Debe ser un número.';
+        }
+      
+        if (!storeExceed.trim()) {
+          newErrors.storeExceed = 'Este campo es requerido.';
+        } else if (!isNumber(storeExceed)) {
+          newErrors.storeExceed = 'Debe ser un número.';
+        }
+      
+        if (!storeIncentive.trim()) {
+          newErrors.storeIncentive = 'Este campo es requerido.';
+        } else if (!isNumber(storeIncentive)) {
+          newErrors.storeIncentive = 'Debe ser un número.';
+        }
+      
+        setErrors(newErrors);
+        return Object.values(newErrors).every((e) => e === '');
+      };        
 
-      //Filtro del select
-      const handleChangeStores = (event) => {
-        const tiendaSelect = event;
-          // Filtrar por tienda
-          const tiendasFiltradas = stores_sales.filter(tiendas => tiendas.store_id === tiendaSelect);
-          setStores_sales_filtro(tiendasFiltradas)
-        
-      };
+    const fetchData = async () => {
+        try {
+            const storesd = await getStores();
+            // Asociar tiendas a marca
 
-        const handleChangePayrolls = async (e) =>{
+            setData(storesd);
 
-        const store_summaries= await getStore_Sales(e)
-        setStores_sales(store_summaries);
-        setStores_sales_filtro(store_summaries)
-        setTiendasFiltradas(tiendasFiltradas)
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    const fetchDatap = async () => {
+        try {
+            const brands = await getBrands();
+            // Asociar tiendas a marca
+
+            setDatap(brands);
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+          if (
+            modalRef.current &&
+            !modalRef.current.contains(event.target) &&
+            !event.target.closest('.MuiPopover-root') // Adjust this selector based on your UI library
+          ) {
+            // Prevent the default action and stop propagation
+            event.preventDefault();
+            event.stopPropagation();
+            // Optionally, you can close the modal here if that's the intended behavior
+            // handleCloseModal();
+          }
+        };
+      
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+        };
+      }, []);
+      
+
+    const fetchDetail = async (id) => {
+        try {
+            const storesd = await getStore(id);
+                // Asociar tiendas a marca
+                setDetail(storesd);
+                setUpdatestoresname(storesd.store_name);
+                setUpdateComission(storesd.incentive_type);
+                setUpdateExceed(storesd.surplus?.toString() ?? "");
+                console.log(updateExceed)
+                setUpdateIncentive(storesd.incentive_sunday?.toString() ?? "");
+                console.log(updateIncentive)
+                setUpdateRetention(storesd.retention?.toString() ?? "");
+                console.log(updateRetention)
+                setUpdateicgBrand(storesd.icg_brand)
+                setUpdateicgSerie(storesd.icg_serie)
+                setPreselectedItems([storesd.brand_id]);
+            console.log("Esto tiene info", detail);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            }
+    }
+
+      async function updateZtore(id) {
+        //event.preventDefault();
+        try {
+          console.log("Esto tiene id: ", id)
+          console.log("Esto tiene responseData ", {
+            store_name: updatestores.toUpperCase(),
+            brand_id: Number(preselectedItems),
+            retention: Number(updateRetention),
+            surplus: Number(updateExceed),
+            incentive_sunday: Number(updateIncentive),
+            incentive_type: Number(updateComission),
+            icg_brand: updateicgBrand,
+            icg_serie: updateicgSerie,
+          })
+          // Llamar a la función en api/empresas.js para crear una nueva empresa
+          let responseData = await putStore({
+            store_name: updatestores.toUpperCase(),
+            brand_id: Number(preselectedItems),
+            retention: Number(updateRetention),
+            surplus: Number(updateExceed),
+            incentive_sunday: Number(updateIncentive),
+            incentive_type: Number(updateComission),
+            icg_brand: updateicgBrand,
+            icg_serie: updateicgSerie
+          }, id);
+          console.log("Esto tiene responseData ", responseData)
+          // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
+          console.log('Marca actualizada exitosamente:', responseData);
+          setMessage("Marca actualizada exitosamente!!");
+          setSuccessModalOpen(true);
+          fetchData();
+        } catch (error) {
+          // Manejar errores en caso de que la creación falleç
+          console.error('Error al actualizar el rol:', error.message);
+        }
       }
-  
 
-  return (
-   <DashboardLayout>
-              <Helmet>
-            <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> </meta>
-          </Helmet>
-     <Fragment>
-      <Container fluid className="calendar-container">
-        <Card >
-            <Card.Body>
-                <h4 className="calendar-title">Resumen de tiendas </h4>
-                <Row className="App">
+    const filteredData = data.filter((item) =>
+        !searchTerm || (item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    );    
 
-                <Col xs={3}>
+    const titledialog = (<>
 
-                  <DropdownSelect_v2 label={"Seleccione Planilla"} options={payrolls} className = "custom-dropdown" onChange= {handleChangePayrolls}/>                      
+        <h4><DeleteForeverIcon /> ELIMINAR TIENDA</h4>
+        <Divider className="divider" />
+    </>
+    );
 
-                  </Col>    
+    const actions = (<>
+        <Button onClick={handleClose}>ACEPTAR</Button>
+    </>);
 
-                  <Col xs={3}>      
+    const contentDialog = (
+        <DialogContentText style={{ color: "black" }}>
+            ¿Esta seguro que desea eliminar esta tienda?
+        </DialogContentText>);
 
-                  <DropdownSelect_v2 label={"Seleccione Tienda"} options={tiendasFiltradas} className = "custom-dropdown" onChange= {handleChangeStores}/>             
+    const titledialogSucces = (<>
+        <h4><VerifiedOutlined /> REGISTRO EXITOSO</h4>
+        <Divider className="divider" />
+    </>
+    );
 
-                  </Col>    
+    const actionsSucces = (
+        <Button onClick={handleCloseSuccessModal}>ACEPTAR</Button>
+    );
 
-                </Row>
-                <br></br>
-                <Row className="App">
+    const contentDialogSucces = (
+        <DialogContentText style={{ color: "black" }}>
+            {message}
+        </DialogContentText>);
 
-                    <Col >
-                    <div className="table-container">
-                                <table className="custom-table">
-                                    <thead>
-                                    <tr>
-                                      <th>Fecha</th>
-                                      <th>Tienda</th>
-                                      <th>Porcentaje <br/>retención</th>
-                                      <th>Meta <br />de ventas</th>
-                                      <th>Diferencia <br /> entre la meta y <br /> lo que se logró</th>
-                                      <th>Porcentaje <br /> meta</th>
-                                      <th>Total <br /> empleados</th>
-                                      <th>Excedente<br />venta</th>
-                                      <th>Total <br /> venta</th>                                
-                                      <th>Porcentaje <br /> incencitvo domingos</th>
-                                      <th>Incentivo domingos</th>
-                                      <th>Total <br /> venta domingos</th>
-                                      <th>Total <br /> vendedores</th>
-                                      <th>Vendedores domingos</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {stores_sales_filtro.length > 0 ? (
-                                        stores_sales_filtro.map((get, index) => (
-                                          <tr key={index}>
-                                          <td  >({get.start_date})-({get.end_date})</td>
-                                          <td >{get.store_name} </td>
-                                          <td >{get.retention_percentage}% </td>
-                                          <td>{get.sales_goal}</td>
-                                          <td  >{get.sales_goal_difference}</td>
-                                          <td>{get.sales_goal_percentage}%</td>
-                                          <td >{get.total_employess}</td>
-                                          <td >{get.sales_surplus} </td>
-                                          <td>{get.total_sales}</td>                                      
-                                          <td  >{get.sunday_incentive_percentage}</td>
-                                          <td  >{get.sunday_incentive}</td>
-                                          <td  >{get.total_sunday_sales}</td>
-                                          <td  >{get.total_sellers}</td>
-                                          <td  >{get.sunday_sellers}</td>
-                                      </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                        <td colSpan="15" className="no-data">No hay datos disponibles</td>
-                                        </tr>
-                                    )}
-                                    </tbody>
-                                </table>
-                      </div>
-              
-                    </Col>
-              
-                </Row>
-            </Card.Body>
-        </Card>
-      </Container>
-     </Fragment>
- </DashboardLayout>
+        //MODAL CREACION TIENDA
+    const modalCreate = (
+        <div ref={modalRef} className="modal-content">
+            <IconButton 
+                onClick={handleCancelCreate} 
+                style={{ position: 'absolute', top: -80, right: -25, backgroundColor: "white", transition: "background-color 0.3s ease",
+                    }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f0f0f0"}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
+                >
+            <CloseIcon />
+            </IconButton>    
+            <MuiTextField title="Nombre de la Tienda:" value={storeName} onChange={(e) => setstoreName(e.target.value)} type="text" className="modal-col-12" error={!!errors.storeName} helperText={errors.storeName}/>
+            <FormControl className="modal-col-6" style={{ top: 25 }} error={!!errors.storeComission}>
+                <InputLabel id="tipo-comision-label" style={{ top: 5, left: 15 }}>Tipo de Comision</InputLabel>
+                    <Select
+                    labelId="tipo-comision-label"
+                    value={storeComission}
+                    onChange={(e) => setstoreComission(e.target.value)}
+                    label="Tipo de Comision"
+                    >
+                        <MenuItem value="local">Local</MenuItem>
+                        <MenuItem value="global">Global</MenuItem>
+                    </Select>
+                {errors.storeComission && <FormHelperText>{errors.storeComission}</FormHelperText>}
+            </FormControl>
+            <MuiTextField title="%Retencion" values={storeRetention} onChange={(e) => setstoreRetention(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeRetention} helperText={errors.storeRetention}/>
+            <MuiTextField title="%Excedente" values={storeExceed} onChange={(e) => setstoreExceed(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeExceed} helperText={errors.storeExceed}/>
+            <MuiTextField title="%Incentivo de Domingos" values={storeIncentive} onChange={(e) => setstoreIncentive(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeIncentive} helperText={errors.storeIncentive}/>
+            <Row style={{ width: "100%" }}>
+                <Col className="modal-col-btn">
+                <Button onClick={() => {
+                    if (validateFields()) {
+                        onSubmit();
+                        timeoutModal();
+                    }
+                    }}>
+                    <SaveIcon /> GUARDAR
+                </Button>
+                    <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
+                </Col>
+            </Row>
+        </div>
+    );
+        //MODAL EDICION TIENDA
+    const modalContent = (
+        <div ref={modalRef} className="modal-content">
+            <IconButton 
+                onClick={handleCancelCreate} 
+                style={{ position: 'absolute', top: -80, right: -25, backgroundColor: "white", transition: "background-color 0.3s ease",
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f0f0f0"}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
+            >
+            <CloseIcon />
+            </IconButton> 
+            <MuiTextField title="Nombre de la Tienda:" value={updatestores} onChange={(e) => setUpdatestoresname(e.target.value)} className="modal-col-12" />
+            <FormControl className="modal-col-6" style={{ top: 25 }}>
+                <InputLabel id="tipo-comision-label" style={{ top: 5, left: 15 }}>Tipo de Comision</InputLabel>
+                <Select
+                    value={updateComission === 1 ? "local" : updateComission === 2 ? "global" : ""}
+                    onChange={(e) => {
+                        const selectedValue = e.target.value;
+                        const numericValue = selectedValue === "local" ? 1 : selectedValue === "global" ? 2 : 0;
+                    setUpdateComission(numericValue);
+                    }}
+                >
+                <MenuItem value="local">Local</MenuItem>
+                <MenuItem value="global">Global</MenuItem>
+                </Select>
+            </FormControl>
+            <MuiTextField title="%Retencion" value={updateRetention} onChange={(event) => setUpdateRetention(parseInt(event))} className="modal-col-6" />
+            <MuiTextField title="%Excedente" value={updateExceed} onChange={(event) => setUpdateExceed(parseInt(event))} className="modal-col-6" />
+            <MuiTextField title="%Incentivo de Domingos" value={updateIncentive} onChange={(event) => setUpdateIncentive(parseInt(event))} className="modal-col-6" />
+            <MuiTextField title="ICG Brand" value={updateicgBrand} onChange={(e) => setUpdateicgBrand(e.target.value)} type="text" className="modal-col-6" />
+            <MuiTextField title="ICG Serie" value={updateicgSerie} onChange={(e) => setUpdateicgSerie(e.target.value)} type="text" className="modal-col-6" />
+            <MuiCheckList title="Marcas" items={datap} customStyles={listStyles} preselectedItems={preselectedItems} onNewSelectedItems={(selectedItems) => setPreselectedItems(selectedItems)} className="modal-checklist" />
+            <Row style={{ width: "100%" }}>
+                <Col className="modal-col-btn">
+                    <Button onClick={() => {updateZtore(detail.id)
+                     timeoutModal();
+                    }}>
+                        <SaveIcon /> GUARDAR
+                    </Button>
+                    <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
+                </Col>
+            </Row>
+        </div>
+    );
+//TABLA DE TIENDAS
+    const body = (
+        <>
+        {filteredData
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((row) => (
+                <TableRow
+                key={row.id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                    <TableCell component="th" scope="row">
+                        {row.id}
+                    </TableCell>
+
+                    <TableCell align="left" className="highlight-column">
+                        {row.name}
+                        <Stack
+                            direction="row"
+                            spacing={1}
+                            alignItems="left"
+                            style={{ flexWrap: 'wrap' }}
+                        >
+                        <Chip
+                            label={row.store_name}
+                            className="badge"
+                            style={{
+                            backgroundColor: 'honeydew',
+                            color: 'green',
+                            borderColor: 'green',
+                            borderRadius: '5px'
+                            }}
+                            size="small"
+                            variant="outlined"
+                        />
+                        </Stack>
+                    </TableCell>
+
+                    <TableCell align="center" className="button-td">
+                        <Button
+                            className="edit-button-g"
+                            onClick={() => {
+                                handleRowClick(row.id);
+                            }}
+                        >
+                            <EditIcon />
+                        </Button>
+                    </TableCell>
+                </TableRow>
+            ))}
+
+        <MuiModal
+            open={isModalOpen}
+            onClose={closeModal}
+            title="EDITAR TIENDA"
+            content={modalContent}
+            customStyles={modalStyles}
+        />
+
+        <MuiDialog
+            open={open}
+            onClose={handleClose}
+            title={titledialog}
+            content={contentDialog}
+            actions={actions}
+            className="modal-dialog-container-delete"
+        />
+    </>
+);
+
+    //SEARCH Y BOTON CREAR
+    return (
+        <>
+            <DashboardLayout className="justify-content-center">
+                <Card className="card-configuraciones">
+                    <CardHeader className="card-header"
+                        title={<h3> Configuración de Tienda </h3>}
+                        subheader={
+                            <Row className="card-config-header">
+                                <div className="card-config-header-left">
+                                    <Form className="card-config-search position-relative" style={{ width: "40%", marginLeft: "20px" }}>
+                                        <Form.Control type="search" placeholder="Search" onChange={handleSearch} />
+                                    </Form>
+                                </div>
+                                <div className="card-header-buttons-company">
+                                    <Styledbuttons style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "100%", color: "HighlightText", flex: "auto" }} onClick={() => {openModalCreate() }}>
+                                        <AddIcon /> CREAR
+                                    </Styledbuttons>
+                                    <MuiModal
+                                        open={isModalCreateOpen}
+                                        onClose={()=>{
+                                            closeModalCreate();
+                                            setErrors({
+                                                storeName: '',
+                                                storeComission: '',
+                                                storeRetention: '',
+                                                storeExceed: '',
+                                                storeIncentive: ''
+                                              });
+                                        }}
+                                        title="CREAR TIENDA"
+                                        content={modalCreate}
+                                        customStyles={modalStyles}
+                                    />
+                                </div>
+                            </Row>
+                        }
+                    />
+                    <Divider className="divider" />
+                    <CardContent className="card-content">
+                        <MuiTable columns={columnsTable} body={body} rowsPerPage={rowsPerPage} page={page} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} count={data.length} />
+                    </CardContent>
+                </Card >
+            </DashboardLayout >
+        </>
     );
 }

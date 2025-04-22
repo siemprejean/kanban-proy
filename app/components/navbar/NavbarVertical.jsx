@@ -13,10 +13,6 @@ import {
 import Accordion from 'react-bootstrap/Accordion';
 import AccordionContext from 'react-bootstrap/AccordionContext';
 import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import SplitButton from 'react-bootstrap/SplitButton';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 
 // import simple bar scrolling used for notification item scrolling

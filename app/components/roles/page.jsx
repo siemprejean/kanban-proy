@@ -11,8 +11,6 @@ import { styled } from "@mui/material/styles";
 import CloseIcon from '@mui/icons-material/Close';
 import { useRef} from "react";
 
-
-
 //import { DetailModal } from "./detailmodal";
 //import DetailModal from "./detailmodal";
 import Tab from "@mui/material/Tab";
@@ -258,6 +256,22 @@ export default function RolesPermision() {
   fetchDatap();
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        // Prevent the default action & stop propagation
+        event.preventDefault();
+        event.stopPropagation();
+        return false;
+      }
+    };
+  
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  }, []);
+
   const fetchDetail = async (id) => {
     try {
       const role = await getRole(id);
@@ -273,6 +287,7 @@ export default function RolesPermision() {
       console.error('Error fetching data:', error);
     }
   }
+
   async function handleCreateRole() {
     // Validate inputs
     if (!roleName.trim() || preselectedItems.length === 0) {
@@ -319,14 +334,14 @@ export default function RolesPermision() {
       console.log("Esto tiene responseData ", {
         name: roleName,
         slug: roleSlug,
-        status_role: roleStatus,
+        status_role: "true",
         permissions: preselectedItems
       })
       // Llamar a la función en api/empresas.js para crear una nueva empresa
       let responseData = await putRole({
         name: updateRoleName,
         slug: updateRoleSlug,
-        status_role: updateRoleStatus,
+        status_role: "true",
         permissions: preselectedItems
       }, id);
       console.log("Esto tiene responseData ", responseData)
@@ -340,12 +355,15 @@ export default function RolesPermision() {
       console.error('Error al actualizar el rol:', error.message);
     }
   }
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
+
   const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
   const handleRowClick = async (roleId) => {
     try {
       await fetchDetail(roleId); // Obtener detalles de la empresa
@@ -362,9 +380,11 @@ export default function RolesPermision() {
       <Divider className="divider" />
     </>
   );
+
   const actions = (<>
     <Button onClick={handleClose}>ACEPTAR</Button>
   </>);
+
   const contentDialog = (
     <DialogContentText style={{ color: "black" }}>
       ¿Esta seguro que desea eliminar este role?
@@ -377,28 +397,13 @@ export default function RolesPermision() {
       <Divider className="divider" />
     </>
   );
+
   const actionsSucces = (<>
   </>);
   const contentDialogSucces = (
     <DialogContentText style={{ color: "black" }}>
       {message}
     </DialogContentText>);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        // Prevent the default action & stop propagation
-        event.preventDefault();
-        event.stopPropagation();
-        return false;
-      }
-    };
-  
-    document.addEventListener("click", handleClickOutside, true);
-    return () => {
-      document.removeEventListener("click", handleClickOutside, true);
-    };
-  }, []);
   
   //CONTENT MODAL DE CREACION ROLES
   const modalCreate = (
@@ -427,7 +432,7 @@ export default function RolesPermision() {
           />
         </FormControl>
   
-        <FormControl fullWidth className="modal-col-12">
+        <FormControl fullWidth className="modal-col-12-slug">
           <InputLabel shrink htmlFor="descripcion" sx={{ fontSize: "20px", fontWeight: "bold" }}>
             Descripción:
           </InputLabel>
@@ -499,7 +504,7 @@ export default function RolesPermision() {
         />
       </FormControl>
 
-      <FormControl fullWidth className="modal-col-12">
+      <FormControl fullWidth className="modal-col-12-slug">
         <InputLabel 
           shrink 
           htmlFor="descripcion"
@@ -523,9 +528,11 @@ export default function RolesPermision() {
           setUpdateRoleStatus(event.target.checked);
         }} />} label="Activo" />
       </FormGroup>
+
       <MuiCheckList title="Permisos" items={data1} customStyles={listStyles} preselectedItems={preselectedItems} onNewSelectedItems={(selectedItems) => {
         setPreselectedItems(selectedItems)
       }} className="modal-checklist" />
+
       <Row style={{ width: "45%" }}>
         <Col className="modal-col-btn">
           <Button 
@@ -534,6 +541,7 @@ export default function RolesPermision() {
           {updateRole(detail.id)
           timeoutModal();
           }}>
+
             <SaveIcon /> GUARDAR
           </Button>
           <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
@@ -557,7 +565,7 @@ export default function RolesPermision() {
           <TableCell align="left">{row.slug}</TableCell>
           <TableCell align="left">
             <Stack direction="row" spacing={1} alignItems="center" style={{ flexWrap: 'wrap' }} >
-              {row.permissions.map((permission, index) => (<Chip key={index} label={permission.name} style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green', borderRadius: '5px' }} size="small" variant="outlined" />))}
+              {row.permissions.map((permission, index) => (<Chip key={index} label={permission.name} className="badge-roles" style={{ backgroundColor: 'honeydew', color: 'green', borderColor: 'green', borderRadius: '5px' }} size="small" variant="outlined" />))}
             </Stack>
           </TableCell>
           <TableCell align="left">{row.created_at}</TableCell>

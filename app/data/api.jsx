@@ -85,25 +85,34 @@ export const switchPass = async () =>{
     }
 };
 
-export const updateUserPermissions = async ({ id, roles }) => {
+export const updateUserPermissions = async (data) => {
     try {
-      const response = await fetch(`http://10.2.1.174:35789/admin/users/update/${id}`, {
+      const response = await fetch(`http://10.2.1.174:35789/admin/users/update/${data.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token_temis}`
         },
-        body: JSON.stringify({ roles }),
+        body: JSON.stringify({
+          name: data.name,
+          username: data.username,
+          email: data.email,
+          avatar: data.avatar,
+          id_company: data.id_company,
+          status_user: data.status_user,
+          roles: data.roles,
+        }),
       });
   
       const result = await response.json();
-      console.log("Roles updated:", result);
+      console.log("Usuario actualizado:", result);
       return result;
     } catch (err) {
-      console.error("Error updating roles:", err);
-      throw err; // optional: rethrow if you want to catch it in calling code
+      console.error("Error actualizando el usuario:", err);
+      throw err;
     }
   };
+  
 
 export const getUser = async () => {
     try {
@@ -142,8 +151,6 @@ export const getRol = async () => {
     }
 }
 
-
-
 //EndPoints de Empresas
 export const getCompanies = async () => {
     try {
@@ -179,6 +186,7 @@ export const getCompany = async (id) => {
         throw new Error('Failed to fetch companies');
     }
 };
+
 export const postCompany = async (companyData) => {
     try {
         console.log("companyData", companyData);
@@ -190,7 +198,7 @@ export const postCompany = async (companyData) => {
             }),
             body: JSON.stringify({
                 "name": companyData.name,
-                "id_country": companyData.id_country
+                "country_id": companyData.country_id
             }),
         });
         
@@ -206,6 +214,7 @@ export const postCompany = async (companyData) => {
         throw new Error('Error en la solicitud:', error);
     }
 };
+
 export const putCompany = async (companyData, id) => {
     try {
         console.log("companyData", companyData);
@@ -219,7 +228,7 @@ export const putCompany = async (companyData, id) => {
             }),
             body: JSON.stringify({
                 "name": companyData.name,
-                "id_country": companyData.id_country
+                "country_id": companyData.country_id
             }),
         });
        
@@ -264,7 +273,7 @@ export const postBrand = async (brandData) => {
             body: JSON.stringify({
                 name: brandData.name,
                 slug: brandData.name,
-                id_company: brandData.id_company
+                company_id: brandData.company_id
             }, console.log("brandData", brandData.name)),
 
         });
@@ -291,7 +300,7 @@ export const putBrand = async (brandData, id) => {
             body: JSON.stringify({
                 name: brandData.name,
                 slug: brandData.name,
-                id_company: brandData.id_company
+                company_id: brandData.company_id
             }, console.log("brandData", brandData.name)),
 
         });
@@ -512,7 +521,7 @@ export const putPermission = async (permissionData, id) => {
 export const getStores = async () => {
     try {
         console.log(`Esto tiene token_temis: ${token_temis} `)
-        const result = await fetch('http://10.2.1.174:35789/general/stores/active', {
+        const result = await fetch('http://10.2.1.174:35789/general/stores', {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -553,14 +562,16 @@ export const postStore = async (storeData) => {
                 'Authorization': `Bearer ${token_temis}`
             },
             body: JSON.stringify({
-                name: storeData.name,
+                store_name: storeData.store_name,
                 slug: storeData.slug,
-                id_brand: storeData.id_brand,
+                brand_id: storeData.brand_id,
                 retention: storeData.retention,
                 surplus: storeData.surplus,
                 incentive_sunday: storeData.incentive_sunday,
                 icg_brand: storeData.icg_brand,
-                icg_serie: storeData.icg_serie
+                icg_serie: storeData.icg_serie,
+                incentive_type: storeData.incentive_type,
+                store_status: storeData.store_status
             }, console.log("storeData", {
                 name: storeData.name,
                 slug: storeData.slug,
@@ -569,7 +580,9 @@ export const postStore = async (storeData) => {
                 surplus: storeData.surplus,
                 incentive_sunday: storeData.incentive_sunday,
                 icg_brand: storeData.icg_brand,
-                icg_serie: storeData.icg_serie
+                icg_serie: storeData.icg_serie,
+                incentive_type: storeData.incentive_type,
+                store_status: storeData.store_status
             })),
 
         });
@@ -595,15 +608,16 @@ export const putStore = async (storeData, id) => {
                 'Authorization': `Bearer ${token_temis}`
             },
             body: JSON.stringify({
-                name: storeData.name,
-                slug: storeData.slug,
-                id_brand: storeData.id_brand,
+                store_name: storeData.store_name,
+                slug: storeData.store_name,
+                brand_id: storeData.brand_id,
                 retention: storeData.retention,
                 surplus: storeData.surplus,
                 incentive_sunday: storeData.incentive_sunday,
+                incentive_type: storeData.incentive_type,
                 icg_brand: storeData.icg_brand,
                 icg_serie: storeData.icg_serie
-            }, console.log("brandData", storeData.name)),
+            }, console.log("brandData", storeData.store_name)),
 
         });
         if (response.ok) {
@@ -622,6 +636,24 @@ export const putStore = async (storeData, id) => {
 export const getCountries = async () => {
     try {
         const result = await fetch(`http://10.2.1.174:35789/general/countries`, {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': `Bearer ${token_temis}`
+            })
+        });
+        const data = await result.json();
+        console.log('Esto tiene countries:', data);
+        return data; countries
+    } catch (error) {
+        console.error('Error fetching countries:', error);
+        throw new Error('Failed to fetch countries');
+    }
+};
+
+//Endpoints de Countries
+export const getCountry = async (id) => {
+    try {
+        const result = await fetch(`http://10.2.1.174:35789/general/countries/${id}`, {
             method: 'GET',
             headers: new Headers({
                 'Authorization': `Bearer ${token_temis}`
@@ -813,3 +845,32 @@ export const validarToken = () =>{
         return 3;
     }
 }
+
+export const postCountry = async (coutryData) => {
+    try {
+        console.log("coutryData", coutryData);
+        const response = await fetch(`http://10.2.1.174:35789/general/countries/create`, {
+            method: 'POST',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token_temis}`
+            }),
+            body: JSON.stringify({
+                "name": coutryData.name,
+                "ISOCode": coutryData.ISOCODE,
+                "currency": coutryData.currency
+            }),
+        });
+        
+        const data = await response.json();
+        if (response.ok) {
+
+            
+            return data; // Puedes devolver datos adicionales si es necesario
+        } else {
+            throw new Error('Error al crear la empresa');
+        }
+    } catch (error) {
+        throw new Error('Error en la solicitud:', error);
+    }
+};

@@ -1,7 +1,7 @@
 'use client'
 import DashboardLayout from "../home/layout";
 //import { CardBody, CardHeader, Col, Row } from "react-bootstrap";
-import { Box, Button, Card, IconButton, Paper, TableCell, TableRow, CardContent, Grid, styled, Divider, Stack, Chip, DialogContentText, DialogActions, Slide } from "@mui/material";
+import { Box, Button, Card, IconButton, Paper, TableCell, TableRow, CardContent, Grid, styled, Divider, Stack, Chip, DialogContentText, Slide } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { getUser, getRol, mostrarUser, updateUserPermissions} from "@/app/data/api";
 import MuiModal from "../customcomponent/modal";
@@ -12,7 +12,6 @@ import MuiTable from "../customcomponent/table";
 import SaveIcon from '@mui/icons-material/Save';
 import MuiDialog from "../customcomponent/dialog";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import MuiSelect from "../customcomponent/Select";
 import { VerifiedOutlined } from "@mui/icons-material";
 import CardHeader from '@mui/material/CardHeader';
 import CloseIcon from '@mui/icons-material/Close';
@@ -36,19 +35,17 @@ export default function Company() {
   const [isModalCreateOpen, setModalCreateOpen] = useState(false);
   const [data, setData] = useState([]);
   const [data1, setData1] = useState([]);
-  const [preselectedItems, setPreselectedItems] = useState([]);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [message, setMessage] = useState('');
   const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal(); closeModalCreate()};
-  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
-  const openModalCreate = () => setModalCreateOpen(true);
   const closeModalCreate = () => setModalCreateOpen(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [updateNam, setUpdateName] = useState("");
   const [updateuser, setUpdateUname] = useState("");
+  const [updatemail, setemail] = useState("");
   const [selectedroles, setSelectedroles] = useState([]);
   const [role_id, setRole_id] = useState([]);
   const modalRef = useRef(null);
@@ -62,15 +59,13 @@ export default function Company() {
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const timeoutModal = () => { 
+  const timeoutModal = () => {
+    console.log('tamos aca?');
+    setMessage("Usuario actualizado exitosamente!!");
     setSuccessModalOpen(true);
     setTimeout(() => setSuccessModalOpen(false), 2000);
     setTimeout(() => handleCloseeditModal(), 2000);
   }
-
-  const filteredData1 = data1.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -80,18 +75,6 @@ export default function Company() {
     //setcompanyIdCountry(event.target.value);
     setRowsPerPage(event.target.value);
     setPage(0);
-  };
-  const handleChangeCountry = async (event) => {
-    const selectedCountry = parseInt(event);
-    setcompanyIdCountry(selectedCountry);
-    console.log("esto tiene selectedCountry", selectedCountry)
-  };
-
-  const handleCancelCreate = () => {
-    setcompanyName('');
-    setcompanyIdCountry('');
-    setPreselectedItems([]);
-    closeModalCreate();
   };
 
    const StyledButton = styled(Button)`
@@ -125,14 +108,6 @@ export default function Company() {
   const handleCloseeditModal = () => {
     setModalOpen(false);  // Open modal
   };
-
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
 
   const columnsTable = [{ label: 'ID', field: 'id' },
   { label: 'Nombre', field: 'name' },
@@ -189,6 +164,7 @@ export default function Company() {
   
     setUpdateName(userData.name);
     setUpdateUname(userData.username);
+    setemail(userData.email);
   
     const preselected = userData.roles.map((role) => role.id);
     setSelectedroles(preselected);
@@ -201,13 +177,20 @@ export default function Company() {
   const updatePermission = async (userId) => {
     try {
       const payload = {
+        name: updateNam,
+        username: updateuser,
+        email: updatemail,
+        avatar: "",
+        id_company: 1,
+        status_user: true,
         id: userId,
         roles: selectedroles,
+
       };
-      console.log(payload);
+      console.log('que hay dentro:', payload);
       await updateUserPermissions(payload); // This should be your API call
+      timeoutModal();
       fetchData();
-      setSuccessModalOpen(true);
     } catch (error) {
       console.error('Error updating permissions:', error);
     }
@@ -219,9 +202,11 @@ export default function Company() {
       <Divider className="divider" />
     </>
   );
+
   const actions = (<>
     <Button onClick={handleClose}>ACEPTAR</Button>
   </>);
+
   const contentDialog = (
     <DialogContentText style={{ color: "black" }}>
       ¿Esta seguro que desea eliminar esta tienda?
@@ -233,9 +218,11 @@ export default function Company() {
       <Divider className="divider" />
     </>
   );
+
   const actionsSucces = (<>
     <Button onClick={handleCloseSuccessModal}>ACEPTAR</Button>
   </>);
+
   const contentDialogSucces = (
     <DialogContentText style={{ color: "black" }}>
       {message}
@@ -293,14 +280,13 @@ export default function Company() {
               }}
               onClick={() => {
                 updatePermission(detail.id);
-                timeoutModal();
               }}
             >
               <SaveIcon /> GUARDAR
             </Button>
             <MuiDialog
               open={successModalOpen}
-              onClose={() => setSuccessModalOpen(false)}
+              onClose={handleCloseSuccessModal}
               title={titledialogSucces}
               content={contentDialogSucces}
               actions={actionsSucces}
@@ -311,9 +297,6 @@ export default function Company() {
       </div>
   );
   
-  console.log(MuiModal.PropTypes);
-  console.log(MuiCheckList.propTypes);
-
   const body = (
     <>
       {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
