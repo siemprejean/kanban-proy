@@ -6,9 +6,18 @@ import {
   ListItemIcon,
   Checkbox,
   ListItemText,
+  FormHelperText,
 } from '@mui/material';
 
-const MuiCheckList = ({ className, title, items, preselectedItems, onNewSelectedItems }) => {
+const MuiCheckList = ({
+  className,
+  title,
+  items,
+  preselectedItems,
+  onNewSelectedItems,
+  error,
+  helperText
+}) => {
   const [checked, setChecked] = React.useState(preselectedItems || []);
 
   useEffect(() => {
@@ -59,6 +68,7 @@ const MuiCheckList = ({ className, title, items, preselectedItems, onNewSelected
             <p>No hay elementos para mostrar.</p>
           )}
         </List>
+        {error && <FormHelperText error>{helperText}</FormHelperText>}
       </div>
     </div>
   );

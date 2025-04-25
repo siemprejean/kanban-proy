@@ -77,20 +77,6 @@ export default function Company() {
     setPage(0);
   };
 
-   const StyledButton = styled(Button)`
-      background-color: #03386a;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
-      &:hover {
-      background-color: #0457a0;
-      transform: scale(1.05);
-      }
-    `;
-
     const Styledbuttons = styled(Button)`
       background-color: #03386a;
       color: white;

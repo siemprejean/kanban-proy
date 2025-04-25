@@ -3,7 +3,7 @@ import DashboardLayout from "../home/layout";
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 //import { CardBody, CardHeader, Col, Row } from "react-bootstrap";
-import { Box, Button, Card, IconButton, Paper, TableCell, TableRow, CardContent, Grid, styled, Divider, Stack, Chip, DialogContentText, DialogActions, Slide, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Box, Button, Card, Paper, TableCell, TableRow, CardContent, styled, Divider, Stack, Chip, DialogContentText, Slide} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { getBrands, getCompanies, getCompany, getCountries, postCountry } from "@/app/data/api";
 import MuiModal from "../customcomponent/modal";
@@ -13,10 +13,8 @@ import MuiTable from "../customcomponent/table";
 import SaveIcon from '@mui/icons-material/Save';
 import MuiDialog from "../customcomponent/dialog";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import MuiSelect from "../customcomponent/Select";
 import { VerifiedOutlined } from "@mui/icons-material";
 import CardHeader from '@mui/material/CardHeader';
-import FormHelperText from '@mui/material/FormHelperText';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 
 import 'styles/theme/components/_card.scss';
@@ -46,7 +44,6 @@ export default function Company() {
   const [countryName, setcountryName] = useState('');
   const [isoCode, setisoCode] = useState('');
   const [coinName, setcoinName] = useState('');
-  const [updateCompanyName, setUpdateCompanyName] = useState('');
   const [updateCompanycountry, setUpdateCompanycountry] = useState('');
   const [companyIdCountry, setcompanyIdCountry] = useState(0);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
@@ -79,9 +76,6 @@ export default function Company() {
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
-  const filteredData = data.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -92,27 +86,20 @@ export default function Company() {
     setPage(0);
   };
 
-  const handleRowClick = async (companyId) => {
-    try {
-      await fetchDetail(companyId); // Obtener detalles de la empresa
-      openModal(); // Abrir el modal después de obtener los detalles
-    } catch (error) {
-      console.error('Error fetching company details:', error);
-    }
-  };
-
-  const handleChangeCountry = async (event) => {
-    const selectedCountry = parseInt(event.target.value, 10);
-    setcompanyIdCountry(selectedCountry);
-    console.log("esto tiene selectedCountry", selectedCountry);
-  };  
-
   const handleCancelCreate = () => {
     setcountryName('');
     setisoCode('');
     setcoinName('');
     setErrors({});
   };
+
+  const timeoutModal = async (val) => {
+
+      setMessage("Pais creado exitosamente!!");
+      setTimeout(() => closeModalCreate(), 2000);
+      setSuccessModalOpen(true);
+      setTimeout(() => setSuccessModalOpen(false), 2000);
+  }; 
 
    const StyledButton = styled(Button)`
       background-color: #03386a;
@@ -142,30 +129,10 @@ export default function Company() {
       }
     `;
 
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
-
   const columnsTable = [{ label: 'Pais', field: 'name' },
   { label: 'Empresas', field: 'company', render: (row) => row.brands.join(', ') }];
 
   //Estilos
-  const listStyles = {
-    display: 'contents',
-    margin: 1,
-    flex: "auto",
-    right: '10%',
-    width: '75%',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4
-  };
-
   const modalStyles = {
     position: 'absolute',
     margin: 1,
@@ -177,7 +144,6 @@ export default function Company() {
     boxShadow: 24,
     p: 4
   };
-  /*   console.log(MuiModal.propTypes); */
 
   const [errors, setErrors] = useState({
     countryName: '',
@@ -193,17 +159,17 @@ export default function Company() {
     };
   
     if (!countryName.trim()) {
-      newErrors.countryName = 'Debe seleccionar un nombre.';
+      newErrors.countryName = 'Debe colocar un nombre.';
     } else if (countryName.length > 50) {
       newErrors.countryName = 'Máximo 50 caracteres.';
     }
   
     if (!isoCode) {
-      newErrors.isoCode = 'Debe seleccionar un nombre corto.';
+      newErrors.isoCode = 'Debe colocar un nombre corto.';
     }
 
     if (!coinName) {
-        newErrors.coinName = 'Debe seleccionar una divisa.';
+        newErrors.coinName = 'Debe colocar una divisa.';
     }
   
     setErrors(newErrors);
@@ -233,21 +199,6 @@ export default function Company() {
       setCountries(countries); // In case needed for form dropdown
     } catch (error) {
       console.error('Error fetching data:', error);
-    }
-  };
-
-  const fetchDetail = async (id) => {
-    try {
-      const company = await getCompany(id);
-  
-      // Set only the needed company details
-      setDetail(company);
-      setUpdateCompanyName(company.name);
-      setUpdateCompanycountry(company.country_id);
-  
-      console.log("Esto tiene companyId:", company.id);
-    } catch (error) {
-      console.error('Error fetching company detail:', error);
     }
   };
 
@@ -293,8 +244,7 @@ export default function Company() {
         });
         console.log("Esto tiene responseData ", responseData)
         // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-        console.log('Pais creado exitosamente:', responseData);
-        setMessage("Pais creado exitosamente!!");
+        timeoutModal();
         setSuccessModalOpen(true);
         fetchData();
       }
@@ -316,23 +266,6 @@ export default function Company() {
       {/* modalCreate contents here */}
     </div>
   </ClickAwayListener>
-   
-
-  const titledialog = (
-    <>
-      <h4><DeleteForeverIcon /> ELIMINAR TIENDA</h4>
-      <Divider className="divider" />
-    </>
-  );
-
-  const actions = (<>
-    <Button onClick={handleClose}>ACEPTAR</Button>
-  </>);
-
-  const contentDialog = (
-    <DialogContentText style={{ color: "black" }}>
-      ¿Esta seguro que desea eliminar esta tienda?
-    </DialogContentText>);
 
   const titledialogSucces = (
     <>
@@ -341,7 +274,6 @@ export default function Company() {
     </>
   );
   const actionsSucces = (<>
-    <Button onClick={handleCloseSuccessModal}>ACEPTAR</Button>
   </>);
 
   const contentDialogSucces = (
@@ -418,10 +350,7 @@ export default function Company() {
                   <Form className="card-config-search position-relative" style={{ width: "40%", marginLeft: "20px" }}>
                     <Form.Control type="search" placeholder="Search" onChange={handleSearch} />
                   </Form>
-                  {/* <FormControl className="card-config-search">
-                                        <Input type="search" placeholder="Search" />
-                                        <span className= "material-symbols-outlined"> search </span>
-                                    </FormControl> */}
+
                 </div>
                 <div className="card-header-buttons-company">
                   <StyledButton style={{ borderRadius: "10px", backgroundColor: "#03386a", width: "10%", color: "HighlightText", flex: "auto", height: "50px", marginRight: "2%"  }} onClick={() => { fetchCountries(), openModalCreate() }}>

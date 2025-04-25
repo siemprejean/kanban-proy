@@ -1,6 +1,5 @@
 'use client'
 import DashboardLayout from "../home/layout";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
@@ -58,18 +57,11 @@ export default function Brand() {
         );
     
     const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal(); closeModalCreate() };
-    const handleClose = () => setOpen(false);
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
     const openModalCreate = () => setModalCreateOpen(true);
     const closeModalCreate = () => setModalCreateOpen(false);
-    const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    }));
+
     const columnsTable = [{ label: 'ID', field: 'id' },
     { label: 'Marca', field: 'name' },
     { label: 'Tiendas', field: 'stores', render: (row) => row.brands.join(', ') },
@@ -118,6 +110,19 @@ export default function Brand() {
         setCompanyID('');
     };
 
+    const timeoutModal = async (val) => {
+        if (val === 1) {
+            setMessage("Marca creada exitosamente!!");
+          setTimeout(() => closeModalCreate(), 2000);
+        } else {
+            setMessage("Marca actualizada exitosamente!!");
+          setTimeout(() => closeModal(), 2000);
+        }
+      
+        setSuccessModalOpen(true);
+        setTimeout(() => setSuccessModalOpen(false), 2000);
+    }; 
+
     const handleChange =
         (event) => {
             setBrandName(event.target.value);
@@ -145,7 +150,7 @@ export default function Brand() {
         };
       
         if (!brandName.trim()) {
-          newErrors.brandName = 'Este campo es requerido.';
+          newErrors.brandName = 'Debe colocar un nombre.';
         } else if (brandName.length > 50) {
           newErrors.brandName = 'Máximo 50 caracteres.';
         }
@@ -195,9 +200,8 @@ export default function Brand() {
             });
             console.log("Esto tiene responseData ", responseData)
             // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-            console.log('Marca creada exitosamente:', responseData);
-            setMessage("Marca creada exitosamente!!");
-            setSuccessModalOpen(true);
+
+            timeoutModal(1);
             fetchData();
         } catch (error) {
             // Manejar errores en caso de que la creación falleç
@@ -222,9 +226,7 @@ export default function Brand() {
             }, id);
             console.log("Esto tiene responseData ", responseData)
             // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-            console.log('Marca actualizada exitosamente:', responseData);
-            setMessage("Marca actualizada exitosamente!!");
-            setSuccessModalOpen(true);
+            timeoutModal();
             fetchData();
         } catch (error) {
             // Manejar errores en caso de que la creación falleç
@@ -244,7 +246,6 @@ export default function Brand() {
             company,
           };
       
-          setPreselectedItems(company ? [company.id] : []);
           setDetail(brandWithCompany);
           setUpdateBrandName(brand.name);
           setCompanyID(brand.company_id);
@@ -252,23 +253,6 @@ export default function Brand() {
           console.error('Error fetching brand detail:', error);
         }
       };
-      
-    const titledialog = (<>
-
-        <h4><DeleteForeverIcon /> ELIMINAR TIENDA</h4>
-        <Divider className="divider" />
-    </>
-    );
-
-    const actions = (<>
-        <Button onClick={handleClose}>ACEPTAR</Button>
-    </>);
-
-    const contentDialog = (
-        <DialogContentText style={{ color: "black" }}>
-            ¿Esta seguro que desea eliminar esta tienda?
-        </DialogContentText>
-        );
 
     const titledialogSucces = (<>
         <h4><VerifiedOutlined /> REGISTRO EXITOSO</h4>
@@ -276,10 +260,12 @@ export default function Brand() {
     </>
     );
 
-    const actionsSucces = (
-        <Button onClick={handleCloseSuccessModal}>ACEPTAR</Button>
+    const titledialogSuccesedit = (<>
+        <h4><VerifiedOutlined /> ACTUALIZACION EXITOSA</h4>
+        <Divider className="divider" />
+    </>
     );
-
+    
     const contentDialogSucces = (
         <DialogContentText style={{ color: "black" }}>
             {message}
@@ -317,7 +303,7 @@ export default function Brand() {
                 }}>
                 <SaveIcon /> GUARDAR
                 </Button>
-                    <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
+                    <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} className="modal-dialog-container" />
                 </Col>
             </Row>
         </div>
@@ -333,7 +319,7 @@ export default function Brand() {
                     <Button onClick={() => updateBrand(detail.id)}>
                         <SaveIcon /> GUARDAR
                     </Button>
-                    <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
+                    <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSuccesedit} content={contentDialogSucces} className="modal-dialog-container" />
                 </Col>
             </Row>
         </div>
@@ -391,14 +377,6 @@ const body = (
         title="EDITAR MARCA"
         content={modalContent}
         customStyles={modalStyles}
-      />
-      <MuiDialog
-        open={open}
-        onClose={handleClose}
-        title={titledialog}
-        content={contentDialog}
-        actions={actions}
-        className="modal-dialog-container-delete"
       />
     </>
   );

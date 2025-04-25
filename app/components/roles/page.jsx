@@ -10,9 +10,6 @@ import { useState } from "react";
 import { styled } from "@mui/material/styles";
 import CloseIcon from '@mui/icons-material/Close';
 import { useRef} from "react";
-
-//import { DetailModal } from "./detailmodal";
-//import DetailModal from "./detailmodal";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -22,11 +19,9 @@ import MuiTextField from "../customcomponent/formcontrol";
 import { NotesOutlined, SaveAltOutlined, SupervisedUserCircleSharp, VerifiedOutlined } from "@mui/icons-material";
 import MuiDialog from "../customcomponent/dialog";
 import MuiCheckList from "../customcomponent/checklist";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import SaveIcon from '@mui/icons-material/Save';
 import MuiModal from "../customcomponent/modal";
 import MuiTable from "../customcomponent/table";
-import dateFormat from 'dateformat';
 
 import 'styles/theme/components/_card.scss';
 import 'styles/theme/components/_button.scss';
@@ -36,7 +31,6 @@ export default function RolesPermision() {
 
   const [open, setOpen] = React.useState(0);
   const [page, setPage] = React.useState(0);
-  const [checked, setChecked] = React.useState(0);
   const [detail, setDetail] = React.useState([]);
   const [detail1, setDetail1] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -50,8 +44,6 @@ export default function RolesPermision() {
   const [updateRoleStatus, setUpdateRoleStatus] = useState(true);
   const [preselectedItems, setPreselectedItems] = useState([]);
   const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal(); closeModalCreate() };
-  const handleClose = () => setOpen(false);
-  const handleOpen = () => setOpen(true);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalCreateOpen, setModalCreateOpen] = useState(false);
   const openModal = () => setModalOpen(true);
@@ -61,8 +53,6 @@ export default function RolesPermision() {
   const [openp, setOpenp] = React.useState(0);
   const [successModalOpenp, setSuccessModalOpenp] = useState(false);
   const handleCloseSuccessModalp = () => {console.log("Closing modal..."); setSuccessModalOpenp(false); closeModalp(); closeModalCreatep() };
-  const handleClosep = () => setOpenp(false);
-  const handleOpenp = () => setOpenp(true);
   const [isModalOpenp, setModalOpenp] = useState(false);
   const [isModalCreateOpenp, setModalCreateOpenp] = useState(false);
   const openModalp = () => setModalOpenp(true);
@@ -194,23 +184,36 @@ export default function RolesPermision() {
   const [data, setData] = useState([]);
   const [data1, setData1] = useState([]);
 
-  const timeoutModalp = () => { 
-    setSuccessModalOpenp(true);
-    setTimeout(() => setSuccessModalOpenp(false), 2000);
+  const timeoutModalp = async (val) => {
+    if (val === 1) {
+    setMessage("Permiso creado exitosamente!!");
+    setTimeout(() => closeModalCreatep(), 2000);
+  } else {
+    setMessage("Permiso actualizado exitosamente!!");
     setTimeout(() => handleCloseeditModalp(), 2000);
   }
 
-  const timeoutModal = () => { 
     setSuccessModalOpenp(true);
+    setTimeout(() => setSuccessModalOpenp(false), 2000);
+    }
+
+  const timeoutModal = async (val) => {
+    if (val === 1) {
+      setMessage("Rol creado exitosamente!!");
+      setTimeout(() => closeModalCreate(), 2000);
+    } else {
+      setMessage("Rol actualizado exitosamente!!");
+      setTimeout(() => handleCloseeditModal(), 2000);
+    }
+  
+    setSuccessModalOpen(true);
     setTimeout(() => setSuccessModalOpen(false), 2000);
-    setTimeout(() => handleCloseeditModal(), 2000);
-  }
+  };  
 
   const handleCloseModal = () => {
     setRoleName('');
     setRoleSlug('');
     setPreselectedItems([]);
-    setSuccessModalOpen(false); // Ensure success modal is also closed
     setModalCreateOpen(false);
   };
   
@@ -256,22 +259,6 @@ export default function RolesPermision() {
   fetchDatap();
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        // Prevent the default action & stop propagation
-        event.preventDefault();
-        event.stopPropagation();
-        return false;
-      }
-    };
-  
-    document.addEventListener("click", handleClickOutside, true);
-    return () => {
-      document.removeEventListener("click", handleClickOutside, true);
-    };
-  }, []);
-
   const fetchDetail = async (id) => {
     try {
       const role = await getRole(id);
@@ -289,17 +276,10 @@ export default function RolesPermision() {
   }
 
   async function handleCreateRole() {
-    // Validate inputs
-    if (!roleName.trim() || preselectedItems.length === 0) {
-      alert("Debe completar el campo 'Nombre del Rol' y seleccionar al menos un permiso.");
-      return;
-    }
-  
     try {
       console.log("Esto tiene responseData ", {
         name: roleName,
         slug: roleSlug,
-        status_role: roleStatus,
         permissions: preselectedItems,
       });
   
@@ -307,7 +287,6 @@ export default function RolesPermision() {
       let responseData = await postRole({
         name: roleName,
         slug: roleSlug,
-        status_role: roleStatus,
         permissions: preselectedItems,
       });
   
@@ -318,7 +297,7 @@ export default function RolesPermision() {
       setRoleName("");
       setRoleSlug("");
       setPreselectedItems([]);
-      setSuccessModalOpen(true); // Open success modal
+      timeoutModal(1);
       closeModalCreate();
       fetchData();
     } catch (error) {
@@ -334,21 +313,19 @@ export default function RolesPermision() {
       console.log("Esto tiene responseData ", {
         name: roleName,
         slug: roleSlug,
-        status_role: "true",
+        status_role: true,
         permissions: preselectedItems
       })
       // Llamar a la función en api/empresas.js para crear una nueva empresa
       let responseData = await putRole({
         name: updateRoleName,
         slug: updateRoleSlug,
-        status_role: "true",
+        status_role: true,
         permissions: preselectedItems
       }, id);
       console.log("Esto tiene responseData ", responseData)
       // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-      console.log('Marca actualizada exitosamente:', responseData);
-      setMessage("Marca actualizada exitosamente!!");
-      setSuccessModalOpen(true);
+      timeoutModal();
       fetchData();
     } catch (error) {
       // Manejar errores en caso de que la creación falleç
@@ -373,22 +350,73 @@ export default function RolesPermision() {
     }
   };
 
-  //DIALOG DE ELIMINACION
-  const titledialog = (
-    <>
-      <h4><DeleteForeverIcon /> ELIMINAR ROLE</h4>
-      <Divider className="divider" />
-    </>
-  );
+  const [errors, setErrors] = useState({
+          brandName: '',
+          companyId: ''
+        });
+  
+  const validateFields = async (value) => {
+    if (value === 1) {
+        const newErrors = {
+          roleName: '',
+          roleSlug: '',
+          preselectedItems: '',
+        };
+        
+        if (!roleName.trim()) {
+          newErrors.roleName = 'Debe colocar un nombre.';
+        } else if (roleName.length > 50) {
+          newErrors.roleName = 'Máximo 50 caracteres.';
+        }
+        
+        console.log('preselectedItems:', preselectedItems);
 
-  const actions = (<>
-    <Button onClick={handleClose}>ACEPTAR</Button>
-  </>);
+        if (!preselectedItems || preselectedItems.length === 0) {
+          newErrors.preselectedItems = 'Debe seleccionar un permiso.';
+        }
 
-  const contentDialog = (
-    <DialogContentText style={{ color: "black" }}>
-      ¿Esta seguro que desea eliminar este role?
-    </DialogContentText>);
+        console.log("entrando entrando")
+
+        setErrors(newErrors);
+        
+        return !newErrors.roleName && !newErrors.preselectedItems;
+
+    } else {
+        const newErrors = {
+          permissionName: '',
+          permissionSlug: '',
+          permissionHttpMethod: '',
+          permissionHttpPath: '',
+        };
+
+        if (!permissionName.trim()) {
+          newErrors.permissionName = 'Debe colocar un nombre.';
+        } else if (permissionName.length > 30) {
+          newErrors.permissionName = 'Máximo 30 caracteres.';
+        }
+
+        if (!permissionSlug.trim()) {
+          newErrors.permissionSlug = 'Debe colocar un nombre.';
+        } else if (permissionSlug.length > 30) {
+          newErrors.permissionSlug = 'Máximo 30 caracteres.';
+        }
+
+        if (!permissionHttpMethod.trim()) {
+          newErrors.permissionHttpMethod = 'Debe colocar un valor.';
+        }
+
+        
+        if (!permissionHttpPath.trim()) {
+          newErrors.permissionHttpPath = 'Debe colocar una ruta de acceso.';
+        } else if (permissionHttpPath.length > 30) {
+          newErrors.permissionHttpPath = 'Máximo 30 caracteres.';
+        }
+
+        setErrors(newErrors);
+        
+        return !newErrors.permissionName && !newErrors.permissionSlug && !newErrors.permissionHttpMethod && !newErrors.permissionHttpPath;
+    }
+    };
 
   //DIALOG DE REGISTRO EXITOSO
   const titledialogSucces = (
@@ -398,8 +426,13 @@ export default function RolesPermision() {
     </>
   );
 
-  const actionsSucces = (<>
-  </>);
+  const titledialogSuccesedit = (
+    <>
+      <h4><VerifiedOutlined /> ACTUALIZACION EXITOSA</h4>
+      <Divider className="divider" />
+    </>
+  );
+
   const contentDialogSucces = (
     <DialogContentText style={{ color: "black" }}>
       {message}
@@ -409,63 +442,30 @@ export default function RolesPermision() {
   const modalCreate = (
     <div className="modal-overlay">
       <div ref={modalRef} className="modal-content" style={{ position: "relative" }}>
-        <IconButton 
-          onClick={handleCloseModal} 
-          style={{ position: "absolute", top: -80, right: -25, backgroundColor: "white", transition: "background-color 0.3s ease"}}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f0f0f0"}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
-        >
-          <CloseIcon />
-        </IconButton>
-  
-        <FormControl fullWidth className="modal-col-6" sx={{ marginBottom: 2 }}>
-          <InputLabel shrink htmlFor="nombre-rol" sx={{ fontSize: "20px", fontWeight: "bold" }}>
-            Nombre del Rol:
-          </InputLabel>
-          <MuiTextField
-            id="nombre-rol"
-            value={roleName}
-            onChange={(e) => setRoleName(e.target.value)}
-            type="text"
-            InputProps={{ style: { fontSize: "18px" } }}
-            InputLabelProps={{ shrink: true }}
-          />
-        </FormControl>
-  
-        <FormControl fullWidth className="modal-col-12-slug">
-          <InputLabel shrink htmlFor="descripcion" sx={{ fontSize: "20px", fontWeight: "bold" }}>
-            Descripción:
-          </InputLabel>
-          <MuiTextField
-            id="descripcion"
-            value={roleSlug}
-            onChange={(e) => setRoleSlug(e.target.value)}
-            multiline
-            rows={4}
-            InputProps={{ style: { fontSize: "18px", minHeight: 100 } }}
-            InputLabelProps={{ shrink: true }}
-          />
-        </FormControl>
-  
-        <MuiCheckList 
+      <MuiTextField title="Nombre del rol:" id="nombre-rol" value={roleName} onChange={(e) => setRoleName(e.target.value)} type="text" InputProps={{ style: { fontSize: "18px" } }} InputLabelProps={{ shrink: true }} className="modal-col-6" error={!!errors.roleName} helperText={errors.roleName}/>
+      <MuiTextField title="Descripcion:" id="descripcion" value={roleSlug} onChange={(e) => setRoleSlug(e.target.value)} multiline rows={2} InputProps={{ style: { fontSize: "18px", minHeight: 100 } }} InputLabelProps={{ shrink: true }} className="modal-col-12-slug" error={!!errors.roleSlug} helperText={errors.roleSlug}/>
+      <MuiCheckList 
           title="Permisos" 
           items={data1} 
           customStyles={listStyles} 
           preselectedItems={preselectedItems} 
           onNewSelectedItems={(selectedItems) => setPreselectedItems(selectedItems)} 
-          className="modal-checklist" 
+          className="modal-checklist"
+          error={!!errors.preselectedItems}
+          helperText={errors.preselectedItems} 
         />
   
         <Row style={{ width: "95%" }}>
           <Col className="modal-col-btn">
-            <Button onClick={() => 
-            { handleCreateRole();
-              timeoutModal();
+            <Button onClick={() => { 
+              if (validateFields(1)){
+                handleCreateRole();
+              }
              }}
             style={{ left: "30%", position: "relative" }}>
               <SaveAltOutlined /> GUARDAR
             </Button>
-            <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
+            <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} className="modal-dialog-container" />
           </Col>
         </Row>
       </div>
@@ -476,58 +476,8 @@ export default function RolesPermision() {
   //CONTENT MODAL DE EDICION ROLES
       const modalContent = (
       <div ref={modalRef} className="modal-content" style={{ position: "relative" }}>
-      
-      <IconButton 
-      onClick={handleCloseeditModal} 
-      style={{ position: 'absolute', top: -80, right: -25, backgroundColor: "white",transition: "background-color 0.3s ease"}}
-      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f0f0f0"}
-      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
-      >
-      <CloseIcon />
-      </IconButton>
-
-      <FormControl fullWidth className="modal-col-6" sx={{ marginBottom: 2 }}>
-        <InputLabel 
-          shrink 
-          htmlFor="nombre-rol"
-          sx={{ fontSize: '20px', fontWeight: 'bold' }}
-        >
-          Nombre del Rol:
-        </InputLabel>
-        <MuiTextField
-          id="nombre-rol"
-          value={updateRoleName}
-          onChange={(e) => setUpdateRoleName(e.target.value)}
-          type="text"
-          InputProps={{ style: { fontSize: '18px' } }}
-          InputLabelProps={{ shrink: true }}
-        />
-      </FormControl>
-
-      <FormControl fullWidth className="modal-col-12-slug">
-        <InputLabel 
-          shrink 
-          htmlFor="descripcion"
-          sx={{ fontSize: '20px', fontWeight: 'bold' }}
-        >
-          Descripción:
-        </InputLabel>
-        <MuiTextField
-          id="descripcion"
-          value={updateRoleSlug}
-          onChange={(e) => setUpdateRoleSlug(e.target.value)}
-          multiline
-          rows={4}
-          InputProps={{ style: { fontSize: '18px', minHeight: 100 } }}
-          InputLabelProps={{ shrink: true }}
-        />
-      </FormControl>
-
-      <FormGroup>
-        <FormControlLabel control={<Switch checked={updateRoleStatus} onChange={(event) => {
-          setUpdateRoleStatus(event.target.checked);
-        }} />} label="Activo" />
-      </FormGroup>
+      <MuiTextField title="Nombre del rol:" id="nombre-rol" value={updateRoleName} onChange={(e) => setUpdateRoleName(e.target.value)} type="text" InputProps={{ style: { fontSize: '18px' } }} InputLabelProps={{ shrink: true }} className="modal-col-6"/>
+      <MuiTextField title="Descripcion:" id="descripcion" value={updateRoleSlug} onChange={(e) => setUpdateRoleSlug(e.target.value)} multiline rows={2} InputProps={{ style: { fontSize: '18px', minHeight: 100 } }} InputLabelProps={{ shrink: true }} className="modal-col-12-slug"/>
 
       <MuiCheckList title="Permisos" items={data1} customStyles={listStyles} preselectedItems={preselectedItems} onNewSelectedItems={(selectedItems) => {
         setPreselectedItems(selectedItems)
@@ -539,12 +489,10 @@ export default function RolesPermision() {
           style={{ borderRadius: "10px", backgroundColor: "#FFAF38", width: "100%", color: "HighlightText", flex: "auto", left: "120%", position: "relative" }} 
           onClick={() => 
           {updateRole(detail.id)
-          timeoutModal();
           }}>
-
             <SaveIcon /> GUARDAR
           </Button>
-          <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
+          <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSuccesedit} content={contentDialogSucces} className="modal-dialog-container" />
         </Col>
       </Row>
     </div>
@@ -583,7 +531,6 @@ export default function RolesPermision() {
         content={modalContent}
         customStyles={modalStyles}
       />
-      <MuiDialog open={open} onClose={handleClose} title={titledialog} content={contentDialog} actions={actions} className="modal-dialog-container-delete" />
     </>
   );
 
@@ -600,6 +547,7 @@ export default function RolesPermision() {
       console.error('Error fetching data:', error);
     }
   }
+
   async function handleCreatePermission() {
     //event.preventDefault();
     try {
@@ -618,9 +566,7 @@ export default function RolesPermision() {
       });
       console.log("Esto tiene responseData ", responseData)
       // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-      console.log('Permiso creado exitosamente:', responseData);
-      setMessage("Permiso creado exitosamente!!");
-      setSuccessModalOpenp(true);
+      timeoutModalp(1);
 
       //closeModalCreatep();
       fetchDatap();
@@ -629,6 +575,7 @@ export default function RolesPermision() {
       console.error('Error al crear el permiso:', error.message);
     }
   }
+
   async function updatePermission(id) {
     //event.preventDefault();
     try {
@@ -648,9 +595,7 @@ export default function RolesPermision() {
       }, id);
       console.log("Esto tiene responseData ", responseData)
       // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-      console.log('Permiso actualizado exitosamente:', responseData);
-      setMessage("Permiso actualizado exitosamente!!");
-      setSuccessModalOpenp(true);
+      timeoutModalp();
       fetchData();
     } catch (error) {
       // Manejar errores en caso de que la creación falleç
@@ -670,32 +615,6 @@ export default function RolesPermision() {
       console.error('Error fetching role details:', error);
     }
   };
-
-  //DIALOG DE ELIMINACION
-  const titledialogp = (
-    <>
-      <h4><DeleteForeverIcon /> ELIMINAR PERMISO</h4>
-      <Divider className="divider" />
-    </>
-  );
-  const actionsp = (<>
-    <Button onClick={handleClosep}>ACEPTAR</Button>
-  </>);
-  const contentDialogp = (
-    <DialogContentText style={{ color: "black" }}>
-      ¿Esta seguro que desea eliminar este permiso?
-    </DialogContentText>);
-
-  //DIALOG DE REGISTRO EXITOSO
-  const titledialogSuccesp = (
-    <>
-      <h4><VerifiedOutlined /> REGISTRO EXITOSO</h4>
-      <Divider className="divider" />
-    </>
-  );
-  const actionsSuccesp = (<>
-
-  </>);
   
   const contentDialogSuccesp = (
     <DialogContentText style={{ color: "black" }}>
@@ -705,17 +624,9 @@ export default function RolesPermision() {
   //CONTENT MODAL DE CREACION PERMISOS
   const modalCreatep = (
     <div ref={modalRef} className="modal-content">
-            <IconButton 
-      onClick={handleCloseModalp} 
-      style={{ position: 'absolute', top: -80, right: -25, backgroundColor: "white", transition: "background-color 0.3s ease"}}
-      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f0f0f0"}
-      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
-        >
-      <CloseIcon />
-      </IconButton>
-      <MuiTextField title="Nombre del Permiso:" value={permissionName} onChange={(e) => setPermissionName(e.target.value)} type="text" className="modal-col-6 input-disabled" disabled />
-      <MuiTextField title="Descripcion:" value={permissionSlug} onChange={(e) => setPermissionSlug(e.target.value)} type="text" className="modal-col-6 textarea-disabled" multiline rows={3}/>
-      <div className="modal-col-6">
+      <MuiTextField title="Nombre del Permiso:" value={permissionName} onChange={(e) => setPermissionName(e.target.value)} type="text" className="modal-col-6" error={!!errors.permissionName} helperText={errors.permissionName}/>
+      <MuiTextField title="Descripcion:" value={permissionSlug} onChange={(e) => setPermissionSlug(e.target.value)} type="text" className="modal-col-6" error={!!errors.permissionSlug} helperText={errors.permissionSlug}/>
+      <div className="modal-col-6" error={!!errors.permissionHttpMethod} helperText={errors.permissionHttpMethod}>
         <StyledmethodButton
           active={permissionHttpMethod === "GET"}
           onClick={() => setPermissionHttpMethod("GET")}
@@ -734,19 +645,21 @@ export default function RolesPermision() {
         >
           PUT
         </StyledmethodButton>
+
       </div>
-      <MuiTextField title="Path Http:" value={permissionHttpPath} onChange={(e) => setPermissionHttpPath(e.target.value)} type="text" className="modal-col-6" />
+      <MuiTextField title="Path Http:" value={permissionHttpPath} onChange={(e) => setPermissionHttpPath(e.target.value)} type="text" className="modal-col-6" error={!!errors.permissionHttpPath} helperText={errors.permissionHttpPath}/>
       <Row style={{ width: "95%" }}>
         <Col className="modal-col-btn">
-          <Button onClick={() => 
-          { handleCreatePermission();
-            timeoutModalp();
-          }}
+          <Button onClick={() => { 
+              if (validateFields()){
+                handleCreatePermission();
+              }
+             }}
             style={{ left: "30%", position: "relative" }}
           >
             <SaveAltOutlined /> GUARDAR
           </Button>
-          <MuiDialog open={successModalOpenp} onClose={handleCloseSuccessModalp} title={titledialogSuccesp} content={contentDialogSuccesp} actions={actionsSuccesp} className="modal-dialog-container" />
+          <MuiDialog open={successModalOpenp} onClose={handleCloseSuccessModalp} title={titledialogSucces} content={contentDialogSuccesp} className="modal-dialog-container" />
         </Col>
       </Row>
     </div>
@@ -808,7 +721,6 @@ export default function RolesPermision() {
             }}
             onClick={() => {
               updatePermission(detail1.id);
-              timeoutModalp();
             }}
           >
             <SaveIcon /> GUARDAR
@@ -816,9 +728,8 @@ export default function RolesPermision() {
           <MuiDialog
             open={successModalOpenp}
             onClose={() => setSuccessModalOpenp(false)}
-            title={titledialogSuccesp}
+            title={titledialogSuccesedit}
             content={contentDialogSuccesp}
-            actions={actionsSuccesp}
             className="modal-dialog-container"
           />
         </Col>
@@ -857,7 +768,6 @@ export default function RolesPermision() {
         content={modalContentp}
         customStyles={modalStylesp}
       />
-      <MuiDialog open={openp} onClose={handleClosep} title={titledialogp} content={contentDialogp} actions={actionsp} className="modal-dialog-container-delete" />
     </>
   );
 
@@ -909,7 +819,15 @@ export default function RolesPermision() {
                     </StyledButton>
                     <MuiModal
                       open={isModalCreateOpen}
-                      onClose={closeModalCreate}
+                      onClose={() => {
+                        handleCloseModal();
+                        setErrors({
+                          PermissionName: '',
+                          permissionSlug:'',
+                          PermissionHttpMethod:'',
+                          PermissionHttpPath:'',
+                        });
+                      }}
                       title="CREAR ROL"
                       content={modalCreate}
                       customStyles={modalStyles}
@@ -947,7 +865,14 @@ export default function RolesPermision() {
                     </StyledButton>
                     <MuiModal
                       open={isModalCreateOpenp}
-                      onClose={closeModalCreatep}
+                      onClose={() => {
+                        handleCloseModalp();
+                        setErrors({
+                          roleName: '',
+                          roleSlug: '',
+                          preselectedItems: '',
+                        });
+                      }}
                       title="CREAR PERMISO"
                       content={modalCreatep}
                       customStyles={modalStylesp}

@@ -1,16 +1,15 @@
 'use client'
 import DashboardLayout from "../home/layout";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import CardHeader from '@mui/material/CardHeader';
-import { InputAdornment, Box, Button, Card, FormControl, IconButton,MenuItem, InputLabel, Input, Modal, Paper, TableCell, TableRow, CardContent, Grid, styled, Divider, Stack, Chip, DialogContentText, Select } from "@mui/material";
+import { Button, Card, FormControl, IconButton,MenuItem, InputLabel, Paper, TableCell, TableRow, CardContent, styled, Divider, Stack, Chip, DialogContentText, Select } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import MuiModal from "../customcomponent/modal";
 import MuiTable from "../customcomponent/table";
-import MuiCheckList from "../customcomponent/checklist";
+import MuiSelect from "../customcomponent/Select";
 import MuiTextField from "../customcomponent/formcontrol";
 import CloseIcon from '@mui/icons-material/Close';
 import {getStores, postStore, putStore, getStore, getBrands } from "@/app/data/api";
@@ -27,7 +26,6 @@ import 'styles/theme/components/_modal.scss';
 export default function Store() {
     useEffect(() => {
         fetchData();
-        fetchDatap();
     },[]);
 
     const [open, setOpen] = useState(0);
@@ -35,6 +33,7 @@ export default function Store() {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [detail, setDetail] = useState([]);
     const [storeName, setstoreName] = useState('');
+    const [storeIdBrand, setstoreIdBrand] = useState(0);
     const [updatestores, setUpdatestoresname] = useState('');
     const [updateComission, setUpdateComission] = useState('');
     const [storeComission, setstoreComission] = useState('');
@@ -48,6 +47,7 @@ export default function Store() {
     const [storeicgSerie, seticgSerie] = useState('');
     const [updateicgBrand, setUpdateicgBrand] = useState('');
     const [updateicgSerie, setUpdateicgSerie] = useState('');
+    const [updateBrandId, setUpdateBrandId] = useState('');
     const [preselectedItems, setPreselectedItems] = useState('');
     const [isModalCreateOpen, setModalCreateOpen] = useState(false);
     const [isModalOpen, setModalOpen] = useState(false);
@@ -63,19 +63,14 @@ export default function Store() {
     };
 
     const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal(); closeModalCreate() };
-    const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
     const openModalCreate = () => setModalCreateOpen(true);
     const closeModalCreate = () => setModalCreateOpen(false);
-    const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    }));
+    const activeBrandId = preselectedItems || updateBrandId; // if you're managing a single ID
+    const selectedBrand = datap.find((brand) => brand.id === activeBrandId);
+    
     const columnsTable = [{ label: 'ID', field: 'id' },
     { label: 'Tiendas', field: 'stores', render: (row) => row.brands.join(', ') },
     { label: '', field: '' },
@@ -92,14 +87,7 @@ export default function Store() {
         border: '2px solid #000',
         boxShadow: 24,
         // p: 4
-    };
-
-    const CustomInputAdornment = styled(InputAdornment)(({ theme }) => ({
-        '& span': {
-          marginRight: 0,  // Removes the margin-right of the internal span
-        },
-      }));
-      
+    };     
 
     const modalStyles = {
         position: 'absolute',
@@ -112,20 +100,6 @@ export default function Store() {
         boxShadow: 24,
         p: 4
     };
-
-    const StyledButton = styled(Button)`
-        background-color: #03386a;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
-        &:hover {
-        background-color: #0457a0;
-        transform: scale(1.05);
-        }
-        `;
     
     const Styledbuttons = styled(Button)`
         background-color: #03386a;
@@ -146,11 +120,18 @@ export default function Store() {
         setPage(newPage);
     };
 
-    const timeoutModal = () => { 
+    const timeoutModal = async (val) => {
+        if (val === 1) {
+          setMessage("Tienda creada exitosamente!!");
+          setTimeout(() => closeModalCreate(), 2000);
+        } else {
+          setMessage("Tienda actualizada exitosamente!!");
+          setTimeout(() => closeModal(), 2000);
+        }
+      
         setSuccessModalOpen(true);
         setTimeout(() => setSuccessModalOpen(false), 2000);
-        setTimeout(() => handleCloseSuccessModal(), 2000);
-    };
+    }; 
 
     const handleChangeRowsPerPage = (event) => {
         event.preventDefault();
@@ -167,7 +148,13 @@ export default function Store() {
         seticgBrand('');
         seticgSerie('');
         closeModalCreate();
-        closeModal();
+        setErrors({
+            storeName: '',
+            storeComission: '',
+            storeRetention: '',
+            storeExceed: '',
+            storeIncentive: ''
+          });
     };
 
     const handleRowClick = async (storeId) => {
@@ -188,38 +175,10 @@ export default function Store() {
         storeIncentive: ''
       });      
 
-    async function onSubmit() {
-        //event.preventDefault();
-        try {
-            const storeComissionValue = storeComission === "local" ? "1" : storeComission === "global" ? "2" : null;
-            // Llamar a la función en api/empresas.js para crear una nueva empresa
-            let responseData = await postStore({
-                store_name: storeName.toUpperCase(),
-                slug: storeName.toUpperCase(),
-                retention: Number(storeRetention),
-                surplus: Number(storeExceed),
-                incentive_sunday: Number(storeIncentive),
-                icg_brand: storeicgBrand,
-                icg_serie: storeicgSerie,
-                brand_id: Number(preselectedItems),
-                incentive_type: Number(storeComissionValue),
-                store_status: 1
-            });
-            console.log("Esto tiene responseData ", responseData)
-            // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-            console.log('Marca creada exitosamente:', responseData);
-            setMessage("Marca creada exitosamente!!");
-            setSuccessModalOpen(true);
-            fetchData();
-        } catch (error) {
-            // Manejar errores en caso de que la creación falleç
-            console.error('Error al crear la tienda:', error.message);
-        }
-    }
-
     const validateFields = () => {
         const newErrors = {
           storeName: '',
+          storeIdBrand: '',
           storeComission: '',
           storeRetention: '',
           storeExceed: '',
@@ -227,13 +186,17 @@ export default function Store() {
         };
       
         if (!storeName.trim()) {
-          newErrors.storeName = 'Este campo es requerido.';
+          newErrors.storeName = 'Debe colocar un nombre.';
         } else if (storeName.length > 50) {
           newErrors.storeName = 'Máximo 50 caracteres.';
         }
+
+        if (!storeIdBrand) {
+            newErrors.storeIdBrand = 'Debe seleccionar una marca.';
+        }
       
         if (!storeComission) {
-          newErrors.storeComission = 'Seleccione una opción.';
+          newErrors.storeComission = 'Debe seleccionar un tipo de comision.';
         }
       
         const isNumber = (val) => /^-?\d*\.?\d+$/.test(val); // At least one digit
@@ -263,20 +226,10 @@ export default function Store() {
     const fetchData = async () => {
         try {
             const storesd = await getStores();
-            // Asociar tiendas a marca
-
-            setData(storesd);
-
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    }
-
-    const fetchDatap = async () => {
-        try {
             const brands = await getBrands();
             // Asociar tiendas a marca
 
+            setData(storesd);
             setDatap(brands);
 
         } catch (error) {
@@ -304,6 +257,12 @@ export default function Store() {
           document.removeEventListener('mousedown', handleClickOutside);
         };
       }, []);
+
+    const handleChangeBrand = async (event) => {
+        const selectedBrand = parseInt(event.target.value, 10);
+        setUpdateBrandId(selectedBrand);
+        console.log("esto tiene selectedCountry", selectedCountry);
+    };  
       
 
     const fetchDetail = async (id) => {
@@ -321,14 +280,41 @@ export default function Store() {
                 console.log(updateRetention)
                 setUpdateicgBrand(storesd.icg_brand)
                 setUpdateicgSerie(storesd.icg_serie)
-                setPreselectedItems([storesd.brand_id]);
+                setPreselectedItems(storesd.brand_id);
             console.log("Esto tiene info", detail);
         } catch (error) {
             console.error('Error fetching data:', error);
             }
     }
 
-      async function updateZtore(id) {
+    async function onSubmit() {
+        //event.preventDefault();
+        try {
+            const storeComissionValue = storeComission === "local" ? "1" : storeComission === "global" ? "2" : null;
+            // Llamar a la función en api/empresas.js para crear una nueva empresa
+            let responseData = await postStore({
+                store_name: storeName.toUpperCase(),
+                slug: storeName.toUpperCase(),
+                retention: Number(storeRetention),
+                surplus: Number(storeExceed),
+                incentive_sunday: Number(storeIncentive),
+                icg_brand: storeicgBrand,
+                icg_serie: storeicgSerie,
+                brand_id: Number(preselectedItems),
+                incentive_type: Number(storeComissionValue),
+                store_status: 1
+            });
+            console.log("Esto tiene responseData ", responseData)
+            // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
+            timeoutModal(1);
+            fetchData();
+        } catch (error) {
+            // Manejar errores en caso de que la creación falleç
+            console.error('Error al crear la tienda:', error.message);
+        }
+    }
+
+    async function updateZtore(id) {
         //event.preventDefault();
         try {
           console.log("Esto tiene id: ", id)
@@ -354,36 +340,17 @@ export default function Store() {
             icg_serie: updateicgSerie
           }, id);
           console.log("Esto tiene responseData ", responseData)
-          // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-          console.log('Marca actualizada exitosamente:', responseData);
-          setMessage("Marca actualizada exitosamente!!");
-          setSuccessModalOpen(true);
+          timeoutModal();
           fetchData();
-        } catch (error) {
-          // Manejar errores en caso de que la creación falleç
-          console.error('Error al actualizar el rol:', error.message);
+        }catch (error) {
+        // Manejar errores en caso de que la creación falleç
+        console.error('Error al crear la actualizar la tienda:', error.message);
         }
-      }
+    }
 
     const filteredData = data.filter((item) =>
         !searchTerm || (item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase()))
     );    
-
-    const titledialog = (<>
-
-        <h4><DeleteForeverIcon /> ELIMINAR TIENDA</h4>
-        <Divider className="divider" />
-    </>
-    );
-
-    const actions = (<>
-        <Button onClick={handleClose}>ACEPTAR</Button>
-    </>);
-
-    const contentDialog = (
-        <DialogContentText style={{ color: "black" }}>
-            ¿Esta seguro que desea eliminar esta tienda?
-        </DialogContentText>);
 
     const titledialogSucces = (<>
         <h4><VerifiedOutlined /> REGISTRO EXITOSO</h4>
@@ -391,8 +358,11 @@ export default function Store() {
     </>
     );
 
-    const actionsSucces = (
-        <Button onClick={handleCloseSuccessModal}>ACEPTAR</Button>
+    
+    const titledialogSuccesedit = (<>
+        <h4><VerifiedOutlined /> ACTUALIZACION EXITOSA</h4>
+        <Divider className="divider" />
+    </>
     );
 
     const contentDialogSucces = (
@@ -402,17 +372,25 @@ export default function Store() {
 
         //MODAL CREACION TIENDA
     const modalCreate = (
-        <div ref={modalRef} className="modal-content">
-            <IconButton 
-                onClick={handleCancelCreate} 
-                style={{ position: 'absolute', top: -80, right: -25, backgroundColor: "white", transition: "background-color 0.3s ease",
-                    }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f0f0f0"}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
-                >
-            <CloseIcon />
-            </IconButton>    
-            <MuiTextField title="Nombre de la Tienda:" value={storeName} onChange={(e) => setstoreName(e.target.value)} type="text" className="modal-col-12" error={!!errors.storeName} helperText={errors.storeName}/>
+        <div ref={modalRef} className="modal-content">  
+            <MuiTextField title="Nombre de la Tienda:" value={storeName} onChange={(e) => setstoreName(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeName} helperText={errors.storeName}/>
+            <FormControl className="modal-col-6" style={{top: 25}} error={!!errors.storeIdBrand}>
+                <InputLabel id="brand-label" style={{top: 5 ,left: 10 }} >Marca</InputLabel>
+                    <Select
+                    labelId="brand-label"
+                    value={storeIdBrand ?? ''}
+                    onChange={handleChangeBrand}
+                    >
+                {datap.map((brand) => (
+                    <MenuItem key={brand.id} value={brand.id}>
+                    {brand.name}
+                    </MenuItem>
+                ))}
+            </Select>
+                {errors.storeIdBrand && (
+                <FormHelperText>{errors.storeIdBrand}</FormHelperText>
+                )}
+            </FormControl>
             <FormControl className="modal-col-6" style={{ top: 25 }} error={!!errors.storeComission}>
                 <InputLabel id="tipo-comision-label" style={{ top: 5, left: 15 }}>Tipo de Comision</InputLabel>
                     <Select
@@ -434,12 +412,11 @@ export default function Store() {
                 <Button onClick={() => {
                     if (validateFields()) {
                         onSubmit();
-                        timeoutModal();
                     }
                     }}>
                     <SaveIcon /> GUARDAR
                 </Button>
-                    <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
+                    <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} className="modal-dialog-container" />
                 </Col>
             </Row>
         </div>
@@ -447,16 +424,8 @@ export default function Store() {
         //MODAL EDICION TIENDA
     const modalContent = (
         <div ref={modalRef} className="modal-content">
-            <IconButton 
-                onClick={handleCancelCreate} 
-                style={{ position: 'absolute', top: -80, right: -25, backgroundColor: "white", transition: "background-color 0.3s ease",
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f0f0f0"}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
-            >
-            <CloseIcon />
-            </IconButton> 
-            <MuiTextField title="Nombre de la Tienda:" value={updatestores} onChange={(e) => setUpdatestoresname(e.target.value)} className="modal-col-12" />
+            <MuiTextField title="Nombre de la Tienda:" value={updatestores} onChange={(e) => setUpdatestoresname(e.target.value)} className="modal-col-6" />
+            <MuiSelect title="Marca" items={datap} values={activeBrandId} onChange={(value) => setPreselectedItems(parseInt(value, 10))} className="modal-col-6" />
             <FormControl className="modal-col-6" style={{ top: 25 }}>
                 <InputLabel id="tipo-comision-label" style={{ top: 5, left: 15 }}>Tipo de Comision</InputLabel>
                 <Select
@@ -476,15 +445,13 @@ export default function Store() {
             <MuiTextField title="%Incentivo de Domingos" value={updateIncentive} onChange={(event) => setUpdateIncentive(parseInt(event))} className="modal-col-6" />
             <MuiTextField title="ICG Brand" value={updateicgBrand} onChange={(e) => setUpdateicgBrand(e.target.value)} type="text" className="modal-col-6" />
             <MuiTextField title="ICG Serie" value={updateicgSerie} onChange={(e) => setUpdateicgSerie(e.target.value)} type="text" className="modal-col-6" />
-            <MuiCheckList title="Marcas" items={datap} customStyles={listStyles} preselectedItems={preselectedItems} onNewSelectedItems={(selectedItems) => setPreselectedItems(selectedItems)} className="modal-checklist" />
             <Row style={{ width: "100%" }}>
                 <Col className="modal-col-btn">
                     <Button onClick={() => {updateZtore(detail.id)
-                     timeoutModal();
                     }}>
                         <SaveIcon /> GUARDAR
                     </Button>
-                    <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
+                    <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSuccesedit} content={contentDialogSucces} className="modal-dialog-container" />
                 </Col>
             </Row>
         </div>
@@ -538,22 +505,12 @@ export default function Store() {
                     </TableCell>
                 </TableRow>
             ))}
-
         <MuiModal
             open={isModalOpen}
             onClose={closeModal}
             title="EDITAR TIENDA"
             content={modalContent}
             customStyles={modalStyles}
-        />
-
-        <MuiDialog
-            open={open}
-            onClose={handleClose}
-            title={titledialog}
-            content={contentDialog}
-            actions={actions}
-            className="modal-dialog-container-delete"
         />
     </>
 );
@@ -580,13 +537,7 @@ export default function Store() {
                                         open={isModalCreateOpen}
                                         onClose={()=>{
                                             closeModalCreate();
-                                            setErrors({
-                                                storeName: '',
-                                                storeComission: '',
-                                                storeRetention: '',
-                                                storeExceed: '',
-                                                storeIncentive: ''
-                                              });
+                                            handleCancelCreate();
                                         }}
                                         title="CREAR TIENDA"
                                         content={modalCreate}

@@ -3,30 +3,25 @@ import DashboardLayout from "../home/layout";
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 //import { CardBody, CardHeader, Col, Row } from "react-bootstrap";
-import { Box, Button, Card, IconButton, Paper, TableCell, TableRow, CardContent, Grid, styled, Divider, Stack, Chip, DialogContentText, DialogActions, Slide, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import {Button, Card, Paper, TableCell, TableRow, CardContent, styled, Divider, Stack, Chip, DialogContentText, Slide, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getBrands, getCompanies, getCompany, getCountries, postCompany, putCompany, getCountry } from "@/app/data/api";
+import { getBrands, getCompanies, getCompany, getCountries, postCompany, putCompany} from "@/app/data/api";
 import MuiModal from "../customcomponent/modal";
 import MuiTextField from "../customcomponent/formcontrol";
 import { Col, Row, Form } from "react-bootstrap";
 import MuiTable from "../customcomponent/table";
 import SaveIcon from '@mui/icons-material/Save';
 import MuiDialog from "../customcomponent/dialog";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import MuiSelect from "../customcomponent/Select";
 import { VerifiedOutlined } from "@mui/icons-material";
 import CardHeader from '@mui/material/CardHeader';
 import FormHelperText from '@mui/material/FormHelperText';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
-
 import 'styles/theme/components/_card.scss';
 import 'styles/theme/components/_button.scss';
 import 'styles/theme/components/_modal.scss';
 import { useRef} from "react";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 export default function Company() {
   useEffect(() => {
@@ -34,7 +29,6 @@ export default function Company() {
     fetchCountries();
   }, []);
   //Variables de estados
-  const [getsBrands, setBrands] = React.useState([]);
   const [open, setOpen] = React.useState(0);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -64,7 +58,6 @@ export default function Company() {
   const selectedCountry = getscountries.find(
     (country) => country.id === activeCountryId
   );
-  const selectedCountryName = selectedCountry ? selectedCountry.name : '';
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -81,6 +74,19 @@ export default function Company() {
     setRowsPerPage(event.target.value);
     setPage(0);
   };
+
+  const timeoutModal = async (val) => {
+    if (val === 1) {
+      setMessage("Empresa creada exitosamente!!");
+      setTimeout(() => closeModalCreate(), 2000);
+    } else {
+      setMessage("Empresa actualizada exitosamente!!");
+      setTimeout(() => closeModal(), 2000);
+    }
+  
+    setSuccessModalOpen(true);
+    setTimeout(() => setSuccessModalOpen(false), 2000);
+  };  
 
   const handleRowClick = async (companyId) => {
     try {
@@ -131,14 +137,6 @@ export default function Company() {
       }
     `;
 
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
-
   const columnsTable = [{ label: 'ID', field: 'id' },
   { label: 'Nombre', field: 'name' },
   { label: 'Marcas', field: 'brands', render: (row) => row.brands.join(', ') },
@@ -182,7 +180,7 @@ export default function Company() {
     };
   
     if (!companyName.trim()) {
-      newErrors.companyName = 'Este campo es requerido.';
+      newErrors.companyName = 'Debe colocar un nombre.';
     } else if (companyName.length > 50) {
       newErrors.companyName = 'Máximo 50 caracteres.';
     }
@@ -255,21 +253,6 @@ export default function Company() {
   };
   console.log('Esto tiene countries:', getscountries);
 
-  useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        const data = await getBrands();
-        console.log("Brands API Response:", data); // Debugging
-        setBrands(data); 
-      } catch (error) {
-        console.error("Error fetching brands:", error);
-      }
-    };
-  
-    fetchBrands();
-  }, []);
-  
-
   const handleCreateCompany = async () => {
     try {
 
@@ -286,9 +269,7 @@ export default function Company() {
         });
         console.log("Esto tiene responseData ", responseData)
         // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-        console.log('Empresa creada exitosamente:', responseData);
-        setMessage("Empresa creada exitosamente!!");
-        setSuccessModalOpen(true);
+        timeoutModal(1);
         fetchData();
       }
     } catch (error) {
@@ -314,9 +295,7 @@ export default function Company() {
         }, id);
         console.log("Esto tiene responseData ", responseData)
         // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
-        console.log('Empresa actualizada exitosamente:', responseData);
-        setMessage("Empresa actualizada exitosamente!!");
-        setSuccessModalOpen(true);
+        timeoutModal();
         fetchData();
         //
 
@@ -340,32 +319,19 @@ export default function Company() {
     </div>
   </ClickAwayListener>
    
-
-  const titledialog = (
-    <>
-      <h4><DeleteForeverIcon /> ELIMINAR TIENDA</h4>
-      <Divider className="divider" />
-    </>
-  );
-
-  const actions = (<>
-    <Button onClick={handleClose}>ACEPTAR</Button>
-  </>);
-
-  const contentDialog = (
-    <DialogContentText style={{ color: "black" }}>
-      ¿Esta seguro que desea eliminar esta tienda?
-    </DialogContentText>);
-
   const titledialogSucces = (
     <>
       <h4><VerifiedOutlined /> REGISTRO EXITOSO</h4>
       <Divider className="divider" />
     </>
   );
-  const actionsSucces = (<>
-    <Button onClick={handleCloseSuccessModal}>ACEPTAR</Button>
-  </>);
+
+  const titledialogSuccesedit= (
+    <>
+      <h4><VerifiedOutlined /> ACTUALIZACION EXITOSA</h4>
+      <Divider className="divider" />
+    </>
+  );
 
   const contentDialogSucces = (
     <DialogContentText style={{ color: "black" }}>
@@ -392,7 +358,7 @@ export default function Company() {
         {errors.companyIdCountry && (
         <FormHelperText>{errors.companyIdCountry}</FormHelperText>
         )}
-  </FormControl>
+      </FormControl>
       <Row style={{ width: "100%" }}>
         <Col className="modal-col-btn">
         <Button onClick={() => {
@@ -402,7 +368,7 @@ export default function Company() {
           }}>
           <SaveIcon /> GUARDAR
         </Button>
-          <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} actions={actionsSucces} className="modal-dialog-container" />
+          <MuiDialog open={successModalOpen} onClose={handleCloseSuccessModal} title={titledialogSucces} content={contentDialogSucces} className="modal-dialog-container" />
         </Col>
       </Row>
     </div>
@@ -425,9 +391,8 @@ export default function Company() {
           <MuiDialog 
             open={successModalOpen} 
             onClose={handleCloseSuccessModal} 
-            title={titledialogSucces} 
+            title={titledialogSuccesedit} 
             content={contentDialogSucces} 
-            actions={actionsSucces} 
             className="modal-dialog-container" 
           />
         </Col>
@@ -487,7 +452,6 @@ export default function Company() {
         content={modalContent}
         customStyles={modalStyles}
       />
-      <MuiDialog open={open} onClose={handleClose} title={titledialog} content={contentDialog} actions={actions} className="modal-dialog-container-delete" />
     </>
   );  
 
