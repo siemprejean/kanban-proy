@@ -1,5 +1,4 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
-import PropTypes from 'prop-types';
 import 'styles/theme/components/_card.scss';
 import 'styles/theme/components/_button.scss';
 import 'styles/theme/components/_table.scss';
@@ -36,19 +35,4 @@ const MuiTable = ({ columns, body, rowsPerPage, page, handleChangePage, handleCh
     );
 };
 
-/*MuiTable.PropTypes = {
-    columns: PropTypes.arrayOf(
-        PropTypes.shape({
-          label: PropTypes.string.isRequired,
-          field: PropTypes.string.isRequired,
-          align: PropTypes.oneOf(['left', 'center', 'right']),
-          render: PropTypes.func,
-        })
-      ).isRequired,
-      body: PropTypes.node.isRequired,
-      rowsPerPage: PropTypes.number.isRequired,
-      page: PropTypes.number.isRequired,
-      //handleChangePage: PropTypes.func.isRequired,
-      //handleChangeRowsPerPage: PropTypes.func.isRequired,
-}*/
 export default MuiTable;

@@ -49,9 +49,6 @@ export default function Company() {
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [message, setMessage] = useState('');
   const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal(); closeModalCreate()};
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const openModal = () => setModalOpen(true);
   const closeModal = () => {
     setcompanyIdCountry(null);
     setModalOpen(false);
@@ -302,6 +299,8 @@ export default function Company() {
     </div>
   );
 
+
+  //TABLA DE CONTENIDO
   const body = (
     <>
       {Object.entries(groupedByCountry).map(([country, companyNames]) => (
@@ -378,7 +377,7 @@ export default function Company() {
           />
           <Divider className="divider" />
           <CardContent className="card-content">
-            <MuiTable columns={columnsTable} body={body} rowsPerPage={rowsPerPage} page={page} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} count={data.length} />
+            <MuiTable columns={columnsTable} body={body} rowsPerPage={rowsPerPage} page={page} handleChangePage={handleChangePage} handleChangeRowsPerPage={handleChangeRowsPerPage} count={getscountries.length} />
           </CardContent>
         </Card >
       </DashboardLayout >

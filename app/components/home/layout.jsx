@@ -25,7 +25,15 @@ export default function DashboardLayout({ children }) {
 					/>
 				</div>
 				<div id="page-content">
-					<div className="header">
+					<div className="header" style={{
+    backgroundColor: '#ffffff',
+    padding: '16px 24px',
+    borderBottom: '1px solid #e0e0e0',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+    position: 'sticky',
+    top: 0,
+    zIndex: 1000
+  }}>
 						<NavbarTop
 							data={{
 								showMenu: showMenu,
