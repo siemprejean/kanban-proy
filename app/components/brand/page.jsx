@@ -24,7 +24,6 @@ export default function Brand() {
     useEffect(() => {
         fetchData();
     }, []);
-    const [open, setOpen] = useState(0);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [detail, setDetail] = useState([]);
@@ -45,17 +44,16 @@ export default function Brand() {
     };
 
     const filteredData = data
-        .map((brand) => ({
-            ...brand,
-            stores: brand.stores.filter((store) =>
-            store.store_name.toLowerCase().includes(searchTerm.toLowerCase())
-            ),
-        }))
-        .filter((brand) =>
-            brand.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            brand.stores.length > 0
-        );
-    
+    .map((brand) => ({
+        ...brand,
+        stores: brand.stores.filter((store) =>
+            (store.name || store.store_name || '').toLowerCase().includes(searchTerm.toLowerCase())
+          )      
+    }))
+    .filter((brand) =>
+        brand.stores.length > 0  // Only include brands that have stores that match the search term
+    );
+
     const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal(); closeModalCreate() };
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);

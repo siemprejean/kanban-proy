@@ -1,6 +1,5 @@
 'use client'
 import DashboardLayout from "../home/layout";
-import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 //import { CardBody, CardHeader, Col, Row } from "react-bootstrap";
 import { Box, Button, Card, Paper, TableCell, TableRow, CardContent, styled, Divider, Stack, Chip, DialogContentText, Slide} from "@mui/material";
@@ -12,7 +11,6 @@ import { Col, Row, Form } from "react-bootstrap";
 import MuiTable from "../customcomponent/table";
 import SaveIcon from '@mui/icons-material/Save';
 import MuiDialog from "../customcomponent/dialog";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { VerifiedOutlined } from "@mui/icons-material";
 import CardHeader from '@mui/material/CardHeader';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
@@ -29,8 +27,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function Company() {
   useEffect(() => {
     fetchData();
-    fetchCountries();
   }, []);
+
   //Variables de estados
   const [getsBrands, setBrands] = React.useState([]);
   const [open, setOpen] = React.useState(0);
@@ -58,17 +56,18 @@ export default function Company() {
   const [searchTerm, setSearchTerm] = useState('');
   const modalRef = useRef(null);
   const activeCountryId = companyIdCountry || updateCompanycountry;
-  const selectedCountry = getscountries.find(
-    (country) => country.id === activeCountryId
-  );
-  const selectedCountryName = selectedCountry ? selectedCountry.name : '';
+    
+  const filteredCountries = getscountries.filter((country) =>
+    country.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );  
   
-  const groupedByCountry = getscountries.reduce((acc, country) => {
-    const associatedCompanies = data.filter(company => company.country === country.name);
-    acc[country.name] = associatedCompanies.map(c => c.name);
+  const groupedByCountry = filteredCountries.reduce((acc, country) => {
+    const associatedCompanies = data.filter(
+      (company) => company.country === country.name
+    );
+    acc[country.name] = associatedCompanies.map((c) => c.name);
     return acc;
-  }, {});
-   
+  }, {});  
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -199,17 +198,6 @@ export default function Company() {
     }
   };
 
-  const fetchCountries = async () => {
-    try {
-      const countries = await getCountries();
-      setCountries(countries);
-
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-  console.log('Esto tiene countries:', getscountries);
-
   useEffect(() => {
     const fetchBrands = async () => {
       try {
@@ -334,7 +322,7 @@ export default function Company() {
         </TableRow>
       ))}
     </>
-  ); 
+  );  
 
   return (
     <>

@@ -3,6 +3,7 @@ import 'styles/theme/components/_card.scss';
 import 'styles/theme/components/_button.scss';
 import 'styles/theme/components/_table.scss';
 
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
 const MuiTable = ({ columns, body, rowsPerPage, page, handleChangePage, handleChangeRowsPerPage, count }) => {
     return (
         <Paper className="table-custom-container">

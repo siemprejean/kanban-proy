@@ -62,6 +62,7 @@ export default function Company() {
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
+  
   const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );

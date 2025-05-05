@@ -217,15 +217,6 @@ export default function Company() {
   //Contenido del modal de edicion
   const modalContent = (
     <div ref={modalRef} className="modal-content">
-        <IconButton 
-          onClick={handleCloseeditModal} 
-          style={{ position: 'absolute', top: -80, right: -25, backgroundColor: "white", transition: "background-color 0.3s ease"}}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f0f0f0"}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}
-        >
-        <CloseIcon />
-        </IconButton>
-  
         <MuiTextField
           title="Nombre"
           value={updateNam}

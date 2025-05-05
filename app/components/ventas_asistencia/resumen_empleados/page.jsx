@@ -306,7 +306,7 @@ export default function DetallesEmpleados() {
     return (
         <DashboardLayout>
               <Helmet>
-        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> </meta>
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
       </Helmet>
             <Fragment>
                 <Container fluid className="calendar-container">

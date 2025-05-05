@@ -11,7 +11,6 @@ import MuiModal from "../customcomponent/modal";
 import MuiTable from "../customcomponent/table";
 import MuiSelect from "../customcomponent/Select";
 import MuiTextField from "../customcomponent/formcontrol";
-import CloseIcon from '@mui/icons-material/Close';
 import {getStores, postStore, putStore, getStore, getBrands } from "@/app/data/api";
 import MuiDialog from "../customcomponent/dialog";
 import { VerifiedOutlined } from "@mui/icons-material";
@@ -57,6 +56,14 @@ export default function Store() {
     const [message, setMessage] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const modalRef = useRef(null);
+
+    const combinedData = data.filter((store) =>
+        store.store_name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+      const filteredData = data.filter((store) =>
+        store.store_name.toLowerCase().includes(searchTerm.toLowerCase())
+      );           
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
@@ -141,6 +148,7 @@ export default function Store() {
 
     const handleCancelCreate = () => {
         setstoreName('');
+        setstoreIdBrand('');
         setstoreComission('');
         setstoreExceed('');
         setstoreIncentive('');
@@ -150,10 +158,13 @@ export default function Store() {
         closeModalCreate();
         setErrors({
             storeName: '',
+            storeIdBrand: '',
             storeComission: '',
             storeRetention: '',
             storeExceed: '',
-            storeIncentive: ''
+            storeIncentive: '',
+            storeicgBrand: '',
+            storeicgSerie: ''
           });
     };
 
@@ -169,10 +180,13 @@ export default function Store() {
 
     const [errors, setErrors] = useState({
         storeName: '',
+        storeIdBrand: '',
         storeComission: '',
         storeRetention: '',
         storeExceed: '',
-        storeIncentive: ''
+        storeIncentive: '',
+        storeicgBrand: '',
+        storeicgSerie: ''
       });      
 
     const validateFields = () => {
@@ -182,7 +196,9 @@ export default function Store() {
           storeComission: '',
           storeRetention: '',
           storeExceed: '',
-          storeIncentive: ''
+          storeIncentive: '',
+          storeicgBrand: '',
+          storeicgSerie: ''
         };
       
         if (!storeName.trim()) {
@@ -217,6 +233,14 @@ export default function Store() {
           newErrors.storeIncentive = 'Este campo es requerido.';
         } else if (!isNumber(storeIncentive)) {
           newErrors.storeIncentive = 'Debe ser un número.';
+        }
+
+        if (!storeicgBrand.trim()) {
+            newErrors.storeicgBrand = 'Este campo es requerido.';
+        }
+
+        if (!storeicgSerie.trim()) {
+            newErrors.storeicgSerie = 'Este campo es requerido.';
         }
       
         setErrors(newErrors);
@@ -260,8 +284,8 @@ export default function Store() {
 
     const handleChangeBrand = async (event) => {
         const selectedBrand = parseInt(event.target.value, 10);
-        setUpdateBrandId(selectedBrand);
-        console.log("esto tiene selectedCountry", selectedCountry);
+        setstoreIdBrand(selectedBrand);
+        console.log("esto tiene selectedBrand", selectedBrand);
     };  
       
 
@@ -346,11 +370,7 @@ export default function Store() {
         // Manejar errores en caso de que la creación falleç
         console.error('Error al crear la actualizar la tienda:', error.message);
         }
-    }
-
-    const filteredData = data.filter((item) =>
-        !searchTerm || (item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    );    
+    }    
 
     const titledialogSucces = (<>
         <h4><VerifiedOutlined /> REGISTRO EXITOSO</h4>
@@ -407,6 +427,8 @@ export default function Store() {
             <MuiTextField title="%Retencion" values={storeRetention} onChange={(e) => setstoreRetention(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeRetention} helperText={errors.storeRetention}/>
             <MuiTextField title="%Excedente" values={storeExceed} onChange={(e) => setstoreExceed(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeExceed} helperText={errors.storeExceed}/>
             <MuiTextField title="%Incentivo de Domingos" values={storeIncentive} onChange={(e) => setstoreIncentive(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeIncentive} helperText={errors.storeIncentive}/>
+            <MuiTextField title="ICG Brand" values={storeicgBrand} onChange={(e) => seticgBrand(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeicgBrand} helperText={errors.storeicgBrand}/>
+            <MuiTextField title="ICG Serie" values={storeicgSerie} onChange={(e) => seticgSerie(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeicgSerie} helperText={errors.storeicgSerie}/>
             <Row style={{ width: "100%" }}>
                 <Col className="modal-col-btn">
                 <Button onClick={() => {
@@ -443,8 +465,8 @@ export default function Store() {
             <MuiTextField title="%Retencion" value={updateRetention} onChange={(event) => setUpdateRetention(parseInt(event))} className="modal-col-6" />
             <MuiTextField title="%Excedente" value={updateExceed} onChange={(event) => setUpdateExceed(parseInt(event))} className="modal-col-6" />
             <MuiTextField title="%Incentivo de Domingos" value={updateIncentive} onChange={(event) => setUpdateIncentive(parseInt(event))} className="modal-col-6" />
-            <MuiTextField title="ICG Brand" value={updateicgBrand} onChange={(e) => setUpdateicgBrand(e.target.value)} type="text" className="modal-col-6" />
-            <MuiTextField title="ICG Serie" value={updateicgSerie} onChange={(e) => setUpdateicgSerie(e.target.value)} type="text" className="modal-col-6" />
+            <MuiTextField title="ICG Brand" value={updateicgBrand} onChange={(e) => seticgBrand(e.target.value)} type="text" className="modal-col-6" />
+            <MuiTextField title="ICG Serie" value={updateicgSerie} onChange={(e) => seticgSerie(e.target.value)} type="text" className="modal-col-6" />
             <Row style={{ width: "100%" }}>
                 <Col className="modal-col-btn">
                     <Button onClick={() => {updateZtore(detail.id)
@@ -457,63 +479,48 @@ export default function Store() {
         </div>
     );
 //TABLA DE TIENDAS
-    const body = (
-        <>
-        {filteredData
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((row) => (
-                <TableRow
-                key={row.id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                    <TableCell component="th" scope="row">
-                        {row.id}
-                    </TableCell>
-
-                    <TableCell align="left" className="highlight-column">
-                        {row.name}
-                        <Stack
-                            direction="row"
-                            spacing={1}
-                            alignItems="left"
-                            style={{ flexWrap: 'wrap' }}
-                        >
-                        <Chip
-                            label={row.store_name}
-                            className="badge"
-                            style={{
-                            backgroundColor: 'honeydew',
-                            color: 'green',
-                            borderColor: 'green',
-                            borderRadius: '5px'
-                            }}
-                            size="small"
-                            variant="outlined"
-                        />
-                        </Stack>
-                    </TableCell>
-
-                    <TableCell align="center" className="button-td">
-                        <Button
-                            className="edit-button-g"
-                            onClick={() => {
-                                handleRowClick(row.id);
-                            }}
-                        >
-                            <EditIcon />
-                        </Button>
-                    </TableCell>
-                </TableRow>
-            ))}
-        <MuiModal
-            open={isModalOpen}
-            onClose={closeModal}
-            title="EDITAR TIENDA"
-            content={modalContent}
-            customStyles={modalStyles}
-        />
+const body = (
+    <>
+      {filteredData
+        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        .map((store) => (
+          <TableRow key={store.id}>
+            <TableCell align="left">{store.id}</TableCell>
+  
+            <TableCell align="left">
+              <Chip
+                label={store.store_name}
+                className="badge"
+                style={{
+                  backgroundColor: 'honeydew',
+                  color: 'green',
+                  borderColor: 'green',
+                }}
+                size="small"
+                variant="outlined"
+              />
+            </TableCell>
+  
+            <TableCell align="center" className="button-td">
+              <Button
+                className="edit-button-g"
+                onClick={() => handleRowClick(store.id)}
+              >
+                <EditIcon />
+              </Button>
+            </TableCell>
+          </TableRow>
+        ))}
+  
+      <MuiModal
+        open={isModalOpen}
+        onClose={closeModal}
+        title="EDITAR TIENDA"
+        content={modalContent}
+        customStyles={modalStyles}
+      />
     </>
-);
+  );  
 
     //SEARCH Y BOTON CREAR
     return (
