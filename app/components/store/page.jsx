@@ -70,7 +70,6 @@ export default function Store() {
     };
 
     const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal(); closeModalCreate() };
-    const handleClose = () => setOpen(false);
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
     const openModalCreate = () => setModalCreateOpen(true);
@@ -377,7 +376,6 @@ export default function Store() {
         <Divider className="divider" />
     </>
     );
-
     
     const titledialogSuccesedit = (<>
         <h4><VerifiedOutlined /> ACTUALIZACION EXITOSA</h4>

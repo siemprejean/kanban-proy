@@ -1,7 +1,7 @@
 'use client'
 // import node module libraries
 import React from "react";
-import { Helmet } from 'react-helmet';
+import Head from 'next/head';
 import { useState, useRef, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -36,6 +36,9 @@ import 'styles/theme/components/_tablaResumenEmpl.scss'
 
 
 export default function DetallesEmpleados() {
+    useEffect(() => {
+        CargarData();
+    },[]);
 
     //const [startDate, setStartDate] = useState(new Date());
     const [detail, setDetail] = useState({fullname: "", cargo:"", tienda:"", local: "", empresa: "", num_empl: "", num_card: "", fecha_in: "", turnos: "", dias_libres: ""});
@@ -57,45 +60,42 @@ export default function DetallesEmpleados() {
     const [dataTabla, setdataTabla ] = useState([])
 
 
-    useEffect(() => {
+    const CargarData = async () => {
+        try {
+            const data_payrolls = await getPayrolls();
+
+            const data_employees = await getEmployees();
+            const data_store = await getStores();
+            const data_companies = await getCompanies();
+            const data_positions = await getPositions();
 
 
-        const CargarData = async () => {
-            try {
-                const data_payrolls = await getPayrolls();
-
-                const data_employees = await getEmployees();
-                const data_store = await getStores();
-                const data_companies = await getCompanies();
-                const data_positions = await getPositions();
-
-
-                  const updatedemployees = data_employees.map(emp => ({
+                const updatedemployees = data_employees.map(emp => ({
                     ...emp,
                     label: ('(' + emp.identification + ')' + ' ' + emp.first_name+ ' ' + emp.last_name),
                     fullname: (emp.first_name+ ' ' + emp.last_name),
-                  }));
+                }));
 
                   
-                  const updatedPayrolls = data_payrolls.map(x => {
+                const updatedPayrolls = data_payrolls.map(x => {
                  
                     return {
-                      ...x,
+                     ...x,
                       label: x.description.replace("Payroll for", "Planilla ")
                     };
-                  });
+                });
                   
-                  console.log(updatedPayrolls);
+                console.log(updatedPayrolls);
                   
 
-                  console.log("Estas son las Planillas")
-                  console.log(updatedPayrolls)
+                console.log("Estas son las Planillas")
+                console.log(updatedPayrolls)
 
 
-                  const updatedStores = data_store.map(store => ({
+                const updatedStores = data_store.map(store => ({
                     ...store,
                     label: store.store_name,
-                  }));
+                }));
 
                 setEmployees(updatedemployees);
                 setCompanies(data_companies);
@@ -103,13 +103,17 @@ export default function DetallesEmpleados() {
 
                 setPayrolls(updatedPayrolls)
                 setStores(updatedStores)
-                //console.log("Esto tiene employeestore", employeestore)
+                console.log("Esto tiene employeestore", employeestore)
             } catch (error) {
                 console.error('Error cargando data inicial:', error);
-            }
-        };
-        CargarData();
-    }, []);
+        }
+    };
+
+    const emptyDetail = {
+        fullname: "", cargo: "", tienda: "", local: "",
+        empresa: "", num_empl: "", num_card: "",
+        fecha_in: "", turnos: "", dias_libres: ""
+      };      
 
  
     const handleChangePayrolls = async (event) => {
@@ -135,20 +139,7 @@ export default function DetallesEmpleados() {
 
         setPayrollstores(updatedStores)
         setEmployeestore([])
-        setDetail(
-            {
-              fullname: "",
-              cargo: "",
-              tienda: "",
-              local: "",
-              empresa: "",
-              num_empl: "",
-              num_card: "",
-              fecha_in: "",
-              turnos: "",
-              dias_libres: "",
-            },
-          );
+        emptyDetail();
     };
 
     const handleChangeStores = async (event) => {
@@ -165,20 +156,7 @@ export default function DetallesEmpleados() {
         }));
         setEmployeestore(filtro_empl); 
 
-        setDetail(
-            {
-              fullname: "",
-              cargo: "",
-              tienda: "",
-              local: "",
-              empresa: "",
-              num_empl: "",
-              num_card: "",
-              fecha_in: "",
-              turnos: "",
-              dias_libres: "",
-            },
-          );
+        emptyDetail();
     };
 
     const handleChangeEmployee = async (event) => {
@@ -224,20 +202,7 @@ export default function DetallesEmpleados() {
 
             setDetail(newDetail);
         }else{
-            setDetail(
-                {
-                  fullname: "",
-                  cargo: "",
-                  tienda: "",
-                  local: "",
-                  empresa: "",
-                  num_empl: "",
-                  num_card: "",
-                  fecha_in: "",
-                  turnos: "",
-                  dias_libres: "",
-                },
-              );
+            emptyDetail();
         }
 
        
@@ -305,9 +270,9 @@ export default function DetallesEmpleados() {
 
     return (
         <DashboardLayout>
-              <Helmet>
-        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
-      </Helmet>
+        <Head>
+            <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+        </Head>
             <Fragment>
                 <Container fluid className="calendar-container">
                     <Card>

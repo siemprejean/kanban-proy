@@ -87,6 +87,7 @@ export default function Company() {
   
     setSuccessModalOpen(true);
     setTimeout(() => setSuccessModalOpen(false), 2000);
+    handleCancelCreate();
   };  
 
   const handleRowClick = async (companyId) => {
@@ -307,18 +308,6 @@ export default function Company() {
     }
   };
 
-  <ClickAwayListener
-    onClickAway={(event) => {
-      const clickedInsideMuiSelect = document.querySelector('.MuiPopover-root')?.contains(event.target);
-      if (clickedInsideMuiSelect) return;
-      handleCancelCreate ();
-      closeModal();
-    }}
-  >
-    <div className="modal-content">
-      {/* modalCreate contents here */}
-    </div>
-  </ClickAwayListener>
    
   const titledialogSucces = (
     <>

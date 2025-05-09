@@ -277,6 +277,8 @@ export default function RolesPermision() {
 
   async function handleCreateRole() {
     try {
+
+      if (roleName !== '' && roleName !== null) {
       console.log("Esto tiene responseData ", {
         name: roleName,
         slug: roleSlug,
@@ -300,6 +302,7 @@ export default function RolesPermision() {
       timeoutModal(1);
       closeModalCreate();
       fetchData();
+      }
     } catch (error) {
       // Manejar errores en caso de que la creación falle
       console.error("Error al crear el role:", error.message);
@@ -549,15 +552,15 @@ export default function RolesPermision() {
   }
 
   async function handleCreatePermission() {
-    //event.preventDefault();
     try {
+
+      if (permissionName !== '' && permissionName !== null) {
       console.log("Esto tiene responseData ", {
         name: permissionName,
         slug: permissionSlug,
         http_method: permissionHttpMethod,
         http_path: permissionHttpPath
       })
-      // Llamar a la función en api/empresas.js para crear una nueva empresa
       let responseData = await postPermission({
         name: permissionName,
         slug: permissionSlug,
@@ -565,11 +568,9 @@ export default function RolesPermision() {
         http_path: permissionHttpPath
       });
       console.log("Esto tiene responseData ", responseData)
-      // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
       timeoutModalp(1);
-
-      //closeModalCreatep();
       fetchDatap();
+      }
     } catch (error) {
       // Manejar errores en caso de que la creación falleç
       console.error('Error al crear el permiso:', error.message);
@@ -627,24 +628,24 @@ export default function RolesPermision() {
       <MuiTextField title="Nombre del Permiso:" value={permissionName} onChange={(e) => setPermissionName(e.target.value)} type="text" className="modal-col-6" error={!!errors.permissionName} helperText={errors.permissionName}/>
       <MuiTextField title="Descripcion:" value={permissionSlug} onChange={(e) => setPermissionSlug(e.target.value)} type="text" className="modal-col-6" error={!!errors.permissionSlug} helperText={errors.permissionSlug}/>
       <div className="modal-col-6" error={!!errors.permissionHttpMethod} helperText={errors.permissionHttpMethod}>
-        <StyledmethodButton
-          active={permissionHttpMethod === "GET"}
-          onClick={() => setPermissionHttpMethod("GET")}
-        >
-          GET
-        </StyledmethodButton>
-        <StyledmethodButton
-          active={permissionHttpMethod === "POST"}
-          onClick={() => setPermissionHttpMethod("POST")}
-        >
-          POST
-        </StyledmethodButton>
-        <StyledmethodButton
-          active={permissionHttpMethod === "PUT"}
-          onClick={() => setPermissionHttpMethod("PUT")}
-        >
-          PUT
-        </StyledmethodButton>
+      <StyledmethodButton
+        active={permissionHttpMethod === "GET" ? "true" : undefined}
+        onClick={() => setPermissionHttpMethod("GET")}
+      >
+      GET
+      </StyledmethodButton>
+      <StyledmethodButton
+        active={permissionHttpMethod === "POST" ? "true" : undefined}
+        onClick={() => setPermissionHttpMethod("POST")}
+      >
+      POST
+      </StyledmethodButton>
+      <StyledmethodButton
+        active={permissionHttpMethod === "PUT" ? "true" : undefined}
+        onClick={() => setPermissionHttpMethod("PUT")}
+      >
+      PUT
+      </StyledmethodButton>
 
       </div>
       <MuiTextField title="Path Http:" value={permissionHttpPath} onChange={(e) => setPermissionHttpPath(e.target.value)} type="text" className="modal-col-6" error={!!errors.permissionHttpPath} helperText={errors.permissionHttpPath}/>

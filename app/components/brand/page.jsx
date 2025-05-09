@@ -116,9 +116,9 @@ export default function Brand() {
             setMessage("Marca actualizada exitosamente!!");
           setTimeout(() => closeModal(), 2000);
         }
-      
         setSuccessModalOpen(true);
         setTimeout(() => setSuccessModalOpen(false), 2000);
+        handleCancelCreate();
     }; 
 
     const handleChange =

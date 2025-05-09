@@ -27,6 +27,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function Company() {
   useEffect(() => {
     fetchData();
+    fetchCountries();
   }, []);
 
   //Variables de estados
@@ -198,19 +199,16 @@ export default function Company() {
     }
   };
 
-  useEffect(() => {
-    const fetchBrands = async () => {
+    const fetchCountries = async () => {
       try {
-        const data = await getBrands();
-        console.log("Brands API Response:", data); // Debugging
-        setBrands(data); 
+        const countries = await getCountries();
+        setCountries(countries);
+  
       } catch (error) {
-        console.error("Error fetching brands:", error);
+        console.error('Error fetching data:', error);
       }
     };
-  
-    fetchBrands();
-  }, []);
+    console.log('Esto tiene countries:', getscountries);
   
   const handleCreateCountry = async () => {
     try {

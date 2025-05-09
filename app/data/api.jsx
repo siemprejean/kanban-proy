@@ -394,6 +394,41 @@ export const postRole = async (roleData) => {
         throw new Error('Error en la solicitud:', error);
     }
 };
+
+export const postUser = async (userData) => {
+    try {
+        console.log("RoleData", userData);
+        const response = await fetch('http://10.2.1.174:35789/admin/users/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token_temis}`
+            },
+            body: JSON.stringify({
+                name: userData.name,
+                username: userData.username,
+                email: userData.email,
+                id_company: userData.id_company,
+                user_password: userData.user_password,
+                remember_password: userData.user_password,
+                avatar: userData.avatar,
+                status_user: userData.status_user,
+                roles: userData.roles
+            }, console.log("userData", userData.name)),
+
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Esto tiene data:", data)
+            return data; // Puedes devolver datos adicionales si es necesario
+        } else {
+            throw new Error('Error al crear el Role');
+        }
+    } catch (error) {
+        throw new Error('Error en la solicitud:', error);
+    }
+};
+
 export const putRole = async (roleData, id) => {
     try {
         console.log("RoleData", roleData);
@@ -487,6 +522,7 @@ export const postPermission = async (permissionData) => {
         throw new Error('Error en la solicitud:', error);
     }
 };
+
 export const putPermission = async (permissionData, id) => {
     try {
         console.log("permissionData", permissionData);
@@ -597,6 +633,7 @@ export const postStore = async (storeData) => {
         throw new Error('Error en la solicitud:', error);
     }
 };
+
 export const putStore = async (storeData, id) => {
     try {
         console.log("storeData", storeData);
@@ -772,23 +809,29 @@ export const getPositions = async () => {
 
 export const getPayrolls = async () => {
     try {
-        const result = await fetch(`http://10.2.1.174:35789/general/payrolls`, {
-            method: 'GET',
-            headers: new Headers({
-                'Authorization': `Bearer ${token_temis}`
-            })
-        });
-        const data = await result.json();
-        return data;
+  
+      const result = await fetch('/api/payrolls', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token_temis}`,
+        },
+      });
+  
+      if (!result.ok) {
+        throw new Error(`Error del servidor: ${result.status}`);
+      }
+  
+      const data = await result.json();
+      console.log('Esto tiene payroll:', data);
+      return data;
     } catch (error) {
-        console.error('Error fetching positions:', error);
-        throw new Error('Failed to fetch positions');
+      console.error('Error fetching payroll:', error);
+      throw new Error('Failed to fetch payroll');
     }
-};
+  };  
 
 export const getSellerSummaries = async (payroll_id) => {
     try {
-        // const result = await fetch(`http://10.2.1.174:35789/general/payments/seller_summaries?payroll_id=${payroll_id}`, {
         const result = await fetch(`http://10.2.1.174:35789/payments/seller_summaries?payroll_id=${payroll_id}`, {
             method: 'GET',
             headers: new Headers({
