@@ -403,10 +403,7 @@ const body = (
                                         onClose={() => {
                                             closeModalCreate();
                                             handleCancelCreate();
-                                            setErrors({
-                                              companyName: '',
-                                              companyIdCountry: ''
-                                            });
+                                            setErrors();
                                           }}
                                         title="CREAR MARCA"
                                         content={modalCreate}

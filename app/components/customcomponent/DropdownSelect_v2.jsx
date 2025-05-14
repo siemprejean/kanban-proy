@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { MenuItem, Select, FormControl, InputLabel } from "@mui/material";
-import 'styles/theme/components/_DropdownSelect_v2.scss'
+import { MenuItem, Select, FormControl } from "@mui/material";
+import 'styles/theme/components/_DropdownSelect_v2.scss';
 
-
-const DropdownSelect_v2 = ({ label, options, className, onChange, type }) => {
+const DropdownSelect_v2 = ({ label, options, className, onChange, type, disabled }) => {
   const [value, setValue] = useState("");
 
   const handleChange = (event) => {
@@ -17,7 +16,7 @@ const DropdownSelect_v2 = ({ label, options, className, onChange, type }) => {
         value={value}
         onChange={handleChange}
         displayEmpty
-
+        disabled={disabled} // ✅ This is the fix
       >
         <MenuItem value="" disabled>
           {label}

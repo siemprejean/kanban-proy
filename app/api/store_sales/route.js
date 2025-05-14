@@ -1,20 +1,27 @@
 // app/api/payrolls/route.js
+
 export async function GET(req) {
     try {
       const authHeader = req.headers.get('authorization');
+      const { searchParams } = new URL(req.url);
+      const id = searchParams.get('id');
   
       if (!authHeader) {
         return Response.json({ error: "Token no enviado" }, { status: 401 });
       }
   
-      const res = await fetch("http://10.2.1.174:35789/general/payrolls", {
+      if (!id) {
+        return Response.json({ error: "ID no enviado" }, { status: 400 });
+      }
+  
+      const res = await fetch(`http://10.2.1.174:35789/payments/store_summaries?payroll_id=${id}`, {
         headers: {
-          Authorization: authHeader, // Pasamos el token recibido desde el cliente
+          Authorization: authHeader,
         },
       });
   
       if (!res.ok) {
-        return Response.json({ error: "Error al obtener payrolls" }, { status: res.status });
+        return Response.json({ error: "Error al obtener resumenes" }, { status: res.status });
       }
   
       const data = await res.json();

@@ -15,7 +15,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import Card from 'react-bootstrap/Card';
 import 'styles/theme/components/_calendar.scss';
 import ModalVentasEmpleado from "../../customcomponent/ModalVentasEmpleado";
-import { getCompanies, getEmployees, getPayrolls, getPositions, getStores, getSellerSummariesDaily,  getStore_Sales, getEmployeeActives} from "@/app/data/api";
+import { getCompanies, getEmployees, getPayrolls, getPositions, getStores, getSellerSummariesDaily, getStore_Sales, getEmployeeActives} from "@/app/data/api";
 import MuiTextField from "../../customcomponent/formcontrol";
 import { useRouter } from "next/navigation";
 import BasicDateRangePicker from  "../../customcomponent/BasicDateRangePicker";
@@ -26,38 +26,6 @@ import { Rock_3D } from "next/font/google";
 import { Description } from "@mui/icons-material";
 import esLocale from "@fullcalendar/core/locales/es"; 
 import { Helmet } from 'react-helmet';
-
-
-const dataTabla = {
-    fecha: "Lunes, 2 de octubre de 2023",
-    fullname: "Julio Ernesto Pérez González",
-    cargo: "Asesor de Ventas",
-    turno: "Turno B (8am - 4pm)",
-    ordinarias: "08:01",
-    certificadoMedico: "00:00",
-    ausenciaJustificada: "00:00",
-    tardanzaJustificada: "00:00",
-    comentarios: "",
-    detallesTurno: [
-      {
-        tienda: "ADIDAS - ALBROOK",
-        entrada: "8:00 am",
-        entradaDescanso: "12:02 pm",
-        salidaDescanso: "1:01 pm",
-        salida: "4:00 pm",
-        turno: "Turno B (8am - 4pm)"
-      }
-    ],
-    ventasHoy: "78.85",
-    ventasMensuales: "496.85",
-    porcentajeVentaMeta: "15.50% / 20%",
-    porcentajeVentasTiendaHoy: "34.00%",
-    incentivo: "18.50"
-  };
-
-
-
-
 
 /* function getDate(dayString) {
     const today = new Date();
@@ -79,25 +47,22 @@ function renderEventContent(eventInfo) {
     )
 }
 
-
-
 export default function DetallesEmpleados() {
 
-   
     const [show, setShow] = useState(false);
     const [typex, settypex] = useState(1);
     const [detail, setDetail] = useState({fullname: "", cargo:"", tienda:"", local: "", empresa: "", num_empl: "", num_card: "", fecha_in: "", turnos: "", dias_libres: ""});
     const [dataReport, setDataReport] = useState(null);
     const handleClose = () => setShow(false);
     const [payrolls, setPayrolls] = useState([])
-    const [stores, setStores] = useState([0]);
+    const [stores, setStores] = useState([]);
     const [employees, setEmployees] = useState([]);
     const [employeesactive, setEmployeesActive] = useState([]);
     const [companies, setCompanies] = useState([0]);
     const [positions, setPositions] = useState([0]);
     const [stores_sales,  setStores_sales] = useState([])
     const [stores_sales_filtro,  setStores_sales_filtro] = useState([])
-    const [employeestore, setEmployeestore] = useState([0]);
+    const [employeestore, setEmployeestore] = useState([]);
     const [tiendasFiltradas, setTiendasFiltradas] = useState([])
     //const colourOptions = stores.map((item) => ({ value: item.id, label: item.name }));
     const router = useRouter();
@@ -105,18 +70,14 @@ export default function DetallesEmpleados() {
     const [startDate, endDate] = dateRange;
     const [events, setEvents] = useState([]);
     const [inicio, setInicio] = useState([]);
-  
-
 
     useEffect(() => {
-
 
         const CargarData = async () => {
             try {
                 const data_payrolls = await getPayrolls();
                 const data_employees = await getEmployees();
                 const data_employees_active = await getEmployeeActives(); 
-                const data_store = await getStores();
                 const data_companies = await getCompanies();
                 const data_positions = await getPositions();
               /*   const data_seller_summaries_daily  = await  getSellerSummariesDaily(3,1,129)
@@ -137,16 +98,7 @@ export default function DetallesEmpleados() {
                 }));   
    */
         //     setEvents(detalle_empleado);  
-             // console.log(events) 
-
-          
-                
-                const updatedStores = data_store.map(store =>  
-                ({
-                    ...store,
-                    label: store.store_name,
-                  
-                  }));
+             // console.log(events)
 
                   const updatedemployees = data_employees.map(emp => 
                   ({
@@ -168,8 +120,6 @@ export default function DetallesEmpleados() {
                     };
                   });
 
-
-            
              /*    const formattedEvents = data_payrollsDaily.map((evento) => ({
                   
                     title: evento.total_daily_sale,
@@ -181,13 +131,11 @@ export default function DetallesEmpleados() {
 
                // setEvents(formattedEvents);
                 setPayrolls(updatedPayrolls)
-                setStores(updatedStores);
                 setEmployees(updatedemployees);
                 setEmployeesActive(data_employees_active);
                 setCompanies(data_companies);
                 setPositions(data_positions);
-                setTiendasFiltradas(upd1);
-                
+                setTiendasFiltradas(upd1);  
                
             } catch (error) {
                 console.error('Error cargando data inicial:', error);
@@ -195,57 +143,59 @@ export default function DetallesEmpleados() {
         };
        CargarData();
      
-
     }, []);
 
+    const defaultDetail = {
+        fullname: "", cargo: "", tienda: "", local: "",
+        empresa: "", num_empl: "", num_card: "",
+        fecha_in: "", turnos: "", dias_libres: ""
+      };
  
  /* EVENTO DE PLANILLA*/
-      const handleChangePayrolls = async (e) =>{
-            const store_summaries= await getStore_Sales(e)
-            setStores_sales(store_summaries);
-            setStores_sales_filtro(store_summaries)
-            setTiendasFiltradas(tiendasFiltradas)
-          }
-      
-
+      const handleChangePayrolls = async (event) => {
+        const selected = parseInt(event);
+            try {
+            const store_summaries = await getStore_Sales(selected);
+            if (store_summaries.length === 0) {
+                alert("Debe seleccionar una planilla que contenga informacion"); // or console.log(...) or show in UI
+                setDetail(defaultDetail);
+                setStores([]);
+                setEmployeestore([]);
+                return;
+            } else {        
+                const filteredStores = store_summaries.map((store, index) => ({
+                id: index,
+                label: store.store_name
+              }));  
+                setStores(filteredStores);
+                setStores_sales(store_summaries);
+                setStores_sales_filtro(store_summaries);
+            }}catch (error) {
+            console.error("Error fetching store summaries:", error);
+            }
+        }   
 
 /*EVENTO DE TIENDAS */
     const handleChangeStores = async (event) => {
         const selectedStore = parseInt(event);
-        //setTiendas(selectedStore);
-
         const activos = employeesactive.map(act => act.employee_id);
-
-if(activos.length > 0  && employees.length >0){ 
-   
- const filtro_empl = employees.filter((item) => item.store_id === selectedStore && activos.includes(item.id) )
+        if(activos.length > 0  && employees.length >0){ 
+            const filtro_empl = employees.filter((item) => item.store_id === selectedStore && activos.includes(item.id) )
            .map((item) => ({
           ...item
-        })); 
+        }));
+        if (filtro_empl.length === 0) {
+            alert("Debe seleccionar una tienda que contenga información de empleados");
+            setDetail(defaultDetail);
+            setEmployeestore([]);
+            return; // Stop further execution
+        } 
    
-     console.log(filtro_empl)
-     console.log(activos)
-    setEmployeestore(filtro_empl); 
-    
-        setDetail(
-            {
-              fullname: "",
-              cargo: "",
-              tienda: "",
-          //    local: "",
-              empresa: "",
-              num_empl: "",
-              num_card: "",
-              fecha_in: "",
-         //     turnos: "",
-        //      dias_libres: "",
-            },
-          );
+        console.log(filtro_empl)
+        console.log(activos)
+        setEmployeestore(filtro_empl); 
 }
     };
-
-
-
 
     /*EVENTO DE EMPLEADOS*/
     const handleChangeEmployee = async (event) => {
@@ -274,40 +224,31 @@ if(activos.length > 0  && employees.length >0){
            
            
         
-            const newDetail = {
-                fullname:  data_emple[0].fullname,
-                cargo: data_cargo[0].name,
-                tienda: data_tienda[0].store_name,
+    const newDetail = {
+        fullname:  data_emple[0].fullname,
+        cargo: data_cargo[0].name,
+        tienda: data_tienda[0].store_name,
               //  local: "****",
-                empresa: data_empresa[0].name,
-                num_empl:  data_emple[0].id,
-                num_card:  data_emple[0].card_number,
-                fecha_in:  data_emple[0].start_date,
+        empresa: data_empresa[0].name,
+        num_empl: data_emple[0].id,
+        num_card:  data_emple[0].card_number,
+        fecha_in:  data_emple[0].start_date,
              //   turnos: "****",
               //  dias_libres: "****",
-              
-              }
-
-              
-            setDetail(newDetail);
+        }
+    setDetail(newDetail);
 
 /* DATOS DEL CALENDARIO */
 
-
-            const data_seller_summaries_daily  = await  getSellerSummariesDaily(stores_sales[0].payroll_id,data_emple[0].store_id,data_emple[0].id,)
-           
-            const detalle_empleado = data_seller_summaries_daily.map((item) =>   ({   
-                 
-                    title:item.total_daily_sale,
-                    start:item.registration_date,
-                    description:item.sale_discount,
-                    color:(item.attendance === true) ? '#64ea8f' : '#e8b19a'
-                
-            }));
-
-         setEvents(detalle_empleado);  
-
-
+    const data_seller_summaries_daily  = await  getSellerSummariesDaily(stores_sales[0].payroll_id,data_emple[0].store_id,data_emple[0].id,)
+    const detalle_empleado = data_seller_summaries_daily.map((item) => ({   
+        title:item.total_daily_sale,
+        start:item.registration_date,
+        description:item.sale_discount,
+        color:(item.attendance === true) ? '#64ea8f' : '#e8b19a'
+    }));
+    console.log(detalle_empleado)
+    setEvents(detalle_empleado);  
         }else{
             setDetail(
                 {
@@ -326,13 +267,7 @@ if(activos.length > 0  && employees.length >0){
         }
     }
 
-  
-
-
-
-
-
-/* MODAL  */
+/* MODAL DEL EMPLEADO  */
     const handleShow = ( event,typex) => {
         if(typex == 1)
         {
@@ -374,8 +309,7 @@ if(activos.length > 0  && employees.length >0){
                 incentivo: "***"
               }
               setDataReport(dx)             
-            
-            
+                     
         }
         else if(typex == 2)
         {
@@ -389,11 +323,8 @@ if(activos.length > 0  && employees.length >0){
         setShow(true);
 
     };
-    
 
-
-    return (
-    
+    return ( 
 
         <DashboardLayout>
         <Helmet>
@@ -412,12 +343,12 @@ if(activos.length > 0  && employees.length >0){
 
                                 <Col xs={3} className="calendar-filter">   
 
-                                <DropdownSelect_v2 label={"Seleccione Tienda"} options={stores} className = "custom-dropdown" onChange= {handleChangeStores}/>             
+                                <DropdownSelect_v2 label={"Seleccione Tienda"} options={stores} className = "custom-dropdown" onChange= {handleChangeStores} disabled={stores.length === 0}/>             
                                     {/* <MuiSelect_v2 text={"Seleccione Tienda"} items={stores} value={tienda} onChange={handleChangeStores} className="modal-col-12" /> */}
                                 </Col>
                                 <Col xs={3} className="calendar-filter">
 
-                                <DropdownSelect_v2 label={"Seleccione empleado"} options={employeestore} className = "custom-dropdown" onChange={handleChangeEmployee} />
+                                <DropdownSelect_v2 label={"Seleccione empleado"} options={employeestore} className = "custom-dropdown" onChange={handleChangeEmployee} disabled={employeestore.length === 0}/>
                                     {/* <MuiSelect_v2 text={"Seleccione Empleado"} items={employeestore} value={empleado} onChange={handleChangeEmployee} className="modal-col-12" /> */}
                                 </Col>
 
@@ -426,9 +357,6 @@ if(activos.length > 0  && employees.length >0){
                              {/*    <Col xs={4} className="calendar-filter">
                                 <BasicDateRangePicker></BasicDateRangePicker>
                                 </Col> */}
-
-                                
-
                                
                             </Row>
                             <br></br>
@@ -441,7 +369,7 @@ if(activos.length > 0  && employees.length >0){
                                     <Row>
                                         <MuiTextField title="Cargo:" value={detail.cargo} className="calendar-col-6" />
                                     </Row>
-                                    <Row>
+                                   {/* <Row>
                                         <MuiTextField title="Tienda:" value={detail.tienda} className="calendar-col-6" />
                                     </Row>
                                   {/*   <Row>

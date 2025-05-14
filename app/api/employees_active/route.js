@@ -7,14 +7,14 @@ export async function GET(req) {
         return Response.json({ error: "Token no enviado" }, { status: 401 });
       }
   
-      const res = await fetch("http://10.2.1.174:35789/general/payrolls", {
+      const res = await fetch("http://10.2.1.174:35789/general/employees/actives", {
         headers: {
           Authorization: authHeader, // Pasamos el token recibido desde el cliente
         },
       });
   
       if (!res.ok) {
-        return Response.json({ error: "Error al obtener payrolls" }, { status: res.status });
+        return Response.json({ error: "Error al obtener employee actives" }, { status: res.status });
       }
   
       const data = await res.json();
@@ -24,4 +24,3 @@ export async function GET(req) {
       return Response.json({ error: "Fallo interno" }, { status: 500 });
     }
   }
-  

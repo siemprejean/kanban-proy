@@ -155,16 +155,20 @@ export const getRol = async () => {
 export const getCompanies = async () => {
     try {
         
-        const res = await fetch('http://10.2.1.174:35789/general/companies', {
+        const result = await fetch('/api/companies', {
             method: 'GET',
-            headers: new Headers({
-                'Authorization': `Bearer ${token_temis}`
-            })
-        });
-        const data = await res.json();
+            headers: {
+              'Authorization': `Bearer ${token_temis}`,
+            },
+          });
+        if (!result.ok) {
+            throw new Error(`Error del servidor: ${result.status}`);
+        }
+
+        const data = await result.json();
+        console.log('Esto tiene compañias:', data);
         return data;
-    }
-    catch (error) {
+    }catch (error) {
         console.error('Error fetching companies:', error);
         throw new Error('Failed to fetch companies');
     }
@@ -244,20 +248,25 @@ export const putCompany = async (companyData, id) => {
     }
 };
 
-//Endpoints de Marcas
 export const getBrands = async () => {
     try {
-        const result = await fetch('http://10.2.1.174:35789/general/brands', {
+        
+        const result = await fetch('/api/brands', {
             method: 'GET',
-            headers: new Headers({
-                'Authorization': `Bearer ${token_temis}`
-            })
-        });
+            headers: {
+              'Authorization': `Bearer ${token_temis}`,
+            },
+          });
+        if (!result.ok) {
+            throw new Error(`Error del servidor: ${result.status}`);
+        }
+
         const data = await result.json();
+        console.log('Esto tiene marcas:', data);
         return data;
-    } catch (error) {
-        console.error('Error fetching brands:', error);
-        throw new Error('Failed to fetch brands');
+    }catch (error) {
+        console.error('Error fetching marcas:', error);
+        throw new Error('Failed to fetch marcas');
     }
 };
 
@@ -331,23 +340,28 @@ export const getBrand = async (id) => {
     }
 };
 
-//ENDPOINTS DE ROLES
 export const getRoles = async () => {
     try {
-        const result = await fetch('http://10.2.1.174:35789/admin/roles', {
-            method: 'GET',
-            headers: new Headers({
-                'Authorization': `Bearer ${token_temis}`
-            })
-        });
-        const data = await result.json();
-        console.log('Esto tiene role:', data);
-        return data;
+  
+      const result = await fetch('/api/roles', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token_temis}`,
+        },
+      });
+  
+      if (!result.ok) {
+        throw new Error(`Error del servidor: ${result.status}`);
+      }
+  
+      const data = await result.json();
+      console.log('Esto tiene posiciones:', data);
+      return data;
     } catch (error) {
-        console.error('Error fetching Roles:', error);
-        throw new Error('Failed to fetch role');
+      console.error('Error fetching positions:', error);
+      throw new Error('Failed to fetch positions');
     }
-}
+  };
 
 export const getRole = async (id) => {
     try {
@@ -462,20 +476,26 @@ export const putRole = async (roleData, id) => {
 //ENDPOINTS DE PERMISOS
 export const getPermissions = async () => {
     try {
-        const result = await fetch('http://10.2.1.174:35789/admin/permissions', {
-            method: 'GET',
-            headers: new Headers({
-                'Authorization': `Bearer ${token_temis}`
-            })
-        });
-        const data = await result.json();
-        console.log('Esto tiene Permission:', data);
-        return data;
+  
+      const result = await fetch('/api/permissions', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token_temis}`,
+        },
+      });
+  
+      if (!result.ok) {
+        throw new Error(`Error del servidor: ${result.status}`);
+      }
+  
+      const data = await result.json();
+      console.log('Esto tiene posiciones:', data);
+      return data;
     } catch (error) {
-        console.error('Error fetching Permissions:', error);
-        throw new Error('Failed to fetch Permissions');
+      console.error('Error fetching positions:', error);
+      throw new Error('Failed to fetch positions');
     }
-}
+  };
 
 export const getPermission = async (id) => {
     try {
@@ -553,19 +573,23 @@ export const putPermission = async (permissionData, id) => {
     }
 };
 
-//Endpoints de Store
 export const getStores = async () => {
     try {
-        console.log(`Esto tiene token_temis: ${token_temis} `)
-        const result = await fetch('http://10.2.1.174:35789/general/stores', {
+        
+        const result = await fetch('/api/stores', {
             method: 'GET',
-            headers: new Headers({
-                'Authorization': `Bearer ${token_temis}`
-            })
-        });
+            headers: {
+              'Authorization': `Bearer ${token_temis}`,
+            },
+          });
+        if (!result.ok) {
+            throw new Error(`Error del servidor: ${result.status}`);
+        }
+
         const data = await result.json();
+        console.log('Esto tiene tiendas:', data);
         return data;
-    } catch (error) {
+    }catch (error) {
         console.error('Error fetching stores:', error);
         throw new Error('Failed to fetch stores');
     }
@@ -672,15 +696,18 @@ export const putStore = async (storeData, id) => {
 //Endpoints de Countries
 export const getCountries = async () => {
     try {
-        const result = await fetch(`http://10.2.1.174:35789/general/countries`, {
+        const result = await fetch(`/api/countries`, {
             method: 'GET',
-            headers: new Headers({
-                'Authorization': `Bearer ${token_temis}`
-            })
+            headers: {
+                'Authorization': `Bearer ${token_temis}`,
+              },
         });
+        if (!result.ok) {
+            throw new Error(`Error del servidor: ${result.status}`);
+        }
         const data = await result.json();
         console.log('Esto tiene countries:', data);
-        return data; countries
+        return data;
     } catch (error) {
         console.error('Error fetching countries:', error);
         throw new Error('Failed to fetch countries');
@@ -705,57 +732,71 @@ export const getCountry = async (id) => {
     }
 };
 
-// Endpoints de Sales
 export const getSales = async () => {
     try {
-        const result = await fetch(`http://10.2.1.174:35789/payments/sales`, {
+        
+        const result = await fetch('/api/sales', {
             method: 'GET',
-            headers: new Headers({
-                'Authorization': `Bearer ${token_temis}`
-            })
-        });
+            headers: {
+              'Authorization': `Bearer ${token_temis}`,
+            },
+          });
+        if (!result.ok) {
+            throw new Error(`Error del servidor: ${result.status}`);
+        }
+
         const data = await result.json();
+        console.log('Esto tiene empleados activos :', data);
         return data;
-    } catch (error) {
-        console.error('Error fetching ventas:', error);
-        throw new Error('Failed to fetch ventas');
+    }catch (error) {
+        console.error('Error fetching employees active:', error);
+        throw new Error('Failed to fetch employees active');
     }
 };
 
 
-// Endpoints Ventas por Tienda
 export const getStore_Sales = async (id) => {
-    try {
-        const result = await fetch(`http://10.2.1.174:35789/payments/store_summaries?payroll_id=${id}`, {
+    try {   
+        const result = await fetch(`/api/store_sales?id=${id}`, {
             method: 'GET',
-            headers: new Headers({
-              'Authorization': `Bearer ${token_temis}`
-            })
-        });
+            headers: {
+              'Authorization': `Bearer ${token_temis}`,
+            },
+          });
+        if (!result.ok) {
+            throw new Error(`Error del servidor: ${result.status}`);
+        }
+
         const data = await result.json();
+        console.log('Esto tiene tiendas activos :', data);
         return data;
-    } catch (error) {
-        console.error('Error fetching ventas:', error);
-        throw new Error('Failed to fetch ventas');
+    }catch (error) {
+        console.error('Error fetching employees active:', error);
+        throw new Error('Failed to fetch employees active');
     }
 };
-
 
 //VENTAS Y ASISTENCIA //DETALLE DE EMPLEADO
 
 export const getEmployeeActives = async () => {
     try {
-        const result = await fetch(`http://10.2.1.174:35789/general/employees/actives`, {
+        
+        const result = await fetch('/api/employees_active', {
             method: 'GET',
-            headers: new Headers({
-                'Authorization': `Bearer ${token_temis}`
-            })
-        });
+            headers: {
+              'Authorization': `Bearer ${token_temis}`,
+            },
+          });
+        if (!result.ok) {
+            throw new Error(`Error del servidor: ${result.status}`);
+        }
+
         const data = await result.json();
+        console.log('Esto tiene empleados activos :', data);
         return data;
-    } catch (error) {
-        console.error('Error fetching empleados:', error);
-        throw new Error('Failed to fetch empleados');
+    }catch (error) {
+        console.error('Error fetching employees active:', error);
+        throw new Error('Failed to fetch employees active');
     }
 };
 
@@ -777,35 +818,49 @@ export const getEmployee = async (id) => {
 
 export const getEmployees = async () => {
     try {
-        const result = await fetch(`http://10.2.1.174:35789/general/employees`, {
+        
+        const result = await fetch('/api/employees', {
             method: 'GET',
-            headers: new Headers({
-                'Authorization': `Bearer ${token_temis}`
-            })
-        });
+            headers: {
+              'Authorization': `Bearer ${token_temis}`,
+            },
+          });
+        if (!result.ok) {
+            throw new Error(`Error del servidor: ${result.status}`);
+        }
+
         const data = await result.json();
+        console.log('Esto tiene empleados:', data);
         return data;
-    } catch (error) {
-        console.error('Error fetching employees:', error);
-        throw new Error('Failed to fetch employees');
+    }catch (error) {
+        console.error('Error fetching employee:', error);
+        throw new Error('Failed to fetch employee');
     }
 };
 
+
 export const getPositions = async () => {
     try {
-        const result = await fetch(`http://10.2.1.174:35789/general/positions`, {
-            method: 'GET',
-            headers: new Headers({
-                'Authorization': `Bearer ${token_temis}`
-            })
-        });
-        const data = await result.json();
-        return data;
+  
+      const result = await fetch('/api/positions', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token_temis}`,
+        },
+      });
+  
+      if (!result.ok) {
+        throw new Error(`Error del servidor: ${result.status}`);
+      }
+  
+      const data = await result.json();
+      console.log('Esto tiene posiciones:', data);
+      return data;
     } catch (error) {
-        console.error('Error fetching positions:', error);
-        throw new Error('Failed to fetch positions');
+      console.error('Error fetching positions:', error);
+      throw new Error('Failed to fetch positions');
     }
-};
+  }; 
 
 export const getPayrolls = async () => {
     try {
@@ -828,42 +883,45 @@ export const getPayrolls = async () => {
       console.error('Error fetching payroll:', error);
       throw new Error('Failed to fetch payroll');
     }
-  };  
+  };
 
-export const getSellerSummaries = async (payroll_id) => {
-    try {
-        const result = await fetch(`http://10.2.1.174:35789/payments/seller_summaries?payroll_id=${payroll_id}`, {
+  export const getSellerSummaries = async (id) => {
+    try {   
+        const result = await fetch(`/api/seller_summaries?id=${id}`, {
             method: 'GET',
-            headers: new Headers({
-                'Authorization': `Bearer ${token_temis}`
-            })
-        });
+            headers: {
+              'Authorization': `Bearer ${token_temis}`,
+            },
+          });
+        if (!result.ok) {
+            throw new Error(`Error del servidor: ${result.status}`);
+        }
+
         const data = await result.json();
+        console.log('Esto tiene empleados activos :', data);
         return data;
-    } catch (error) {
-        console.error('Error fetching positions:', error);
-        throw new Error('Failed to fetch positions');
+    }catch (error) {
+        console.error('Error fetching employees active:', error);
+        throw new Error('Failed to fetch employees active');
     }
 };
 
-export const getSellerSummariesDaily = async (payroll_id, store_id, employee_id) => {
+export const getSellerSummariesDaily = async (payroll_id,store_id,employee_id) => {
     try {
-        const result = await fetch(`http://10.2.1.174:35789/payments/seller_summaries_daily?payroll_id=${payroll_id}&store_id=${store_id}&employee_id=${employee_id}`, {
-            method: 'GET',
-            headers: new Headers({
-                'Authorization': `Bearer ${token_temis}`
-            })
-        });
-        const data = await result.json();
-        return data;
+      const result = await fetch(`/api/seller_summaries_daily?payroll_id=${payroll_id}&store_id=${store_id}&employee_id=${employee_id}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token_temis}`
+        }
+      });
+      const data = await result.json();
+      console.log(data)
+      return data;
     } catch (error) {
-        console.error('Error fetching positions:', error);
-        throw new Error('Failed to fetch positions');
+      console.error('Error fetching ventas:', error);
+      throw new Error('Failed to fetch ventas');
     }
-};
-
-
-
+  };
 
 const token_vencido = () =>{
     const hoy = new Date();

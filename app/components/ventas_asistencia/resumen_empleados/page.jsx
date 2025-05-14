@@ -5,35 +5,18 @@ import Head from 'next/head';
 import { useState, useRef, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-
 import Col from 'react-bootstrap/Col';
-
 import DashboardLayout from "../../home/layout";
 import { Fragment } from "react";
-
 import Card from 'react-bootstrap/Card';
-
-//import DatePicker from 'react-datepicker';
 import 'styles/theme/components/_calendar.scss';
-import { getCompanies, getEmployees, getPayrolls, getPositions, getSellerSummaries, getStores } from "@/app/data/api";
-
+import { getCompanies, getEmployees, getPayrolls, getPositions, getSellerSummaries, getStores,getStore_Sales } from "@/app/data/api";
 import MuiTextField from "../../customcomponent/formcontrol";
-
 import { useRouter } from "next/navigation";
-
 import DropdownSelect_v2 from "../../customcomponent/DropdownSelect_v2";
 import 'styles/theme/components/_dateRangePicker.scss'
 import 'styles/theme/components/_DropdownSelect_v2.scss'
 import 'styles/theme/components/_tablaResumenEmpl.scss'
-
-
-
-
-
-
-
-
-
 
 export default function DetallesEmpleados() {
     useEffect(() => {
@@ -45,37 +28,29 @@ export default function DetallesEmpleados() {
     const [dataReport, setDataReport] = useState(null);
     const handleClose = () => setShow(false);
 
-    const [payrolls, setPayrolls] = useState([0]);
-    const [stores, setStores] = useState([0]);
+    const [payrolls, setPayrolls] = useState([]);
+    const [stores, setStores] = useState([]);
     const [employees, setEmployees] = useState([]);
-    const [companies, setCompanies] = useState([0]);
-    const [positions, setPositions] = useState([0]);
-
-    const [employeestore, setEmployeestore] = useState([0]);
-
+    const [companies, setCompanies] = useState([]);
+    const [positions, setPositions] = useState([]);
+    const [dataIsReady, setDataIsReady] = useState(false);
+    const [employeestore, setEmployeestore] = useState([]);
     const router = useRouter();
-
-    const [dateRange, setDateRange] = useState([null, null]);
     const [sellerSumaries, setSellerSumaries] = useState([])
     const [dataTabla, setdataTabla ] = useState([])
-
 
     const CargarData = async () => {
         try {
             const data_payrolls = await getPayrolls();
-
             const data_employees = await getEmployees();
-            const data_store = await getStores();
             const data_companies = await getCompanies();
             const data_positions = await getPositions();
-
 
                 const updatedemployees = data_employees.map(emp => ({
                     ...emp,
                     label: ('(' + emp.identification + ')' + ' ' + emp.first_name+ ' ' + emp.last_name),
                     fullname: (emp.first_name+ ' ' + emp.last_name),
                 }));
-
                   
                 const updatedPayrolls = data_payrolls.map(x => {
                  
@@ -84,83 +59,101 @@ export default function DetallesEmpleados() {
                       label: x.description.replace("Payroll for", "Planilla ")
                     };
                 });
-                  
-                console.log(updatedPayrolls);
-                  
-
-                console.log("Estas son las Planillas")
-                console.log(updatedPayrolls)
-
-
-                const updatedStores = data_store.map(store => ({
-                    ...store,
-                    label: store.store_name,
-                }));
 
                 setEmployees(updatedemployees);
                 setCompanies(data_companies);
                 setPositions(data_positions);
-
-                setPayrolls(updatedPayrolls)
-                setStores(updatedStores)
-                console.log("Esto tiene employeestore", employeestore)
+                setPayrolls(updatedPayrolls);
             } catch (error) {
                 console.error('Error cargando data inicial:', error);
         }
     };
 
-    const emptyDetail = {
+    const defaultDetail = {
         fullname: "", cargo: "", tienda: "", local: "",
         empresa: "", num_empl: "", num_card: "",
         fecha_in: "", turnos: "", dias_libres: ""
-      };      
+      };
 
- 
     const handleChangePayrolls = async (event) => {
         const selected = parseInt(event);
+        console.log(selected)
         const dataSeller = await getSellerSummaries(selected);
+        const storeData = await getStore_Sales(selected);
 
-        const updatedDataTest = dataSeller.map(x => {
-            const matchedEmployee = employees.find(e => e.id === x.employee_id);
+        let updatedDataTest = [];
+
+        if (dataSeller.length === 0) {
+            alert("Debe seleccionar una planilla que contenga informacion"); // or console.log(...) or show in UI
+            setdataTabla([]);
+            setDetail(defaultDetail);
+            setStores([]);
+            setEmployeestore([]);
+            return;
+        } else if (storeData.length === 0) {
+            alert("Debe seleccionar una planilla que contenga tiendas asociadas");
+            setStores([]);
+            setEmployeestore([]); // or console.log(...) or show in UI
+        } else {
+        updatedDataTest = dataSeller.map(x => {
+        const matchedEmployee = employees.find(e => e.id === x.employee_id);
             return {
-            ...x,
-            cedula: matchedEmployee?.identification || "Sin Cédula",
+                ...x,
+                cedula: matchedEmployee?.identification || "Sin Cédula",
             };
-            });
+        });
 
-        setSellerSumaries(updatedDataTest)
-        setdataTabla(updatedDataTest)
-        
-    
-        const updatedStores = stores.filter((item) => item.payroll_id === selected).map(store => ({
-            ...store,
-            label: store.store_name,
+        console.log(updatedDataTest)
+        setSellerSumaries(updatedDataTest)        
+        const storeNames = storeData.map((store, index) => ({
+            id: index, // or store.id if it exists
+            label: store.store_name
           }));
-
-        setPayrollstores(updatedStores)
-        setEmployeestore([])
-        emptyDetail();
+        setStores(storeNames);
+        }
     };
 
     const handleChangeStores = async (event) => {
         const selectedStore = parseInt(event);
-        //setTiendas(selectedStore);
+      
+        const updatedataTabla = sellerSumaries.filter((item) => item.store_id === selectedStore);
+      
+        if (updatedataTabla.length === 0) {
+            alert("Debe seleccionar una tienda que contenga información de empleados");
+            setdataTabla([]);
+            setDetail(defaultDetail);
+            setEmployeestore([]);
+            return; // Stop further execution
+          }
 
-        const updatedataTabla = sellerSumaries.filter((item) => item.store_id === selectedStore)
-        
-        setdataTabla(updatedataTabla)
-
-        const filtro_empl = employees.filter((item) => item.store_id === selectedStore)
-        .map((item) => ({
-          ...item
-        }));
-        setEmployeestore(filtro_empl); 
-
-        emptyDetail();
-    };
+        setdataTabla(updatedataTabla);
+      
+        const filtro_empl = [
+          { id: 0, label: "Todos los empleados" }, // Neutral option
+          ...employees
+            .filter((emp) =>
+              sellerSumaries.some(
+                (summary) => summary.employee_id === emp.id && summary.store_id === selectedStore
+              )
+            )
+            .map((emp) => ({
+              id: emp.id,
+              label: `(${emp.identification}) ${emp.fullname}`,
+            })),
+        ];
+      
+        setEmployeestore(filtro_empl);
+      };      
 
     const handleChangeEmployee = async (event) => {
         const selectedEmployee = parseInt(event);
+
+        if (selectedEmployee === 0) {
+            // Show everything (no filter)
+            setdataTabla(sellerSumaries);
+            setDetail(defaultDetail);
+            return;
+        }          
 
         const updatedDataTest = sellerSumaries.filter((item) => item.employee_id === selectedEmployee)
      
@@ -201,14 +194,8 @@ export default function DetallesEmpleados() {
               }
 
             setDetail(newDetail);
-        }else{
-            emptyDetail();
         }
-
-       
-
     };
-
 
     const handleShow = ( event,typex) => {
         if(typex == 1)
@@ -286,22 +273,15 @@ export default function DetallesEmpleados() {
                                 </Col>
                                 <Col xs={3} className="calendar-filter">   
 
-                                <DropdownSelect_v2 label={"Seleccione Tienda"} options={stores} className = "custom-dropdown" onChange= {handleChangeStores}/>             
+                                <DropdownSelect_v2 label={"Seleccione Tienda"} options={stores} className = "custom-dropdown" onChange= {handleChangeStores} disabled={stores.length === 0}/>             
                                     {/* <MuiSelect_v2 text={"Seleccione Tienda"} items={stores} value={tienda} onChange={handleChangeStores} className="modal-col-12" /> */}
                                 </Col>
                                 <Col xs={3} className="calendar-filter">
 
-                                <DropdownSelect_v2 label={"Seleccione empleado"} options={employeestore} className = "custom-dropdown" onChange={handleChangeEmployee} />
-                                    {/* <MuiSelect_v2 text={"Seleccione Empleado"} items={employeestore} value={empleado} onChange={handleChangeEmployee} className="modal-col-12" /> */}
+                                <DropdownSelect_v2 label={"Seleccione empleado"} options={employeestore} className = "custom-dropdown" onChange={handleChangeEmployee} disabled={employeestore.length === 0}/>
                                 </Col>
                                 <Col xs={3} className="calendar-filter">
-
-                                    {/* <MuiSelect_v2 text={"Seleccione Empleado"} items={employeestore} value={empleado} onChange={handleChangeEmployee} className="modal-col-12" /> */}
                                 </Col>
-
-            
-                                
-
                                
                             </Row>
                             <br></br>
@@ -324,18 +304,6 @@ export default function DetallesEmpleados() {
                                         <MuiTextField title="Empresa:" value={detail.empresa} className="calendar-col-6" />
                                     </Row>
                                 </Col>
-                                {/* <Col xs={3} className="calendar-filter">
-                                    <Row>
-                                        <Button style={{ height:"70px", borderRadius: "10px", backgroundColor: "#03386a", color: "HighlightText", flex: "auto", marginTop: "10px",  marginBottom: "20px",  marginLeft:"30px", marginRight:"30px" }} onClick={() => { handleShow(2) }}>
-                                            Historico de Ventas
-                                        </Button>
-                                    </Row>
-                                    <Row>
-                                        <Button style={{ height:"70px", borderRadius: "10px", backgroundColor: "#03386a", color: "HighlightText", flex: "auto", marginTop: "10px", marginBottom: "20px", marginLeft:"30px", marginRight:"30px" }} onClick={() => { handleShow(3) }}>
-                                        Historico de Comisiones
-                                        </Button>
-                                    </Row>
-                                </Col> */}
                             </Row>
                             <br></br>
                             <div className="table-container">
