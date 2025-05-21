@@ -390,14 +390,16 @@ export default function Store() {
 
         //MODAL CREACION TIENDA
     const modalCreate = (
-        <div ref={modalRef} className="modal-content">  
+        <div ref={modalRef} className="modal-content">
+          <div className="input-group">
             <MuiTextField title="Nombre de la Tienda:" value={storeName} onChange={(e) => setstoreName(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeName} helperText={errors.storeName}/>
-            <FormControl className="modal-col-6" style={{top: 25}} error={!!errors.storeIdBrand}>
-                <InputLabel id="brand-label" style={{top: 5 ,left: 10 }} >Marca</InputLabel>
+            <FormControl className="modal-col-6-drop mb-6" style={{top: 25}} error={!!errors.storeIdBrand}>
+                <InputLabel id="brand-label">Marca</InputLabel>
                     <Select
                     labelId="brand-label"
                     value={storeIdBrand ?? ''}
                     onChange={handleChangeBrand}
+                    label="Marca"
                     >
                 {datap.map((brand) => (
                     <MenuItem key={brand.id} value={brand.id}>
@@ -409,8 +411,8 @@ export default function Store() {
                 <FormHelperText>{errors.storeIdBrand}</FormHelperText>
                 )}
             </FormControl>
-            <FormControl className="modal-col-6" style={{ top: 25 }} error={!!errors.storeComission}>
-                <InputLabel id="tipo-comision-label" style={{ top: 5, left: 15 }}>Tipo de Comision</InputLabel>
+            <FormControl className="modal-col-6-drop mb-3" style={{ top: 25 }} error={!!errors.storeComission} fullWidth>
+                <InputLabel id="tipo-comision-label">Tipo de Comision</InputLabel>
                     <Select
                     labelId="tipo-comision-label"
                     value={storeComission}
@@ -422,11 +424,12 @@ export default function Store() {
                     </Select>
                 {errors.storeComission && <FormHelperText>{errors.storeComission}</FormHelperText>}
             </FormControl>
-            <MuiTextField title="%Retencion" values={storeRetention} onChange={(e) => setstoreRetention(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeRetention} helperText={errors.storeRetention}/>
-            <MuiTextField title="%Excedente" values={storeExceed} onChange={(e) => setstoreExceed(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeExceed} helperText={errors.storeExceed}/>
-            <MuiTextField title="%Incentivo de Domingos" values={storeIncentive} onChange={(e) => setstoreIncentive(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeIncentive} helperText={errors.storeIncentive}/>
+            <MuiTextField title="%Retencion" values={storeRetention} onChange={(e) => setstoreRetention(e.target.value)} type="text" className="modal-col-6 mb-3" error={!!errors.storeRetention} helperText={errors.storeRetention}/>
+            <MuiTextField title="%Excedente" values={storeExceed} onChange={(e) => setstoreExceed(e.target.value)} type="text" className="modal-col-6 mb-3" error={!!errors.storeExceed} helperText={errors.storeExceed}/>
+            <MuiTextField title="%Incentivo de Domingos" values={storeIncentive} onChange={(e) => setstoreIncentive(e.target.value)} type="text" className="modal-col-6 mb-3" error={!!errors.storeIncentive} helperText={errors.storeIncentive}/>
             <MuiTextField title="ICG Brand" values={storeicgBrand} onChange={(e) => seticgBrand(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeicgBrand} helperText={errors.storeicgBrand}/>
             <MuiTextField title="ICG Serie" values={storeicgSerie} onChange={(e) => seticgSerie(e.target.value)} type="text" className="modal-col-6" error={!!errors.storeicgSerie} helperText={errors.storeicgSerie}/>
+          </div>
             <Row style={{ width: "100%" }}>
                 <Col className="modal-col-btn">
                 <Button onClick={() => {
@@ -444,10 +447,10 @@ export default function Store() {
         //MODAL EDICION TIENDA
     const modalContent = (
         <div ref={modalRef} className="modal-content">
-            <MuiTextField title="Nombre de la Tienda:" value={updatestores} onChange={(e) => setUpdatestoresname(e.target.value)} className="modal-col-6" />
-            <MuiSelect title="Marca" items={datap} values={activeBrandId} onChange={(value) => setPreselectedItems(parseInt(value, 10))} className="modal-col-6" />
-            <FormControl className="modal-col-6" style={{ top: 25 }}>
-                <InputLabel id="tipo-comision-label" style={{ top: 5, left: 15 }}>Tipo de Comision</InputLabel>
+            <MuiTextField title="Nombre de la Tienda:" value={updatestores} onChange={(e) => setUpdatestoresname(e.target.value)} className="modal-col-6 mb-3" />
+            <MuiSelect title="Marca" items={datap} values={activeBrandId} onChange={(value) => setPreselectedItems(parseInt(value, 10))} className="modal-col-6-drop mb-3" />
+            <FormControl className="modal-col-6-drop mb-3" style={{ top: 25 }}>
+                <InputLabel id="tipo-comision-label" style={{ top: -5, left: -10 }}>Tipo de Comision</InputLabel>
                 <Select
                     value={updateComission === 1 ? "local" : updateComission === 2 ? "global" : ""}
                     onChange={(e) => {
@@ -460,9 +463,9 @@ export default function Store() {
                 <MenuItem value="global">Global</MenuItem>
                 </Select>
             </FormControl>
-            <MuiTextField title="%Retencion" value={updateRetention} onChange={(event) => setUpdateRetention(parseInt(event))} className="modal-col-6" />
-            <MuiTextField title="%Excedente" value={updateExceed} onChange={(event) => setUpdateExceed(parseInt(event))} className="modal-col-6" />
-            <MuiTextField title="%Incentivo de Domingos" value={updateIncentive} onChange={(event) => setUpdateIncentive(parseInt(event))} className="modal-col-6" />
+            <MuiTextField title="%Retencion" value={updateRetention} onChange={(event) => setUpdateRetention(parseInt(event))} className="modal-col-6 mb-3" />
+            <MuiTextField title="%Excedente" value={updateExceed} onChange={(event) => setUpdateExceed(parseInt(event))} className="modal-col-6 mb-3" />
+            <MuiTextField title="%Incentivo de Domingos" value={updateIncentive} onChange={(event) => setUpdateIncentive(parseInt(event))} className="modal-col-6 mb-3" />
             <MuiTextField title="ICG Brand" value={updateicgBrand} onChange={(e) => seticgBrand(e.target.value)} type="text" className="modal-col-6" />
             <MuiTextField title="ICG Serie" value={updateicgSerie} onChange={(e) => seticgSerie(e.target.value)} type="text" className="modal-col-6" />
             <Row style={{ width: "100%" }}>
@@ -541,7 +544,6 @@ const body = (
                                     <MuiModal
                                         open={isModalCreateOpen}
                                         onClose={()=>{
-                                            closeModalCreate();
                                             handleCancelCreate();
                                         }}
                                         title="CREAR TIENDA"

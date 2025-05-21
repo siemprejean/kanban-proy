@@ -2,11 +2,12 @@
 import DashboardLayout from "../home/layout";
 import AddIcon from '@mui/icons-material/Add';
 //import { CardBody, CardHeader, Col, Row } from "react-bootstrap";
-import { Box, Button, Card, Paper, TableCell, TableRow, CardContent, styled, Divider, Stack, Chip, DialogContentText, Slide} from "@mui/material";
+import { Button, Card,  TableCell, TableRow, CardContent, styled, Divider, Stack, Chip, DialogContentText} from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getBrands, getCompanies, getCompany, getCountries, postCountry } from "@/app/data/api";
+import {  getCompanies, getCountries, postCountry } from "@/app/data/api";
 import MuiModal from "../customcomponent/modal";
 import MuiTextField from "../customcomponent/formcontrol";
+import LoadingSpinner from "../customcomponent/formcontrol";
 import { Col, Row, Form } from "react-bootstrap";
 import MuiTable from "../customcomponent/table";
 import SaveIcon from '@mui/icons-material/Save';
@@ -20,10 +21,6 @@ import 'styles/theme/components/_button.scss';
 import 'styles/theme/components/_modal.scss';
 import { useRef} from "react";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
 export default function Company() {
   useEffect(() => {
     fetchData();
@@ -31,13 +28,9 @@ export default function Company() {
   }, []);
 
   //Variables de estados
-  const [getsBrands, setBrands] = React.useState([]);
-  const [open, setOpen] = React.useState(0);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [detail, setDetail] = React.useState([]);
   const [getscountries, setCountries] = React.useState([]);
-  const [isModalOpen, setModalOpen] = useState(false);
   const [isModalCreateOpen, setModalCreateOpen] = useState(false);
   const [data, setData] = useState([]);
   const [countryName, setcountryName] = useState('');
@@ -56,7 +49,6 @@ export default function Company() {
   const closeModalCreate = () => setModalCreateOpen(false);
   const [searchTerm, setSearchTerm] = useState('');
   const modalRef = useRef(null);
-  const activeCountryId = companyIdCountry || updateCompanycountry;
     
   const filteredCountries = getscountries.filter((country) =>
     country.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -69,6 +61,11 @@ export default function Company() {
     acc[country.name] = associatedCompanies.map((c) => c.name);
     return acc;
   }, {});  
+
+
+  if (!data) {
+    return <LoadingSpinner />;
+  }
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
@@ -267,10 +264,10 @@ export default function Company() {
   //Contenido del modal de creación
   const modalCreate = (
     <div className="modal-content">
-      <MuiTextField title="Nombre del Pais:" value={countryName} onChange={(e) => setcountryName(e.target.value)} type="text" className="modal-col-12" error={!!errors.countryName} helperText={errors.countryName}/>
+      <MuiTextField title="Nombre del Pais:" value={countryName} onChange={(e) => setcountryName(e.target.value)} type="text" className="modal-col-12" error={!!errors.countryName} helperText={errors.countryName} style={{ marginBottom: '2%' }}/>
       <MuiTextField title="Nombre corto del Pais:" value={isoCode} onChange={(e) => setisoCode(e.target.value)} type="text" className="modal-col-6" error={!!errors.isoCode} helperText={errors.isoCode}/>
-      <MuiTextField title="Divisa:" value={coinName} onChange={(e) => setcoinName(e.target.value)} type="text" className="modal-col-6" error={!!errors.coinName} helperText={errors.coinName}/> 
-      <Row style={{ width: "100%" }}>
+      <MuiTextField title="Divisa:" value={coinName} onChange={(e) => setcoinName(e.target.value)} type="text" className="modal-col-6" error={!!errors.coinName} helperText={errors.coinName}/>
+       <Row style={{ width: "100%" }}>
         <Col className="modal-col-btn">
         <Button onClick={() => {
           if (validateFields()) {
@@ -328,7 +325,7 @@ export default function Company() {
 
         <Card className="card-configuraciones">
           <CardHeader className="card-header"
-            title={<h3> Configuración de Empresas </h3>}
+            title={<h3> Configuración de Paises </h3>}
             subheader={
               <Row className="card-config-header">
                 <div className="card-config-header-left">

@@ -30,6 +30,7 @@ export default function Brand() {
     const [companyId, setCompanyID] = useState(0);
     const [brandName, setBrandName] = useState('');
     const [updateBrandName, setUpdateBrandName] = useState('');
+    const [updatecompanyid, setUpdateCompanyId] = useState('');
     const [getsCompanies, setCompanies] = useState([]);
     const [isModalCreateOpen, setModalCreateOpen] = useState(false);
     const [isModalOpen, setModalOpen] = useState(false);
@@ -106,6 +107,11 @@ export default function Brand() {
     const handleCancelCreate = () => {
         setBrandName('');
         setCompanyID('');
+        closeModalCreate();
+        setErrors({
+            brandName: '',
+            companyId: ''
+          });
     };
 
     const timeoutModal = async (val) => {
@@ -120,12 +126,6 @@ export default function Brand() {
         setTimeout(() => setSuccessModalOpen(false), 2000);
         handleCancelCreate();
     }; 
-
-    const handleChange =
-        (event) => {
-            setBrandName(event.target.value);
-            console.log("Esto tiene event.target.value: ", event.target.value)
-    };
 
     const handleRowClick = async (brandId) => {
         try {
@@ -158,8 +158,7 @@ export default function Brand() {
         }
       
         setErrors(newErrors);
-      
-        return !newErrors.brandName && !newErrors.companyId;
+        return Object.values(newErrors).every((e) => e === '');
     };
 
     const fetchData = async () => {
@@ -214,13 +213,13 @@ export default function Brand() {
             console.log("Esto tiene responseData ", {
                 name: updateBrandName,
                 slug: updateBrandName,
-                company_id: companyId,
+                company_id: updatecompanyid,
             })
             // Llamar a la función en api/empresas.js para crear una nueva empresa
             let responseData = await putBrand({
                 name: updateBrandName,
                 slug: updateBrandName,
-                company_id: companyId,
+                company_id: updatecompanyid,
             }, id);
             console.log("Esto tiene responseData ", responseData)
             // La empresa se creó exitosamente, puedes realizar acciones adicionales si es necesario
@@ -246,7 +245,7 @@ export default function Brand() {
       
           setDetail(brandWithCompany);
           setUpdateBrandName(brand.name);
-          setCompanyID(brand.company_id);
+          setUpdateCompanyId(brand.company_id);
         } catch (error) {
           console.error('Error fetching brand detail:', error);
         }
@@ -272,15 +271,16 @@ export default function Brand() {
     //MODAL CREACION MARCAS
     const modalCreate = (
         <div ref={modalRef} className="modal-content">
-            <MuiTextField title="Nombre de la Marca:" value={brandName} onChange={handleChange} className="modal-col-6" error={!!errors.brandName} helperText={errors.brandName}/>
-            <FormControl className="modal-col-6" style={{ top: 25 }} error={!!errors.companyId}>
-                <InputLabel id="empresa-label" style={{ top: 5, left: 10 }}>
+            <MuiTextField title="Nombre de la Marca:" value={brandName} onChange={(e) => setBrandName(e.target.value)} type="text" className="modal-col-6" error={!!errors.brandName} helperText={errors.brandName}/>
+            <FormControl className="modal-col-6-drop" style={{ top: 25 }} error={!!errors.companyId}>
+                <InputLabel id="empresa-label">
                 Empresa
                 </InputLabel>
             <Select
                 labelId="empresa-label"
                 value={companyId ?? ''}
                 onChange={(e) => setCompanyID(parseInt(e.target.value))}
+                label="Empresa"
             >
                 {getsCompanies.map((company) => (
             <MenuItem key={company.id} value={company.id}>
@@ -311,7 +311,7 @@ export default function Brand() {
     const modalContent = (
         <div ref={modalRef} className="modal-content">
             <MuiTextField title="Nombre de la Marca:" value={updateBrandName} onChange={(e) => setUpdateBrandName(e.target.value)} className="modal-col-6" />
-            <MuiSelect title="Empresa" items={getsCompanies} values={companyId} onChange={(value) => setCompanyID(parseInt(value, 10))} className="modal-col-6"/>
+            <MuiSelect title="Empresa" items={getsCompanies} values={updatecompanyid} onChange={(value) => setUpdateCompanyId(parseInt(value, 10))} className="modal-col-6"/>
             <Row style={{ width: "100%" }}>
                 <Col className="modal-col-btn">
                     <Button onClick={() => updateBrand(detail.id)}>
@@ -386,7 +386,7 @@ const body = (
             <DashboardLayout className="justify-content-center">
                 <Card className="card-configuraciones">
                     <CardHeader className="card-header"
-                        title={<h3> Configuración de Marca </h3>}
+                        title={<h3> Configuración de Marcas </h3>}
                         subheader={
                             <Row className="card-config-header">
                                 <div className="card-config-header-left">
@@ -401,9 +401,7 @@ const body = (
                                     <MuiModal
                                         open={isModalCreateOpen}
                                         onClose={() => {
-                                            closeModalCreate();
                                             handleCancelCreate();
-                                            setErrors();
                                           }}
                                         title="CREAR MARCA"
                                         content={modalCreate}

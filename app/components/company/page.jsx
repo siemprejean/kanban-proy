@@ -333,11 +333,12 @@ export default function Company() {
     <div className="modal-content">
       <MuiTextField title="Nombre de la Empresa:" value={companyName} onChange={(e) => setcompanyName(e.target.value)} type="text" className="modal-col-6" error={!!errors.companyName} helperText={errors.companyName} />
       <FormControl className="modal-col-6" style={{top: 25}} error={!!errors.companyIdCountry}>
-        <InputLabel id="pais-label" style={{top: 5 ,left: 10 }} >País</InputLabel>
+        <InputLabel id="pais-label">País</InputLabel>
           <Select
             labelId="pais-label"
             value={companyIdCountry ?? ''}
             onChange={handleChangeCountry}
+            label="País"
           >
             {getscountries.map((country) => (
             <MenuItem key={country.id} value={country.id}>

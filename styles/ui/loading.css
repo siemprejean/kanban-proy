@@ -1,3 +1,16 @@
+.loader-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f7fa;
+  z-index: 9999;
+}
+
 .loader {
   animation: rotate 1s infinite;
   height: 50px;
@@ -15,15 +28,15 @@
 
 .loader:before {
   animation: ball1 1s infinite;
-  background-color: #2196f3; /* Blue */
-  box-shadow: 30px 0 0 #1976d2; /* Darker blue */
+  background-color: #2196f3;
+  box-shadow: 30px 0 0 #1976d2;
   margin-bottom: 10px;
 }
 
 .loader:after {
   animation: ball2 1s infinite;
-  background-color: #1976d2; /* Darker blue */
-  box-shadow: 30px 0 0 #2196f3; /* Blue */
+  background-color: #1976d2;
+  box-shadow: 30px 0 0 #2196f3;
 }
 
 @keyframes rotate {
@@ -61,4 +74,5 @@
     margin-top: 0;
   }
 }
+
 

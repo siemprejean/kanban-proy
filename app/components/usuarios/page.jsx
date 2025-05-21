@@ -348,14 +348,15 @@ export default function Company() {
         <MuiTextField title="Nombre:" value={Name} onChange={(e) => setName(e.target.value)} type="text" className="modal-col-6" error={!!errors.Name} helperText={errors.Name}/>
         <MuiTextField title="Nombre de Usuario:" value={Username} onChange={(e) => setUname(e.target.value)} type="text" className="modal-col-6" error={!!errors.Username} helperText={errors.Username}/>
         <MuiTextField title="Correo:" value={Email} onChange={(e) => setEmail(e.target.value)} type="email" className="modal-col-6" error={!!errors.Email} helperText={errors.Email}/>
-        <FormControl className="modal-col-6" style={{ top: 25 }} error={!!errors.Companyid}>
-            <InputLabel id="empresa-label" style={{ top: 5, left: 10 }}>
+        <FormControl className="modal-col-6-drop" style={{ top: 25 }} error={!!errors.Companyid}>
+            <InputLabel id="empresa-label">
               Empresa
             </InputLabel>
             <Select
               labelId="empresa-label"
               value={Companyid ?? ''}
               onChange={(e) => setCompany(parseInt(e.target.value))}
+              label="Empresa"
             >
               {getsCompanies.map((company) => (
             <MenuItem key={company.id} value={company.id}>
@@ -407,7 +408,7 @@ export default function Company() {
     <div ref={modalRef} className="modal-content">
         <MuiTextField title="Nombre" value={updateNam} type="text" className="modal-col-6" InputProps={{ readOnly: true }}/>
         <MuiTextField title="Usuario" value={updateuser} type="text" className="modal-col-6" InputProps={{ readOnly: true }}/>
-        <MuiCheckList title="Permisos" items={data1} customStyles={listStyles} preselectedItems={selectedroles} onNewSelectedItems={(selectedItems) => setSelectedroles(selectedItems)} className="modal-checklist" />
+        <MuiCheckList title="Permisos" items={data1} customStyles={listStyles} preselectedItems={selectedroles} onNewSelectedItems={(selectedItems) => setSelectedroles(selectedItems)} className="modal-checklist mt-6"/>
         <Row style={{ width: "45%" }}>
           <Col className="modal-col-btn">
             <Button
@@ -436,7 +437,7 @@ export default function Company() {
             />
           </Col>
         </Row>
-      </div>
+    </div>
   );
   
   const body = (

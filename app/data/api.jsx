@@ -27,7 +27,6 @@ export const postLogin = async (loginData) => {
     } catch (error) {
         return error;
     }
-
 };
 
 export const mostrarUser = async (id) => {
@@ -116,22 +115,25 @@ export const updateUserPermissions = async (data) => {
 
 export const getUser = async () => {
     try {
-        const response = await fetch(`http://10.2.1.174:35789/admin/users`, {
-            method: "GET",
-            headers: new Headers({
+        
+        const result = await fetch('/api/users', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token_temis}`,
+            },
+          });
+        if (!result.ok) {
+            throw new Error(`Error del servidor: ${result.status}`);
+        }
 
-                'Content-Type': 'application/json',
-                'Authorization':  `Bearer ${token_temis}`
-            })
-
-        });
-        const result = await response.json();
-        return result;
-    
-    } catch (err) {
-        console.log(err);
+        const data = await result.json();
+        console.log('Esto tiene compañias:', data);
+        return data;
+    }catch (error) {
+        console.error('Error fetching companies:', error);
+        throw new Error('Failed to fetch companies');
     }
-}
+};
 
 export const getRol = async () => {
     try {

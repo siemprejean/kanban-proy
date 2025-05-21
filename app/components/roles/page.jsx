@@ -8,7 +8,6 @@ import React, { useEffect } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { useState } from "react";
 import { styled } from "@mui/material/styles";
-import CloseIcon from '@mui/icons-material/Close';
 import { useRef} from "react";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
@@ -38,10 +37,8 @@ export default function RolesPermision() {
   const [message, setMessage] = useState('');
   const [roleName, setRoleName] = useState('');
   const [roleSlug, setRoleSlug] = useState('');
-  const [roleStatus, setRoleStatus] = useState(true);
   const [updateRoleName, setUpdateRoleName] = useState('');
   const [updateRoleSlug, setUpdateRoleSlug] = useState('');
-  const [updateRoleStatus, setUpdateRoleStatus] = useState(true);
   const [preselectedItems, setPreselectedItems] = useState([]);
   const handleCloseSuccessModal = () => { setSuccessModalOpen(false); closeModal(); closeModalCreate() };
   const [isModalOpen, setModalOpen] = useState(false);
@@ -50,7 +47,6 @@ export default function RolesPermision() {
   const closeModal = () => setModalOpen(false);
   const openModalCreate = () => setModalCreateOpen(true);
   const closeModalCreate = () => setModalCreateOpen(false);
-  const [openp, setOpenp] = React.useState(0);
   const [successModalOpenp, setSuccessModalOpenp] = useState(false);
   const handleCloseSuccessModalp = () => {console.log("Closing modal..."); setSuccessModalOpenp(false); closeModalp(); closeModalCreatep() };
   const [isModalOpenp, setModalOpenp] = useState(false);
@@ -457,7 +453,6 @@ export default function RolesPermision() {
           error={!!errors.preselectedItems}
           helperText={errors.preselectedItems} 
         />
-  
         <Row style={{ width: "95%" }}>
           <Col className="modal-col-btn">
             <Button onClick={() => { 
@@ -625,9 +620,9 @@ export default function RolesPermision() {
   //CONTENT MODAL DE CREACION PERMISOS
   const modalCreatep = (
     <div ref={modalRef} className="modal-content">
-      <MuiTextField title="Nombre del Permiso:" value={permissionName} onChange={(e) => setPermissionName(e.target.value)} type="text" className="modal-col-6" error={!!errors.permissionName} helperText={errors.permissionName}/>
-      <MuiTextField title="Descripcion:" value={permissionSlug} onChange={(e) => setPermissionSlug(e.target.value)} type="text" className="modal-col-6" error={!!errors.permissionSlug} helperText={errors.permissionSlug}/>
-      <div className="modal-col-6" error={!!errors.permissionHttpMethod} helperText={errors.permissionHttpMethod}>
+      <MuiTextField title="Nombre del Permiso:" value={permissionName} onChange={(e) => setPermissionName(e.target.value)} type="text" className="modal-col-6 mb-3" error={!!errors.permissionName} helperText={errors.permissionName}/>
+      <MuiTextField title="Descripcion:" value={permissionSlug} onChange={(e) => setPermissionSlug(e.target.value)} type="text" className="modal-col-6 mb-3" error={!!errors.permissionSlug} helperText={errors.permissionSlug}/>
+      <div className="modal-col-6-buts" error={!!errors.permissionHttpMethod} helperText={errors.permissionHttpMethod}>
       <StyledmethodButton
         active={permissionHttpMethod === "GET" ? "true" : undefined}
         onClick={() => setPermissionHttpMethod("GET")}
@@ -648,7 +643,7 @@ export default function RolesPermision() {
       </StyledmethodButton>
 
       </div>
-      <MuiTextField title="Path Http:" value={permissionHttpPath} onChange={(e) => setPermissionHttpPath(e.target.value)} type="text" className="modal-col-6" error={!!errors.permissionHttpPath} helperText={errors.permissionHttpPath}/>
+      <MuiTextField title="Path Http:" value={permissionHttpPath} onChange={(e) => setPermissionHttpPath(e.target.value)} type="text" className="modal-col-6" style = {{ left: '70px'}} error={!!errors.permissionHttpPath} helperText={errors.permissionHttpPath} labelOffset={70}/>
       <Row style={{ width: "95%" }}>
         <Col className="modal-col-btn">
           <Button onClick={() => { 
@@ -674,28 +669,28 @@ export default function RolesPermision() {
         value={updatePermissionName}
         onChange={(e) => setUpdatePermissionName(e.target.value)}
         type="text"
-        className="modal-col-6"
+        className="modal-col-6 mb-3"
       />
       <MuiTextField
         title="Descripción:"
         value={updatePermissionSlug}
         onChange={(e) => setUpdatePermissionSlug(e.target.value)}
         type="text"
-        className="modal-col-6"
+        className="modal-col-6 mb-3"
       />
       <MuiTextField
         title="Metodo Http:"
         value={updatePermissionHttpMethod}
         onChange={(e) => setUpdatePermissionHttpMethod(e.target.value)}
         type="text"
-        className="modal-col-6"
+        className="modal-col-6 mb-3"
       />
       <MuiTextField
         title="Path Http:"
         value={updatePermissionHttpPath}
         onChange={(e) => setUpdatePermissionHttpPath(e.target.value)}
         type="text"
-        className="modal-col-6"
+        className="modal-col-6 mb-3"
       />
 
       <Row style={{ width: "45%" }}>
