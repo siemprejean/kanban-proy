@@ -34,51 +34,22 @@ export const DashboardMenu = [
 	},
 	{
 		id: uuid(),
-		title: 'Ventas y Asistencia',
-		icon: 'account_balance_wallet',
-		children: [
-			/* { id: uuid(), link: '/components/ventas_asistencia/ventas', name: 'Ventas' }, */
-	/* 		{ id: uuid(), link: '/components/ventas_asistencia/asistencia', name: 'Asistencia' }, */
-			{ id: uuid(), link: '/components/ventas_asistencia/resumen_empleados', name: 'Resumen de Empleados' },
-			{ id: uuid(), link: '/components/ventas_asistencia/detalles_empleado', name: 'Detalle de Empleado' }
-		]
-	},
-/* 	{
-		id: uuid(),
-		title: 'Histórico de Pagos',
-		icon: 'history',
-		link: '/components/vacio'
-	}, */
-	{
-		id: uuid(),
-		title: 'Tiendas',
-		icon: 'shopping_basket',
-		link: '/components/store'
-	},
-	/*{
-		id: uuid(),
-		title: 'Metas',
-		icon: 'finance',
-		link: '/components/vacio'
+		title: 'Crear Tarea',
+		icon: 'home',
+		link: '/components/tasks'
 	},
 	{
 		id: uuid(),
-		title: 'Gestión de Incentivos',
-		icon: 'credit_card',
-		link: '/components/vacio'
-	},*/
+		title: 'Asignadas a mi',
+		icon: 'home',
+		link: '/components/owned'
+	},
 	{
 		id: uuid(),
 		title: 'Configuraciones',
 		icon: 'settings',
 		children: [
-			{ id: uuid(), link: '/components/usuarios', name: 'Usuarios' },
-			{ id: uuid(), link: '/components/roles', name: 'Roles y Permisos' },
-			{ id: uuid(), link: '/components/company', name: 'Empresas' },	
-	 		{ id: uuid(), link: '/components/brand', name: 'Marcas' },
-			{ id: uuid(), link: '/components/store', name: 'Tiendas' },
-			{ id: uuid(), link: '/components/country', name: 'Paises' },
-			
+			{ id: uuid(), link: '/components/profile', name: 'Perfil' },
 		]
 	},
 

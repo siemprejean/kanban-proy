@@ -56,18 +56,6 @@ const ModalVentasEmpleado = ({ data, typex}) => {
                 <th>Turno</th>
               </tr>
             </thead>
-            <tbody>
-              {data.detallesTurno.map((detalle, index) => (
-                <tr key={index}>
-                  <td>{detalle.tienda}</td>
-                  <td>{detalle.entrada}</td>
-                  <td>{detalle.entradaDescanso}</td>
-                  <td>{detalle.salidaDescanso}</td>
-                  <td>{detalle.salida}</td>
-                  <td>{detalle.turno}</td>
-                </tr>
-              ))}
-            </tbody>
           </Table>
 
           <h5 className="mt-4">Detalles de ventas</h5>
